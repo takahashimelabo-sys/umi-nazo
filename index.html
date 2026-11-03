@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}body::after{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top,0px);z-index:45;background:inherit;background-image:none;pointer-events:none}</style>
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}body::after{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top,0px);z-index:60;background:inherit;background-image:none;pointer-events:none}</style>
 </head>
 <body>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
@@ -4264,7 +4264,7 @@ function gunzipJS(u8) {
   return out.subarray(0, op);
 }
 async function readCode(text) {
-  const t = String(text || "").replace(/\s+/g, ""), m = t.match(/UMINAZO([12]):([A-Za-z0-9+/=]+)/);
+  const t = String(text || "").replace(/\s+/g, ""), m = t.match(/UMINAZO([12]):([A-Za-z0-9+/=]+)/i) || (/^H4sI[A-Za-z0-9+/=]+$/.test(t) ? [t, "2", t] : null);   // 2026-11-03 iPhoneで はじめが 小文字に なっても よめる
   if (!m) throw new Error(t ? "head" : "empty");
   let u8; try { u8 = b64d(m[2]); } catch (e) { throw new Error("cut"); }
   if (m[1] === "2") { let z = null; if (typeof DecompressionStream !== "undefined") { try { z = await streamBytes(u8, DecompressionStream); } catch (e) { z = null; } }
@@ -4291,9 +4291,9 @@ function renderMove() {
   el.innerHTML = '<details class="pmove"' + (mv.open ? " open" : "") + '><summary>きろくの ひきつぎ（べつの 端末（たんまつ）へ うつす）</summary>' +
     '<div class="mvsec"><b>① この 端末（たんまつ）の きろくを かきだす</b><p>プレイヤー みんなの きろくが、ながい 文字の 列（ひきつぎコード）に なるよ。コピーして メモや LINE などに とっておくか、ファイルで ほぞん してね。</p>' +
     '<div class="mvrow"><button id="mvmake"' + (has ? "" : " disabled") + '>ひきつぎコードを つくる</button></div>' +
-    (mv.out ? '<textarea id="mvout" readonly>' + esc(mv.out) + '</textarea><div class="mvrow"><button id="mvcopy">コピー</button><button id="mvsave">ファイルで ほぞん</button></div>' : "") + '</div>' +
+    (mv.out ? '<textarea id="mvout" readonly autocapitalize="off" autocorrect="off" spellcheck="false">' + esc(mv.out) + '</textarea><div class="mvrow"><button id="mvcopy">コピー</button><button id="mvsave">ファイルで ほぞん</button></div>' : "") + '</div>' +
     '<div class="mvsec"><b>② べつの 端末（たんまつ）で よみこむ</b><p>コードを はりつけるか、ほぞんした ファイルを えらんでね。おなじ プレイヤーが いたら、よみこんだ きろくで うわがき するよ。</p>' +
-    '<textarea id="mvin" placeholder="UMINAZO から はじまる コードを ここに はりつけ"></textarea>' +
+    '<textarea id="mvin" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" placeholder="UMINAZO から はじまる コードを ここに はりつけ"></textarea>' +
     '<div class="mvrow"><button id="mvread">よみこむ</button><label class="mvfile">ファイルから<input type="file" id="mvfile" accept=".txt,text/plain"></label></div></div>' +
     '<div class="mvmsg' + (mv.ok ? " ok" : "") + '" id="mvmsg">' + esc(mv.msg) + '</div></details>';
   const det = el.querySelector("details"); det.ontoggle = () => { mv.open = det.open; };
