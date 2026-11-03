@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}</style>
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}body::after{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top,0px);z-index:45;background:inherit;background-image:none;pointer-events:none}</style>
 </head>
 <body>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
@@ -4230,12 +4230,47 @@ async function makeCode() {
   if (typeof CompressionStream !== "undefined") { try { return "UMINAZO2:" + b64e(await streamBytes(raw, CompressionStream)); } catch (e) {} }
   return "UMINAZO1:" + b64e(raw);
 }
+/* 2026-11-03 ブラウザに たよらない gzip ほどき（RFC1951）。Safari で DecompressionStream が うまく いかない ときの 予備 */
+function gunzipJS(u8) {
+  if (u8[0] !== 0x1f || u8[1] !== 0x8b || u8[2] !== 8) throw new Error("gz");
+  const flg = u8[3]; let pos = 10;
+  if (flg & 4) pos += 2 + (u8[pos] | u8[pos + 1] << 8);
+  if (flg & 8) { while (u8[pos++]); }
+  if (flg & 16) { while (u8[pos++]); }
+  if (flg & 2) pos += 2;
+  let bit = 0, bitPos = pos * 8; const N = u8.length * 8;
+  const bits = n => { let v = 0; for (let i = 0; i < n; i++) { if (bitPos >= N) throw new Error("eof"); v |= ((u8[bitPos >> 3] >> (bitPos & 7)) & 1) << i; bitPos++; } return v; };
+  const build = lens => { const cnt = new Uint16Array(16), off = new Uint16Array(16), sym = new Uint16Array(lens.length); for (const l of lens) cnt[l]++; cnt[0] = 0; for (let i = 1; i < 16; i++) off[i] = off[i - 1] + cnt[i - 1]; lens.forEach((l, s) => { if (l) sym[off[l]++] = s; }); return { cnt, sym }; };
+  const dec = h => { let code = 0, first = 0, idx = 0; for (let l = 1; l < 16; l++) { code |= bits(1); const c = h.cnt[l]; if (code - first < c) return h.sym[idx + code - first]; idx += c; first += c; first <<= 1; code <<= 1; } throw new Error("code"); };
+  const LB = [3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258], LE = [0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0];
+  const DB = [1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577], DE = [0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13];
+  let out = new Uint8Array(Math.max(1024, u8.length * 6)), op = 0;
+  const put = b => { if (op >= out.length) { const n = new Uint8Array(out.length * 2); n.set(out); out = n; } out[op++] = b; };
+  let fixL = null, fixD = null, last = 0;
+  while (!last) {
+    last = bits(1); const type = bits(2);
+    if (type === 0) { bitPos = (bitPos + 7) & ~7; const p = bitPos >> 3, len = u8[p] | u8[p + 1] << 8; for (let i = 0; i < len; i++) put(u8[p + 4 + i]); bitPos = (p + 4 + len) * 8; continue; }
+    let L, D;
+    if (type === 1) { if (!fixL) { const l = []; for (let i = 0; i < 288; i++) l.push(i < 144 ? 8 : i < 256 ? 9 : i < 280 ? 7 : 8); fixL = build(l); fixD = build(new Array(30).fill(5)); } L = fixL; D = fixD; }
+    else if (type === 2) {
+      const hl = bits(5) + 257, hd = bits(5) + 1, hc = bits(4) + 4, ORD = [16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15], cl = new Array(19).fill(0);
+      for (let i = 0; i < hc; i++) cl[ORD[i]] = bits(3);
+      const CH = build(cl), ls = [];
+      while (ls.length < hl + hd) { const s = dec(CH); if (s < 16) ls.push(s); else if (s === 16) { const pv = ls[ls.length - 1], r = 3 + bits(2); for (let i = 0; i < r; i++) ls.push(pv); } else if (s === 17) { const r = 3 + bits(3); for (let i = 0; i < r; i++) ls.push(0); } else { const r = 11 + bits(7); for (let i = 0; i < r; i++) ls.push(0); } }
+      L = build(ls.slice(0, hl)); D = build(ls.slice(hl, hl + hd));
+    } else throw new Error("type");
+    for (;;) { const s = dec(L); if (s < 256) put(s); else if (s === 256) break; else { const i = s - 257, len = LB[i] + bits(LE[i]), ds = dec(D), dist = DB[ds] + bits(DE[ds]); if (dist > op) throw new Error("dist"); for (let k = 0; k < len; k++) put(out[op - dist]); } }
+  }
+  return out.subarray(0, op);
+}
 async function readCode(text) {
   const t = String(text || "").replace(/\s+/g, ""), m = t.match(/UMINAZO([12]):([A-Za-z0-9+/=]+)/);
-  if (!m) throw new Error("form");
-  let u8 = b64d(m[2]);
-  if (m[1] === "2") { if (typeof DecompressionStream === "undefined") throw new Error("old"); u8 = await streamBytes(u8, DecompressionStream); }
-  const o = JSON.parse(new TextDecoder().decode(u8));
+  if (!m) throw new Error(t ? "head" : "empty");
+  let u8; try { u8 = b64d(m[2]); } catch (e) { throw new Error("cut"); }
+  if (m[1] === "2") { let z = null; if (typeof DecompressionStream !== "undefined") { try { z = await streamBytes(u8, DecompressionStream); } catch (e) { z = null; } }
+    if (!z) { try { z = gunzipJS(u8); } catch (e) { throw new Error("cut"); } }   // 2026-11-03 Safari で ほどけない ときは 自前で ほどく
+    u8 = z; }
+  let o; try { o = JSON.parse(new TextDecoder().decode(u8)); } catch (e) { throw new Error("cut"); }
   if (!o || o.app !== "uminazo" || !o.players || typeof o.players !== "object") throw new Error("form");
   return o.players;
 }
@@ -4243,7 +4278,7 @@ function importPlayers(got) {
   let add = 0, upd = 0;
   for (const [pid, p] of Object.entries(got)) {
     if (!p || typeof p.name !== "string" || !p.name) continue;
-    const q = { name: p.name.slice(0, 10), av: p.av || "same", book: p.book || {}, coins: p.coins || 0, bait: p.bait || {}, hr: Number.isFinite(p.hr) ? p.hr : 4, stats: p.stats || {}, sea: SEAS && SEAS[p.sea] ? p.sea : "hare", storm: p.storm || 0, kings: p.kings || {}, fruit: p.fruit || 0, fruitAll: p.fruitAll || 0, fruitBy: numMap(p.fruitBy), fruitKey: SERIES[p.fruitKey] ? p.fruitKey : null, fruitSeen: numMap(p.fruitSeen), umiSel: Array.isArray(p.umiSel) ? p.umiSel.filter(id => typeof id === "string" && byId(id)).slice(0, 12) : undefined, umiOpened: p.umiOpened ? 1 : 0, umiTier: Number.isFinite(p.umiTier) ? Math.max(0, Math.min(4, Math.floor(p.umiTier))) : (p.umiOpened ? 1 : 0), sj: (p.sj && typeof p.sj === "object") ? Object.fromEntries(Object.entries(p.sj).filter(([k, v]) => SJ[k] && v && typeof v === "object").map(([k, v]) => [k, { pg: Math.max(1, Math.min(SJ[k].pages.length, Math.floor(+v.pg || 1))), c: Math.max(0, Math.floor(+v.c || 0)), d: typeof v.d === "string" ? v.d.slice(0, 12) : "", ids: Array.isArray(v.ids) ? v.ids.filter(id => typeof id === "string" && byId(id)).slice(0, 20) : [] }])) : {}, sjDay: typeof p.sjDay === "string" ? p.sjDay.slice(0, 12) : "", hats: (p.hats && typeof p.hats === "object") ? Object.fromEntries(Object.keys(p.hats).filter(h => SJ_HATS[h]).map(h => [h, 1])) : {}, hat: SJ_HATS[p.hat] && p.hats && p.hats[p.hat] ? p.hat : null, rampage: p.rampage || 0, rampGot: p.rampGot || 0, wx: p.wx || null, eq: (p.eq && typeof p.eq === "object") ? { rod: KGEAR[p.eq.rod] || /^t\d$/.test(p.eq.rod || "") ? p.eq.rod : null, reel: KGEAR[p.eq.reel] || /^t\d$/.test(p.eq.reel || "") ? p.eq.reel : null } : null, rodMax: p.rodMax, at: p.at || Date.now() };
+    const q = { name: p.name.slice(0, 10), av: p.av || "same", book: p.book || {}, coins: p.coins || 0, bait: p.bait || {}, hr: Number.isFinite(p.hr) ? p.hr : 4, stats: p.stats || {}, sea: SEAS && SEAS[p.sea] ? p.sea : "hare", storm: p.storm || 0, kings: p.kings || {}, fruit: p.fruit || 0, fruitAll: p.fruitAll || 0, fruitBy: numMap(p.fruitBy), fruitKey: SERIES[p.fruitKey] ? p.fruitKey : null, fruitSeen: numMap(p.fruitSeen), umiSel: Array.isArray(p.umiSel) ? p.umiSel.filter(id => typeof id === "string" && umiById(id)).slice(0, 21) : undefined, umiTitle: p.umiTitle ? 1 : 0, netGot: p.netGot ? 1 : 0, umiOpened: p.umiOpened ? 1 : 0, umiTier: Number.isFinite(p.umiTier) ? Math.max(0, Math.min(UMI_TOP, Math.floor(p.umiTier))) : (p.umiOpened ? 1 : 0), sj: (p.sj && typeof p.sj === "object") ? Object.fromEntries(Object.entries(p.sj).filter(([k, v]) => SJ[k] && v && typeof v === "object").map(([k, v]) => [k, { pg: Math.max(1, Math.min(SJ[k].pages.length, Math.floor(+v.pg || 1))), c: Math.max(0, Math.floor(+v.c || 0)), d: typeof v.d === "string" ? v.d.slice(0, 12) : "", ids: Array.isArray(v.ids) ? v.ids.filter(id => typeof id === "string" && byId(id)).slice(0, 20) : [] }])) : {}, sjDay: typeof p.sjDay === "string" ? p.sjDay.slice(0, 12) : "", hats: (p.hats && typeof p.hats === "object") ? Object.fromEntries(Object.keys(p.hats).filter(h => SJ_HATS[h]).map(h => [h, 1])) : {}, hat: SJ_HATS[p.hat] && p.hats && p.hats[p.hat] ? p.hat : null, rampage: p.rampage || 0, rampGot: p.rampGot || 0, wx: p.wx || null, eq: (p.eq && typeof p.eq === "object") ? { rod: KGEAR[p.eq.rod] || /^t\d$/.test(p.eq.rod || "") ? p.eq.rod : null, reel: KGEAR[p.eq.reel] || /^t\d$/.test(p.eq.reel || "") ? p.eq.reel : null } : null, rodMax: p.rodMax, at: p.at || Date.now() };
     if (players[pid]) upd++; else add++;
     players[pid] = q;
   }
@@ -4283,7 +4318,12 @@ function renderMove() {
       mv.msg = "よみこんだよ！（あたらしく " + add + "人・うわがき " + upd + "人）"; mv.ok = true;
       renderAll(); renderPlayers();
     } catch (e) {
-      say(e && e.message === "old" ? "この ブラウザでは よみこめない 形の コードだよ。ブラウザを 新しく してね" : "コードが ただしく ないみたい。さいごまで ぜんぶ コピー できているか たしかめてね");
+      const why = e && e.message;
+      say(why === "old" ? "この ブラウザでは よみこめない 形の コードだよ。ブラウザを 新しく してね"
+        : why === "empty" ? "コードを はりつけてから「よみこむ」を おしてね"
+        : why === "head" ? "コードの はじめの「UMINAZO」が 見つからないよ。もとの 画面の「コピー」ボタンで もう一ど コピーしてね"
+        : why === "cut" ? "コードが とちゅうで 切れて いるみたい。もとの 画面の「コピー」ボタンで もう一ど コピーしてね"
+        : "よみこみの とちゅうで うまく いかなかったよ（" + String(why || "?").slice(0, 40) + "）");
     }
   };
   $("mvread").onclick = () => doRead($("mvin").value);
