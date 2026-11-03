@@ -13,7 +13,12 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" href="icon-192.png">
-<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}body::after{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top,0px);z-index:60;background:inherit;background-image:none;pointer-events:none}</style>
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<!-- 2026-11-03 時計の 帯には、うしろの 海と おなじ もようを かぶせる（スクロールしても 中身が 時計の うらに 入りこまない。時計の 文字は 黒のまま） -->
+<style>body::after{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top,0px);z-index:60;background:inherit;background-image:none;pointer-events:none}
+body[data-theme="umi"]::after{background:#c8f3f6;background-image:radial-gradient(circle at 12px 12px,#ffffff2e 2.5px,transparent 3px),radial-gradient(circle at 36px 36px,#ffffff1f 1.8px,transparent 2.3px),linear-gradient(180deg,#c8f3f6 0,#7fd0ea 14%,#3a9bd2 34%,#1d6aae 56%,#11407f 76%,#081634 100%);background-size:48px 48px,48px 48px,100% 100vh}
+body[data-theme="sango"]::after{background:#d9fbf6;background-image:radial-gradient(circle at 12px 12px,#ff9fb04d 3px,transparent 3.5px),radial-gradient(circle at 36px 36px,#ffffff59 2.5px,transparent 3px),linear-gradient(180deg,#d9fbf6 0,#9ff0e8 40%,#5fd0d8 100%);background-size:48px 48px,48px 48px,100% 100vh}
+body[data-theme="yoru"]::after{background:#13306a;background-image:radial-gradient(circle at 10px 14px,#9ff6ff66 1.2px,transparent 1.8px),radial-gradient(circle at 34px 38px,#ffffff40 1px,transparent 1.6px),linear-gradient(180deg,#13306a 0,#0a1a44 45%,#040a1e 100%);background-size:48px 48px,52px 52px,100% 100vh}</style>
 </head>
 <body>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
@@ -61,7 +66,6 @@ h2 { font-family: var(--display); font-weight: 900; font-size: 17px; margin: 0; 
 
 .stage { position: relative; border-radius: 22px; overflow: hidden; border: 4px solid #ffffff; box-shadow: 0 4px 0 #e2cfa0; user-select: none; touch-action: manipulation; }
 .stage > svg { display: block; width: 100%; height: auto; }
-#scene { will-change: transform; }   /* 2026-10-29 iPhone で 毎コマ 一部だけ かきなおすと 砂に 1点分の 横線が のこる。つり場の 絵を 1まいの 層に して、かきなおしの はばを ずらさない */
 .msg { position: absolute; left: 0; right: 0; top: 10px; text-align: center; font-family: var(--display); font-size: clamp(20px, 5.5vw, 30px); color: #fff; text-shadow: 0 2px 0 #0008, 0 0 12px #0006; pointer-events: none; padding: 0 12px; }
 .sub { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px #000a; pointer-events: none; padding: 0 12px; }
 .pop { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); font-family: var(--display); font-size: clamp(26px, 7vw, 40px); pointer-events: none; text-shadow: 0 3px 0 #0009; opacity: 0; white-space: nowrap; }
@@ -217,7 +221,7 @@ h2 { font-family: var(--display); font-weight: 900; font-size: 17px; margin: 0; 
 .avs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
 .avs button { display: grid !important; justify-items: center; gap: 2px; text-align: center !important; font-size: 11px !important; font-weight: 900 !important; color: var(--ink) !important; white-space: nowrap !important; min-width: 0; font-family: var(--body) !important; }
 .avs button svg { width: 100%; max-width: 56px; height: auto; }
-@media (prefers-reduced-motion: no-preference) { .hop { animation: hop 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: bottom center; } .blink { animation: blink 4.2s infinite; transform-box: fill-box; transform-origin: center; } .sway { animation: sway 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: bottom center; } /* 2026-10-29 発熱対策：ふしぎな海の バナーの 中の じぶんは 止める（バナー全体の かきなおしに なるため） */ svg.bnr .hop, svg.bnr .blink { animation: none; } }
+@media (prefers-reduced-motion: no-preference) { .hop { animation: hop 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: bottom center; } .blink { animation: blink 4.2s infinite; transform-box: fill-box; transform-origin: center; } .sway { animation: sway 3.6s ease-in-out infinite; transform-box: fill-box; transform-origin: bottom center; } }
 @keyframes hop { 50% { transform: scale(1.03, .97); } }
 @keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
 @keyframes sway { 50% { transform: rotate(2deg); } }
@@ -396,11 +400,6 @@ body[data-theme="umi"] h1.logo svg, body[data-theme="yoru"] h1.logo svg { filter
 .mspot.on .mhit { fill: #ffffff; fill-opacity: .14; stroke: #ffd84a; stroke-width: 3; stroke-linejoin: round; }
 .mspot:focus-visible .mlab rect { stroke: #ffd84a; stroke-width: 3; }
 .mfloat { animation: bob 1.6s ease-in-out infinite; }
-.smapw { position: relative; }
-.mfloatH { position: absolute; width: calc((100% - 6px) * .0444); margin-left: calc((100% - 6px) * -.0222); pointer-events: none; will-change: transform; animation: bobT 1.6s ease-in-out infinite; }
-.mfloatH svg { display: block; width: 100%; height: auto; margin-top: -100%; }
-@keyframes bobT { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-@media (prefers-reduced-motion: reduce) { .mfloatH { animation: none; } }
 @keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -3px; } }
 @media (prefers-reduced-motion: reduce) { .mfloat { animation: none; } }
 .spots.locked .mspot:not(.on) { opacity: .5; cursor: default; }
@@ -441,7 +440,6 @@ body[data-theme="umi"] h1.logo svg, body[data-theme="yoru"] h1.logo svg { filter
 .clock svg { width: 16px; height: 16px; }
 .clock span { font-size: 11px; font-weight: 900; color: #ffe08a; }
 .clock.mz { background: #c8501ab3; border-color: #ffd08a; box-shadow: 0 0 10px #ffb060aa; animation: mzglow 1.6s ease-in-out infinite; }
-.zoff *, .zoff *::before, .zoff *::after, .zoff::before, .zoff::after { animation-play-state: paused !important; }
 .clock.mz span { color: #fff6c8; }
 @keyframes mzglow { 50% { box-shadow: 0 0 18px #ffc070; } }
 @media (prefers-reduced-motion: reduce) { .clock.mz { animation: none; } }
@@ -618,22 +616,6 @@ body.lite .stage::after { animation: none !important; }
 .tstorm { font-size: 11px; color: #6a3a9a; margin-top: 4px; font-weight: 800; }
 .tstorm.ok { color: #4a2470; }
 
-.pubfoot { grid-column: 1 / -1; background: #fffaf0e6; color: var(--ink); border-radius: 16px; padding: 12px 16px; font-size: 12px; line-height: 1.7; }
-.pubfoot b { font-family: var(--display); font-size: 14px; }
-.pubfoot p { margin: 4px 0 0; font-weight: 500; }
-.pmove { background: #fffaf0e6; border-radius: 14px; padding: 6px 12px; color: var(--ink); font-size: 13px; }
-.pmove summary { cursor: pointer; font-weight: 900; }
-.pmove .mvsec { display: grid; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
-.pmove .mvsec b { font-family: var(--display); font-size: 14px; }
-.pmove p { margin: 0; font-weight: 500; font-size: 12px; line-height: 1.6; }
-.pmove textarea { font: 12px/1.4 ui-monospace, monospace; width: 100%; min-height: 70px; border: 2px solid var(--line); border-radius: 10px; padding: 6px 8px; background: #fff; color: var(--ink); word-break: break-all; }
-.pmove .mvrow { display: flex; flex-wrap: wrap; gap: 6px; }
-.pmove button, .pmove label.mvfile { font: inherit; font-weight: 900; font-size: 13px; border: 0; border-radius: 999px; padding: 6px 14px; background: var(--leaf); color: #fff; cursor: pointer; box-shadow: 0 3px 0 #4e9a3a; }
-.pmove label.mvfile input { display: none; }
-.pmove .mvmsg { font-weight: 800; color: #c96a1a; min-height: 1em; }
-.pmove .mvmsg.ok { color: #3f9a3a; }
-.a2hs { background: #fff3c4; border: 2px solid var(--win); border-radius: 14px; padding: 6px 12px; font-size: 12.5px; color: var(--ink); line-height: 1.6; }
-.a2hs b { font-family: var(--display); }
 /* 七つの海の 大王：全面 虹（ゆっくり 変わる。てんめつなし） */
 .tc.kc { padding: 7px; background: linear-gradient(135deg, #ffb3de, #a8ecff, #fff7a8, #c8b0ff, #9af0c8, #ffb3de); background-size: 300% 300%; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #b48ae8, 0 0 22px #c8a8ffaa; overflow: visible; }
 .tc.kc .in { background: repeating-linear-gradient(45deg, #ffffff00 0 7px, #ffffff70 7px 8px), linear-gradient(150deg, #fff0fa, #e6f8ff 35%, #fffbe0 60%, #f0e6ff); box-shadow: inset 0 0 0 1px #fffa; }
@@ -805,6 +787,22 @@ body.lite *:not(.pop):not(.stage), body.lite *::before, body.lite *::after { ani
 body.lite svg [filter] { filter: none !important; }
 body.lite .stage .act { background: #0a1a44d9; } body.lite .tabbar { background: #fffaf0; }
 #litebtn[aria-pressed="true"] { color: #2a8a3a; border-color: #8fd08a; }
+.pmove { background: #fffaf0e6; border-radius: 14px; padding: 6px 12px; color: var(--ink); font-size: 13px; }
+.pmove summary { cursor: pointer; font-weight: 900; }
+.pmove .mvsec { display: grid; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.pmove .mvsec b { font-family: var(--display); font-size: 14px; }
+.pmove p { margin: 0; font-weight: 500; font-size: 12px; line-height: 1.6; }
+.pmove textarea { font: 12px/1.4 ui-monospace, monospace; width: 100%; min-height: 70px; border: 2px solid var(--line); border-radius: 10px; padding: 6px 8px; background: #fff; color: var(--ink); word-break: break-all; }
+.pmove .mvrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.pmove button, .pmove label.mvfile { font: inherit; font-weight: 900; font-size: 13px; border: 0; border-radius: 999px; padding: 6px 14px; background: var(--leaf); color: #fff; cursor: pointer; box-shadow: 0 3px 0 #4e9a3a; }
+.pmove label.mvfile input { display: none; }
+.pmove .mvmsg { font-weight: 800; color: #c96a1a; min-height: 1em; }
+.pubfoot { grid-column: 1 / -1; background: #fffaf0e6; color: var(--ink); border-radius: 16px; padding: 12px 16px; font-size: 12px; line-height: 1.7; }
+.pubfoot b { font-family: var(--display); font-size: 14px; }
+.pubfoot p { margin: 4px 0 0; font-weight: 500; }
+.pmove .mvmsg.ok { color: #3f9a3a; }
+.a2hs { background: #fff3c4; border: 2px solid var(--win); border-radius: 14px; padding: 6px 12px; font-size: 12.5px; color: var(--ink); line-height: 1.6; }
+.a2hs b { font-family: var(--display); }
 
 /* 2026-10-26 毒王の 絵（かるい 版） */
 .tc.kc .kart .kd3 > * { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -932,7 +930,6 @@ header .sndbtn svg { flex: none; }
 header .hrow:last-child .sndbtn { letter-spacing: 0; }
 @media (max-width: 480px), (min-width: 760px) { header .hrow:last-child .sndbtn svg { display: none; } header .hrow:last-child .sndbtn { font-size: 12px; } }
 header .hrow:last-child .sndbtn { min-width: 0; overflow: hidden; justify-content: center; padding: 6px 4px; min-height: 36px; white-space: nowrap; }
-header .ttlbtn { min-height: 36px; padding: 4px 12px 4px 8px; font-size: 13px; }
 header .themes { background: none; border: 0; padding: 0; }
 @media (max-width: 380px) { header .hrow:last-child .sndbtn { font-size: 11px; } }
 header h1.logo { width: 100%; max-width: 560px; justify-self: center; }
@@ -957,37 +954,6 @@ header .hright { width: 100%; max-width: 560px; justify-self: center; box-sizing
 .usong { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; font-weight: 800; color: var(--muted); }
 .usong button { font: inherit; font-size: 12px; font-weight: 800; border: 2px solid var(--line); background: var(--panel2); color: var(--ink); border-radius: 999px; padding: 4px 12px; cursor: pointer; }
 .usong button[aria-pressed="true"] { background: var(--ink); color: #fff; }
-
-/* 2026-10-29 ヘッダー v2：タイトル画面が できたので 大きな バナーは やめ、1まいの 小さな カードに。せっていは 歯車の 中へ */
-header.hv2 { display: block !important; }
-body.pscreen header.hv2 { display: none !important; }
-header.hv2 .hcard { max-width: 560px; margin: 0 auto; background: #fffaf0f0; border: 2px solid var(--line); border-radius: 20px; padding: 8px 10px 8px 8px; box-shadow: 0 2px 0 #0000001a; display: grid; gap: 6px; }
-header.hv2 .hbar { display: flex; align-items: center; gap: 8px; }
-header.hv2 .embbtn { flex: none; width: 54px; height: 48px; padding: 0; border: 0; background: none; cursor: pointer; }
-header.hv2 .embbtn svg { display: block; width: 100%; height: 100%; overflow: visible; }
-header.hv2 .pchip { flex: 1; min-width: 0; justify-content: flex-start; padding: 3px 12px 3px 4px; overflow: hidden; white-space: nowrap; }
-header.hv2 .pchip .small { margin-left: auto; }
-header.hv2 .gearbtn { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--line); background: var(--panel2); color: var(--ink); display: grid; place-items: center; cursor: pointer; padding: 0; transition: transform .25s; }
-header.hv2 .gearbtn svg { width: 24px; height: 24px; }
-header.hv2 .gearbtn[aria-expanded="true"] { background: #ffd84a; transform: rotate(60deg); }
-header.hv2 .stats, body[data-theme] header.hv2 .stats { padding: 6px 4px 0 !important; border-bottom: 0; border-top: 2px dashed var(--line); gap: 4px; }
-header.hv2 .stats > span { justify-items: center; }
-header.hv2 .stats small { font-size: 11px; }
-header.hv2 .stats b { font-size: clamp(18px, 4.8vw, 22px); }
-header.hv2 .setpanel { border-top: 2px dashed var(--line); padding: 10px 2px 2px; display: grid; gap: 10px; }
-header.hv2 .setpanel[hidden] { display: none; }
-header.hv2 .srow { display: flex; align-items: center; gap: 10px; }
-header.hv2 .slab { font-size: 12px; font-weight: 800; color: var(--muted); }
-header.hv2 .themes { background: none; border: 0; padding: 0; }
-header.hv2 .themes button { width: 32px; height: 32px; }
-header.hv2 .sgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-header.hv2 .sgrid .sndbtn { justify-content: center; min-width: 0; padding: 6px 4px; min-height: 40px; white-space: nowrap; font-size: 12px; }
-header.hv2 .sgrid .sndbtn svg { display: none; }
-header.hv2 .ttlbtn { justify-content: center; min-height: 40px; font-size: 13px; }
-@media (min-width: 760px) { header.hv2 .hcard { max-width: none; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; column-gap: 14px; }
-  header.hv2 .stats, body[data-theme] header.hv2 .stats { border-top: 0; padding: 0 !important; }
-  header.hv2 .setpanel { grid-column: 1 / -1; } }
-
 </style>
 
 <div class="modal" id="modal" hidden>
@@ -1007,21 +973,15 @@ header.hv2 .ttlbtn { justify-content: center; min-height: 40px; font-size: 13px;
   </div>
 </div>
 <div class="wrap">
-  <header class="t-tsuri hv2">
-    <h1 class="sr">うみのナゾずかん（ウミナゾ）</h1>
-    <div class="hlogo" hidden><svg id="logo" viewBox="0 0 360 150" aria-hidden="true"></svg></div>
-    <div class="hcard">
-      <div class="hbar">
-        <button class="embbtn" id="embbtn" aria-label="タイトルに もどる" title="タイトルに もどる"></button>
-        <button class="pchip" id="pchip" aria-label="プレイヤーを えらぶ"></button>
-        <button class="gearbtn" id="setbtn" aria-label="せってい" aria-expanded="false" aria-controls="setpanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8Z" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10.3 2.8h3.4l.5 2.6 1.9.8 2.2-1.5 2.4 2.4-1.5 2.2.8 1.9 2.6.5v3.4l-2.6.5-.8 1.9 1.5 2.2-2.4 2.4-2.2-1.5-1.9.8-.5 2.6h-3.4l-.5-2.6-1.9-.8-2.2 1.5-2.4-2.4 1.5-2.2-.8-1.9-2.6-.5v-3.4l2.6-.5.8-1.9-1.5-2.2 2.4-2.4 2.2 1.5 1.9-.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
-      </div>
+  <header class="t-tsuri">
+    <h1 class="logo"><span class="sr">うみのナゾずかん（ウミナゾ）</span><svg id="logo" viewBox="0 0 360 150" role="img" aria-label="うみのナゾずかん"></svg></h1>
+    <div class="hright">
       <div class="stats"><span><small>ずかん</small><span class="sv"><b id="zc">0</b>/<span id="zt">0</span></span></span><span><small>つった数</small><b id="tc">0</b></span><span><small>かい</small><b id="coins">0</b></span></div>
-      <div class="setpanel" id="setpanel" hidden>
-        <div class="srow"><span class="slab">はいけい</span><div class="themes" id="themes" role="group" aria-label="はいけいの いろ"><button data-t="suna" aria-label="すなはま"></button><button data-t="umi" aria-label="うみ（あさせから しんかいへ）"></button><button data-t="sango" aria-label="さんごしょう"></button><button data-t="yoru" aria-label="しんかい"></button></div></div>
-        <div class="sgrid"><button class="sndbtn" id="sndbtn" aria-label="こうかおん"></button><button class="sndbtn" id="bgmbtn" aria-label="BGM"></button><button class="sndbtn" id="litebtn" aria-label="かるい ひょうじ"></button></div>
-        <button class="sndbtn ttlbtn" id="ttlbtn" aria-label="タイトルに もどる"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 L12 4 L20 11 V20 H14 V14 H10 V20 H4 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/></svg>タイトルに もどる</button>
-      </div>
+      <div class="hrow"><button class="pchip" id="pchip" aria-label="プレイヤーを えらぶ"></button>
+      <div class="themes" id="themes" role="group" aria-label="はいけいの いろ"><span>はいけい</span><button data-t="suna" aria-label="すなはま"></button><button data-t="umi" aria-label="うみ（あさせから しんかいへ）"></button><button data-t="sango" aria-label="さんごしょう"></button><button data-t="yoru" aria-label="しんかい"></button></div></div>
+      <div class="hrow"><button class="sndbtn" id="sndbtn" aria-label="こうかおん"></button>
+      <button class="sndbtn" id="bgmbtn" aria-label="BGM"></button>
+      <button class="sndbtn" id="litebtn" aria-label="かるい ひょうじ"></button></div>
     </div>
   </header>
 
@@ -3593,7 +3553,7 @@ function taxoLabel(s) {
 const GROUP_SHORT = { "軟骨魚類": "サメ・エイ", "条鰭類": "さかな", "肉鰭類": "シーラカンス", "無顎類": "あごなし", "甲殻類": "エビ・カニ", "鋏角類": "カブトガニ", "軟体動物": "貝・イカ", "刺胞動物": "クラゲなど", "有櫛動物": "クシクラゲ", "棘皮動物": "ウニなど", "尾索動物": "ホヤ", "海綿動物": "カイメン", "環形動物": "ゴカイ", "爬虫類": "カメ・ヘビ", "両生類": "サンショウウオ", "哺乳類": "クジラなど" };
 function taxoShort(s) {
   const g = typeof taxoOf === "function" ? (taxoOf(s) || {}).g : TAXO[s.id];
-  return g ? GROUP_SHORT[g] || "？" : s.r === 5 ? "でんせつ" : "？";
+  return g ? GROUP_SHORT[String(g).replace(/（.*$/, "")] || "？" : s.r === 5 ? "でんせつ" : "？";   // 2026-10-31 「条鰭類（じょうきるい）」の 読みがなを はずして さがす
 }
 /* 本物を とる きまり（2026年10月に しらべた はんい。きまりは 場所や 時代で かわる） */
 const RULE_DATE = "2026年10月21日";
@@ -4164,7 +4124,7 @@ async function connectDb() {
   mode = "db";
   db.collection("players").onSnapshot(async snap => {
     const next = {};
-    snap.docs.forEach(d => { const raw = d.data(), v = raw ? JSON.parse(JSON.stringify(raw)) : raw; if (v && v.name) next[d.id] = { name: v.name, av: v.av || "same", book: v.book || {}, coins: v.coins || 0, bait: v.bait || {}, hr: Number.isFinite(v.hr) ? v.hr : 4, stats: v.stats || {}, sj: v.sj || {}, sjDay: v.sjDay || "", hats: v.hats || {}, hat: v.hat || null, at: v.at || 0 }; });
+    snap.docs.forEach(d => { const raw = d.data(), v = raw ? JSON.parse(JSON.stringify(raw)) : raw; if (v && v.name) next[d.id] = { name: v.name, av: v.av || "same", book: v.book || {}, coins: v.coins || 0, bait: v.bait || {}, hr: Number.isFinite(v.hr) ? v.hr : 4, stats: v.stats || {}, sea: v.sea || "hare", storm: v.storm || 0, kings: v.kings || {}, fruit: v.fruit || 0, fruitAll: v.fruitAll || 0, fruitBy: v.fruitBy || {}, fruitKey: v.fruitKey || null, fruitSeen: v.fruitSeen || {}, umiSel: Array.isArray(v.umiSel) ? v.umiSel.slice(0, 21) : undefined, umiTitle: v.umiTitle || 0, netGot: v.netGot || 0, umiOpened: v.umiOpened || 0, umiTier: Number.isFinite(v.umiTier) ? v.umiTier : (v.umiOpened ? 1 : 0), sj: v.sj || {}, sjDay: v.sjDay || "", hats: v.hats || {}, hat: v.hat || null, rampage: v.rampage || 0, rampGot: v.rampGot || 0, wx: v.wx || null, eq: v.eq || null, rodMax: v.rodMax, at: v.at || 0 }; });
     // first sync: move players kept only on this device into the shared record
     if (snap.empty && Object.keys(players).length && !connectDb.migrated) {
       connectDb.migrated = true;
@@ -4217,7 +4177,6 @@ async function removePlayer(pid) {
   if (mode === "db" && db) { try { await db.doc("players/" + pid).delete(); } catch (e) {} }
   renderAll();
 }
-
 
 /* ---------- きろくの ひきつぎ（かきだし・よみこみ） ---------- */
 let mv = { open: false, out: "", msg: "", ok: false };
@@ -4343,7 +4302,6 @@ try { if (navigator.storage && navigator.storage.persist) navigator.storage.pers
 /* ---------- player screen ---------- */
 function showPlayers(on) {
   $("players").hidden = !on; $("game").hidden = on;
-  document.body.classList.toggle("pscreen", !!on);   // 2026-10-29 だれが あそぶ？の あいだは 上の カード（0の 数字）を かくす
   if (on) { cancelAnimationFrame(raf); S = { st: "idle" }; }
   if (typeof BGM !== "undefined") BGM.update();
 }
@@ -4567,8 +4525,7 @@ function drawScene() {
     o += '<g id="angler"></g>';
     o += bt[1];
   }
-  // 2026-10-29 iPhone（WebKit）で 入れこの svg を 毎コマ うごかすと、かきなおし範囲が ずれて 砂に 横線が のこる。<g> の 移動・拡大に かえる（見た目は 同じ。はみ出しは 切りとる）
-  o += '<clipPath id="fishSc"><rect width="300" height="150"/></clipPath><g id="fishP" transform="translate(0 0) scale(.4)" opacity="0"><g id="fishS" clip-path="url(#fishSc)"></g></g>';
+  o += '<svg id="fishS" x="0" y="0" width="120" height="60" viewBox="0 0 300 150" opacity="0"></svg>';
   o += '<path id="ln" d="" stroke="#ffffffcc" stroke-width="1" fill="none"/>';
   o += '<g id="rings" opacity="0"><ellipse cx="290" cy="91" rx="10" ry="3" fill="none" stroke="#fff" stroke-width="1.5"/><ellipse cx="290" cy="91" rx="20" ry="5" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/></g>';
   o += '<g id="bob" opacity="0"><ellipse cx="0" cy="0" rx="5" ry="7" fill="#fff"/><path d="M-5 -1 A5 7 0 0 1 5 -1Z" fill="#e8413c"/><rect x="-1" y="-13" width="2" height="7" fill="#e8413c"/></g>';
@@ -4606,7 +4563,7 @@ function netPole(pt) {
 }
 function setLine(x2, y2, sag) { netPole([x2, y2]); const x1 = 168, y1 = 22, mx = (x1 + x2) / 2, my = (y1 + y2) / 2 + (sag || 18); $("ln").setAttribute("d", "M" + x1 + " " + y1 + " Q" + mx + " " + my + " " + x2 + " " + y2); }
 function setBob(x, y, show) { const b = $("bob"); b.setAttribute("transform", "translate(" + x + " " + y + ")"); b.setAttribute("opacity", show ? 1 : 0); }
-function fishAt(x, y, w, op) { const f = $("fishP"); if (!f) return; f.setAttribute("transform", "translate(" + (+x).toFixed(2) + " " + (+y).toFixed(2) + ") scale(" + (w / 300).toFixed(4) + ")"); f.setAttribute("opacity", op); }
+function fishAt(x, y, w, op) { const f = $("fishS"); f.setAttribute("x", x); f.setAttribute("y", y); f.setAttribute("width", w); f.setAttribute("height", w / 2); f.setAttribute("opacity", op); }
 
 /* ---------- tools: rods & reels (zukan goals), bait (shells) ---------- */
 const TG = (n) => ({ t: "total", n, txt: "ずかんを " + n + "種 あつめる" });
@@ -5655,13 +5612,9 @@ function cast() {
       if (fly >= 1 && !S.landed) { S.landed = true; SFX.plop(); }
       if (tw && !S.twOn) SFX.nibble(); S.twOn = !!tw;
       const bob = fly < 1 ? byy : 91 + Math.sin(t * 3) * 1.5 + tw;
-      // 2026-10-29 発熱対策：まっている あいだの うきの ゆれは 1コマおきに かく（投げる 動きと アタリの 判定は 毎コマ）
-      S._fr = (S._fr || 0) + 1;
-      if (fly < 1 || tw || S._fr % 2 === 0) {
-        setBob(bx, bob, true); setLine(bx, bob - 12, fly < 1 ? 0 : 14);
-        const near = Math.max(0, (now - S.t0 - S.bite + 1200) / 1200);
-        fishAt(290 - S.w * .9, 215 - near * 30, S.w, Math.min(.45, near * .45));
-      }
+      setBob(bx, bob, true); setLine(bx, bob - 12, fly < 1 ? 0 : 14);
+      const near = Math.max(0, (now - S.t0 - S.bite + 1200) / 1200);
+      fishAt(290 - S.w * .9, 215 - near * 30, S.w, Math.min(.45, near * .45));
       if (now - S.t0 > S.bite) startHook();
     }
     if (S.st === "hook") {
@@ -6427,7 +6380,7 @@ function renderLogo() {
   const bubbles = (n, x0, x1, y0, y1) => { let o = ""; for (let i = 0; i < n; i++) o += '<circle cx="' + (x0 + (i * 53) % (x1 - x0)) + '" cy="' + (y0 + (i * 37) % (y1 - y0)) + '" r="' + (1.5 + i % 3) + '" fill="none" stroke="#fff" stroke-width="1" opacity=".55"/>'; return o; };
   const title = (cx, tagY) => T("うみの", cx, 44, 20, "#ffffff") + T("ナゾずかん", cx, 84, 40, "#ffd84a") +
     '<rect x="' + (cx - 88) + '" y="' + tagY + '" width="176" height="18" rx="9" fill="#0a1a44" opacity=".6"/><text x="' + cx + '" y="' + (tagY + 13) + '" text-anchor="middle" font-family="' + F + '" font-weight="900" font-size="10.5" fill="#ffffff">つって・あつめて・ハカセに なろう</text>';
-  const ukiStamp = (x, y, cid = "ttlFs") => { let e = ""; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2, r = i % 2 ? 24.5 : 27.5; e += (i ? "L" : "M") + (Math.cos(a) * r).toFixed(1) + " " + (Math.sin(a) * r).toFixed(1); }
+  const ukiStamp = (x, y) => { let e = ""; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2, r = i % 2 ? 24.5 : 27.5; e += (i ? "L" : "M") + (Math.cos(a) * r).toFixed(1) + " " + (Math.sin(a) * r).toFixed(1); }
       return '<g transform="translate(' + x + ' ' + y + ') rotate(-16) scale(.9)">' +
         '<clipPath id="lgFs"><circle r="21"/></clipPath>' +
         '<path d="' + e + 'Z" fill="#ff8a3a" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>' +
@@ -6468,7 +6421,13 @@ function renderLogo() {
     o += put("kakurekumanomi", 20, 108, 40) + put("jinbee", 186, 104, 84, true);
     o += '<circle cx="150" cy="134" r="26" fill="url(#lgGlow)"/>' + put("chouchinankou", 128, 118, 46);
     o += '<circle cx="320" cy="132" r="40" fill="#ff4fd8" opacity=".16"/>' + put("kraken", 272, 92, 90, true);
-    o += '</g>' + border + title(182, 96) + ukiStamp(37, 70);
+    o += '</g>' + border + (() => {   // 2026-10-29 表紙と 同じ 組み方（表紙の ロゴを 0.47ばいに して まん中へ。スタンプも 表紙と 同じ 位置・大きさ）
+      const k = .47, lx = 182 - 210 * k, ly = 13;
+      const TX = (txt, y, size, fill, sw, ls, extra) => '<text x="210" y="' + y + '" text-anchor="middle" font-family="' + F + '" font-weight="900" font-size="' + size + '"' + (ls ? ' letter-spacing="' + ls + '"' : '') + ' fill="' + fill + '"' + (sw ? ' stroke="#5a3a1a" stroke-width="' + sw + '" stroke-linejoin="round" paint-order="stroke"' : '') + (extra || '') + '>' + txt + '</text>';
+      const logo = '<g transform="translate(' + lx.toFixed(1) + ' ' + ly + ') scale(' + k + ')">' + TX("うみの", 62, 46, "#ffffff", 13) + TX("ナゾずかん", 150, 84, "#ffd84a", 22, -2) + TX("ナゾずかん", 150, 84, "none", 0, -2, ' stroke="#fff6c0" stroke-width="2" opacity=".6"') + '</g>';
+      const emb = '<g transform="translate(' + (lx + 4.2 * k).toFixed(1) + ' ' + (ly - 22.8 * k).toFixed(1) + ') scale(' + (138.6 * k / 80).toFixed(4) + ') translate(40 34)">' + ukiStamp(0, 0) + '</g>';
+      const tagY = 97, pill = '<rect x="94" y="' + tagY + '" width="176" height="18" rx="9" fill="#0a1a44" opacity=".6"/><text x="182" y="' + (tagY + 13) + '" text-anchor="middle" font-family="' + F + '" font-weight="900" font-size="10.5" fill="#ffffff">つって・あつめて・ハカセに なろう</text>';
+      return logo + emb + pill; })();
     el.innerHTML = o;
   
 }
@@ -6532,7 +6491,7 @@ function mapArt() {
 }
 function renderSpots() {
   const bk = book(), host = $("spots");
-  let o = mapArt(), fl = "";
+  let o = mapArt();
   Object.entries(MAP_SPOTS).forEach(([k, m]) => {
     const sp = SPOTS[k], got = sp.ids.filter(id => bk[id]).length, on = k === spot, dark = k === "deep" || k === "river";
     const fs = sp.name.length > 4 ? 10 : 11, w = Math.max(sp.name.length * fs + 12, 48);
@@ -6541,12 +6500,11 @@ function renderSpots() {
     o += '<g class="mlab" transform="translate(' + m.lx + ' ' + m.ly + ')"><rect x="' + (-w / 2) + '" y="-14" width="' + w + '" height="30" rx="10" fill="' + (on ? '#ffd84a' : '#fffaf0') + '" stroke="' + (on ? '#fff' : '#6a4e34') + '" stroke-width="' + (on ? 2.5 : 1.2) + '" opacity="' + (on ? 1 : .92) + '"/>' +
       '<text y="0" text-anchor="middle" font-family="&quot;Zen Maru Gothic&quot;, sans-serif" font-weight="900" font-size="' + fs + '" fill="#5a3a1a">' + sp.name + '</text>' +
       '<text y="12" text-anchor="middle" font-family="&quot;M PLUS Rounded 1c&quot;, sans-serif" font-weight="800" font-size="8.5" fill="#8a6a44">' + got + '/' + sp.ids.length + '</text></g>';
-    // 2026-10-29 発熱対策：ゆれる うきは ちずの 外に 出し、GPUで 動かす（ちず全体を 毎コマ かきなおさない）
-    if (on) fl = '<div class="mfloatH" style="left:calc(3px + (100% - 6px) * ' + (m.lx / 360).toFixed(4) + ');top:calc(3px + (100% - 6px) * ' + ((m.ly - 22) / 220).toFixed(4) + ')"><svg viewBox="-8 -16 16 24" aria-hidden="true"><path d="M0 -14 v6" stroke="#5a3a1a" stroke-width="1.5"/><circle r="6" fill="#ff5a4a" stroke="#fff" stroke-width="1.5"/><path d="M-6 0 a6 6 0 0 0 12 0z" fill="#fff"/></svg></div>';
+    if (on) o += '<g class="mfloat" transform="translate(' + m.lx + ' ' + (m.ly - 22) + ')"><path d="M0 -14 v6" stroke="#5a3a1a" stroke-width="1.5"/><circle r="6" fill="#ff5a4a" stroke="#fff" stroke-width="1.5"/><path d="M-6 0 a6 6 0 0 0 12 0z" fill="#fff"/></g>';
     o += '</g>';
   });
   const cur = SPOTS[spot];
-  host.innerHTML = '<div class="smapw"><svg class="smap" viewBox="0 0 360 220" role="group" aria-label="つり場を えらぶ ちず">' + o + '</svg>' + fl + '</div><div class="snow"><b>' + cur.name + (cur.yomi ? '<small>（' + cur.yomi + '）</small>' : '') + '</b> ' + cur.desc + ' ・ ' + cur.ids.filter(id => bk[id]).length + '/' + cur.ids.length + '<span>ちずの 場所を タップすると つり場が かわるよ</span></div>';
+  host.innerHTML = '<svg class="smap" viewBox="0 0 360 220" role="group" aria-label="つり場を えらぶ ちず">' + o + '</svg><div class="snow"><b>' + cur.name + (cur.yomi ? '<small>（' + cur.yomi + '）</small>' : '') + '</b> ' + cur.desc + ' ・ ' + cur.ids.filter(id => bk[id]).length + '/' + cur.ids.length + '<span>ちずの 場所を タップすると つり場が かわるよ</span></div>';
   host.querySelectorAll(".mspot").forEach(g => {
     const go = () => { if (host.classList.contains("locked") || S.st === "wait" || S.st === "hook" || S.st === "reel") return; if (spot === g.dataset.k) return; spot = g.dataset.k; resetStage(); renderSpots(); renderTools(); };
     g.onclick = go; g.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
@@ -6554,11 +6512,6 @@ function renderSpots() {
 }
 let renderLater = false;
 function lockSpots(on) { const h = $("spots"); if (h) h.classList.toggle("locked", !!on); if (!on && renderLater) { renderLater = false; setTimeout(renderAll, 0); } }
-/* 2026-10-29 発熱対策：ずかんの カードの キラキラ（背景を ずらす アニメ）は 毎コマ かきなおしが 要る。画面の 外の カードは 止めておく */
-const zIO = "IntersectionObserver" in window ? new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle("zoff", !e.isIntersecting)), { rootMargin: "120px 0px" }) : null;
-let zObsSig = null;
-function zObs() { if (!zIO) return; const host = $("zukan"); if (!host || zObsSig === host.firstElementChild) return; zObsSig = host.firstElementChild;
-  zIO.disconnect(); host.querySelectorAll(":scope > button").forEach(b => { b.classList.add("zoff"); zIO.observe(b); }); }
 const zqNorm = t => String(t || "").normalize("NFKC").replace(/[\u3041-\u3096]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60)).replace(/[\s　・]/g, "").toLowerCase();
 let zqT = null;
 function zqWire() {
@@ -6601,7 +6554,6 @@ function renderBook() {
   const zsig = JSON.stringify([cur, zf, list.map(s => s.id), list.map(s => bk[s.id] ? bk[s.id].n : 0), [...newIds]]);
   if (zsig !== renderBook.sig) { renderBook.sig = zsig; $("zukan").innerHTML = list.map(s => { const r = bk[s.id]; return '<button data-id="' + s.id + '" class="' + (r ? "" : "lock") + '" aria-label="' + (r ? s.name : "未発見 No." + s.no) + '">' + (newIds.has(s.id) ? '<span class="new">NEW</span>' : "") + (r ? '<span class="cnt">×' + r.n + '</span>' : "") + cardHTML(s, { sil: !r }) + '</button>'; }).join(""); }
   $("zukan").querySelectorAll("button").forEach(b => b.onclick = () => { const id = b.dataset.id; if (!bk[id]) return; newIds.delete(id); zList = list.filter(x => bk[x.id]).map(x => x.id); openCard(id); });
-  zObs();   // 2026-10-29 発熱対策：画面に 見えている カードだけ キラキラさせる
   $("zdetail").innerHTML = (zq ? '<div class="zqhint">「' + escB(($("zq") || {}).value) + '」で さがした：つった 生きもの ' + list.length + 'しゅ' + (zqMiss ? '。まだ つっていない 中にも ' + zqMiss + 'しゅ いるみたい…！' : '') + '</div>' : '') + '<div class="small"><b>' + list.length + '種</b> 表示中（うち つった ' + gotN + '種）' + (list.length ? '' : ' … この 条件の 生きものは いないよ') + '<br>つったカードを タップすると 大きく 見られるよ。</div>';
 }
 let zList = [], zOpen = null, zFocus = null;
@@ -6767,9 +6719,7 @@ function umiStep(now) {
       a.y += (by + Math.sin(t * .5 + a.ph) * H * .03 - a.y) * .6 * dt; }
     a.el.classList.toggle("flip", a.dir < 0);
     const sq = a.mode === "jelly" ? 1 + Math.sin(t * 1.4 + a.ph) * .05 : 1, kk = k / UMI_K;
-    // 2026-10-29 発熱対策：かわった ときだけ 書きこむ（重なり順を 毎コマ 書くと 画面全体の かきなおしが おきる）
-    const zi = Math.round(a.z * 20), op = a.flat ? "1" : Math.min(1, .5 + .5 * a.z).toFixed(2);
-    if (a._zi !== zi) { a._zi = zi; a.el.style.zIndex = zi; } if (a._op !== op) { a._op = op; a.el.style.opacity = op; }
+    a.el.style.zIndex = Math.round(a.z * 100); a.el.style.opacity = a.flat ? 1 : Math.min(1, .5 + .5 * a.z).toFixed(2);
     a.el.style.transform = "translate3d(" + (a.x - a.box / 2).toFixed(1) + "px," + (a.y - a.box / 4).toFixed(1) + "px,0) scale(" + kk.toFixed(3) + "," + (kk * sq).toFixed(3) + ")";
   }
   requestAnimationFrame(umiStep);
@@ -6892,8 +6842,15 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
 
 /* B 大水槽：光の 網（コースティクス）・強い 光の すじ・きらめく つぶ・見上げる 親子の かげ */
 #ttl.pb { background: linear-gradient(180deg, #7ad8f4 0%, #2a9ad6 18%, #1468b0 45%, #0b3a78 75%, #061a40 100%) !important; }
-#ttl .caus { position: absolute; left: -20%; top: 0; width: 140%; height: 34%; opacity: .55; will-change: transform; animation: ttlCaus 14s ease-in-out infinite alternate; }
-#ttl .caus.b2 { opacity: .35; animation-duration: 19s; animation-direction: alternate-reverse; }
+#ttl .hz { position: absolute; display: block; pointer-events: none; }
+#ttl .hz1 { left: -30%; top: -32%; width: 170%; height: 90%; background: radial-gradient(ellipse 50% 50% at 58% 42%, #f4feff 0%, #d0f6fff0 20%, #98e2ffa8 42%, #5cc0f04d 62%, #4ab0e800 80%); animation: ttlHz 14s ease-in-out infinite alternate; }
+#ttl .hz2 { left: 30%; top: -12%; width: 90%; height: 48%; background: radial-gradient(ellipse 50% 50% at 50% 45%, #ffffffe6 0%, #e0faff99 30%, #a8e8ff00 70%); animation: ttlHz2 9s ease-in-out infinite alternate; }
+#ttl .hz3 { left: -25%; top: 8%; width: 80%; height: 42%; background: radial-gradient(ellipse 50% 50% at 50% 50%, #c8f4ff59 0%, #9ae0ff26 45%, #9ae0ff00 72%); animation: ttlHz2 12s ease-in-out infinite alternate-reverse; }
+#ttl .hz1, #ttl .hz2, #ttl .hz3 { animation: none !important; opacity: .92; }   /* 2026-10-29 光の ゆらぎは とめる（うごかない 光） */
+@keyframes ttlHz { from { transform: translateX(-3%); opacity: .85; } to { transform: translateX(3%); opacity: 1; } }
+@keyframes ttlHz2 { from { transform: translate(-4%, 0) scale(1); opacity: .7; } to { transform: translate(4%, 2%) scale(1.06); opacity: 1; } }
+#ttl .caus { position: absolute; left: -20%; top: 0; width: 140%; height: 34%; opacity: .32; will-change: transform; animation: ttlCaus 14s ease-in-out infinite alternate; }
+#ttl .caus.b2 { opacity: .18; animation-duration: 19s; animation-direction: alternate-reverse; }
 @keyframes ttlCaus { from { transform: translateX(-4%); } to { transform: translateX(4%); } }
 #ttl .rays.r2 { opacity: .35; animation-duration: 17s; animation-direction: alternate-reverse; }
 #ttl .spk { position: absolute; width: var(--z); height: var(--z); border-radius: 50%; background: #fffbe0; box-shadow: 0 0 6px 2px #fffbe088; opacity: .2; animation: ttlTw var(--d) ease-in-out infinite alternate; animation-delay: var(--dl); }
@@ -6906,7 +6863,7 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
 /* C：夕やけの 桟橋 */
 /* 共通 */
 #ttl .center { z-index: 5; position: absolute; left: 0; right: 0; top: 30%; display: grid; justify-items: center; gap: 10px; pointer-events: none; }
-#ttl .logo { display: block; width: min(86vw, 420px); filter: drop-shadow(0 6px 0 #0003); }   /* 2026-10-29 発熱対策：影（filter）つきの 絵そのものは 動かさない */
+#ttl .logo { display: block; width: min(81.3vw, 396px); filter: drop-shadow(0 6px 0 #0003); }   /* 2026-10-29 発熱対策：影（filter）つきの 絵そのものは 動かさない */
 @keyframes ttlIn { from { transform: scale(.2) translateY(40px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
 @keyframes ttlBob { 50% { transform: translateY(-6px); } }
 #ttl .tag { font-weight: 900; font-size: 15px; color: #fff; background: #0a2a5a66; border-radius: 99px; padding: 4px 14px; letter-spacing: .06em; animation: ttlFade 1s .6s both; }
@@ -6933,7 +6890,8 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
 #ttl.rest, #ttl.rest * { animation-play-state: paused !important; }   /* 3分 さわらないと 動きを 止めて 休む */
 #ttl .emb { position: absolute; left: 1%; top: -12%; width: 33%; z-index: 1; filter: drop-shadow(0 6px 0 #0003); }
 #ttl .emb svg { display: block; width: 100%; height: auto; }
-#ttl .center { top: 30%; }
+#ttl .center { top: 45%; }   /* 人の 目は まん中より 少し 上を「まん中」と 感じるので 45% に */
+#ttl .lw { margin-top: calc(min(81.3vw, 396px) * -0.2262); }   /* 2026-10-29 「うみのナゾずかん」の 文字の まん中を 画面の 高さの まん中に（ロゴの 高さの 半分だけ 上へ） */
 </style>
 <script>
 (() => {
@@ -6946,11 +6904,11 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
   // ウミナゾの エンブレム（ゲーム内の ロゴと 同じ うきの スタンプ）
   const EMB = (() => { const F = '&quot;Zen Maru Gothic&quot;, &quot;M PLUS Rounded 1c&quot;, sans-serif';
   const ET = (x, y, size) => '<text x="' + x + '" y="' + y + '" text-anchor="middle" font-family="' + F + '" font-weight="900" font-size="' + size + '" stroke="#5a3a1a" stroke-width="' + size * .3 + '" stroke-linejoin="round" paint-order="stroke" fill="#fff">ウミナゾ</text>';
-  const ukiStamp = (x, y, cid = "ttlFs") => { let e = ""; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2, r = i % 2 ? 24.5 : 27.5; e += (i ? "L" : "M") + (Math.cos(a) * r).toFixed(1) + " " + (Math.sin(a) * r).toFixed(1); }
+  const ukiStamp = (x, y) => { let e = ""; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2, r = i % 2 ? 24.5 : 27.5; e += (i ? "L" : "M") + (Math.cos(a) * r).toFixed(1) + " " + (Math.sin(a) * r).toFixed(1); }
       return '<g transform="translate(' + x + ' ' + y + ') rotate(-16) scale(.9)">' +
-        '<clipPath id="' + cid + '"><circle r="21"/></clipPath>' +
+        '<clipPath id="ttlFs"><circle r="21"/></clipPath>' +
         '<path d="' + e + 'Z" fill="#ff8a3a" stroke="#fff" stroke-width="2.4" stroke-linejoin="round"/>' +
-        '<circle r="21" fill="#bff0ff"/><g clip-path="url(#' + cid + ')"><rect x="-22" y="4" width="44" height="20" fill="#2a8ac8"/><path d="M-22 4 q5.5 -3 11 0 t11 0 t11 0 t11 0" stroke="#fff" stroke-width="1.6" fill="none"/>' +
+        '<circle r="21" fill="#bff0ff"/><g clip-path="url(#ttlFs)"><rect x="-22" y="4" width="44" height="20" fill="#2a8ac8"/><path d="M-22 4 q5.5 -3 11 0 t11 0 t11 0 t11 0" stroke="#fff" stroke-width="1.6" fill="none"/>' +
         '<ellipse cx="0" cy="6" rx="15" ry="3" fill="none" stroke="#fff" stroke-width="1.2" opacity=".75"/><ellipse cx="0" cy="6.5" rx="9" ry="1.8" fill="none" stroke="#fff" stroke-width="1.2" opacity=".9"/>' +
         '<circle cx="11" cy="-11" r="4" fill="#ffd84a"/></g>' +
         // うき本体（アンテナ・赤い 頭・黒い おび・白い どう・足）
@@ -6964,7 +6922,6 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
         // リボン
         '<path d="M-36 12 L-28 22 L-36 31 L-22 31 L-22 15Z M36 12 L28 22 L36 31 L22 31 L22 15Z" fill="#c8601a" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>' +
         '<path d="M-29 14 Q0 10 29 14 L29 29 Q0 25 -29 29Z" fill="#ff8a3a" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>' + ET(0, 25.5, 11.5) + '</g>'; };
-    window.umiEmblem = cid => '<svg viewBox="-40 -34 80 70" aria-hidden="true">' + ukiStamp(0, 0, cid) + '</svg>';
     return '<div class="emb" aria-hidden="true"><svg viewBox="-40 -34 80 70">' + ukiStamp(0, 0) + '</svg></div>'; })();
   const W = window.innerWidth;
   // 2026-11-02 タイトルに およがせる 生きもの（その 端末で さいごに 遊んだ 子が「タイトルで およがせる」に して いる とき）
@@ -6975,8 +6932,8 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
     const IMG = {}, img = id => { if (!IMG[id]) IMG[id] = byId(id) ? "data:image/svg+xml;charset=utf-8," + encodeURIComponent(creatureSVG(byId(id), { nobg: true }).replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" ')) : umiSrc(umiById(id)); return IMG[id]; };
     const MINE = ttlMine();
     const TROP = ["kiirohagi", "kakurekumanomi", "nanyouhagi", "kingyohanadai", "purplequeen", "sazanamiyakko", "tsunodashi", "chouchouuo", "hanagoi", "rurisuzumedai", "nishikiyakko", "tatejimakinchaku", "mongarakawahagi", "hatatatedai", "fueyakkodai", "hamakumanomi", "harisenbon", "aoumigame"].filter(id => byId(id));
-    const BIG = ["jinbee", "manta", "shirowani", "kuromaguro", "rouninaji"].filter(id => byId(id));
-    const SZ = { jinbee: 2.4, manta: 1.8, shirowani: 1.6, kuromaguro: 1.4, rouninaji: 1.1, aoumigame: 1.1 };
+    const BIG = ["jinbee", "manta", "shachi", "kuromaguro", "rouninaji"].filter(id => byId(id));
+    const SZ = { jinbee: 2.4, manta: 1.8, shachi: 1.9, purplejelly: .9, kuromaguro: 1.4, rouninaji: 1.1, aoumigame: 1.1 };
     const pick = a => a[Math.floor(Math.random() * a.length)];
     // 光：光の 網（2まい）と 光の すじ（2まい）
     const caus = cls => { let c = '<svg class="caus ' + cls + '" viewBox="0 0 600 160" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#ffffff" stroke-linecap="round">';
@@ -6984,21 +6941,23 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
       for (let k = 0; k < 26; k++) { const x = rnd(0, 600), y = rnd(0, 140); c += '<path d="M' + x.toFixed(0) + ' ' + y.toFixed(0) + ' q12 -10 24 0 q-6 14 -24 0" stroke-width="1.6" opacity=".6"/>'; }
       return c + "</g></svg>"; };
     const rays = cls => { let r = '<svg class="rays ' + cls + '" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true">';
-      for (let k = 0; k < 9; k++) { const x = -80 + k * 58 + rnd(-10, 10), w = rnd(18, 46); r += '<path d="M' + (x + 30) + ' 0 L' + (x + 30 + w * .5) + ' 0 L' + (x + w * 1.8) + ' 300 L' + (x - w * .7) + ' 300 Z" fill="#fffef0" opacity="' + rnd(.12, .26).toFixed(2) + '"/>'; }
+      // 2026-10-29 さしこむ 光は 3本だけ（太さと こさを 少し かえる）
+      [[10, 46, .24], [150, 34, .18], [270, 54, .26]].forEach(([x, w, op]) => { r += '<path d="M' + (x + 30) + ' 0 L' + (x + 30 + w * .5) + ' 0 L' + (x + w * 1.8) + ' 300 L' + (x - w * .7) + ' 300 Z" fill="#fffef0" opacity="' + op + '"/>'; });
       return r + "</svg>"; };
-    let o = '<div class="layer">' + rays("") + rays("r2") + caus("") + caus("b2");
+    // 2026-10-29 光は すじではなく、水面から ふんわり 広がる あかるさ（海の 底までは とどかない）
+    let o = '<div class="layer"><i class="hz hz1"></i><i class="hz hz2"></i><i class="hz hz3"></i>' + caus("") + caus("b2");
     for (let k = 0; k < 26; k++) { const d = rnd(2.4, 5); o += '<i class="spk" style="left:' + rnd(2, 98).toFixed(1) + '%;top:' + rnd(2, 70).toFixed(1) + '%;--z:' + rnd(2, 4).toFixed(1) + 'px;--d:' + d.toFixed(1) + 's;--dl:-' + rnd(0, d).toFixed(1) + 's"></i>'; }
     o += "</div>";
     const fish = (id, sc, op, d, y) => { const w = 150 * (SZ[id] || 1) * sc, right = Math.random() < .5, x0 = right ? -w - 20 : W + 20, x1 = right ? W + 20 : -w - 20;
       return '<div class="sw2" style="--y:' + y.toFixed(0) + '%;--x0:' + x0.toFixed(0) + 'px;--x1:' + x1.toFixed(0) + 'px;--d:' + d.toFixed(1) + 's;--dl:-' + rnd(0, d).toFixed(1) + 's"><div style="--w:' + w.toFixed(0) + 'px;--o:' + op + ';--wd:' + rnd(2.4, 4).toFixed(1) + 's"><div style="--f:' + (right ? 1 : -1) + '"><img alt="" src="' + img(id) + '"></div></div></div>'; };
     const school = (id, n, sc, op, d, y) => { const w = 150 * sc, sw = w * 7, sh = w * 2.6, right = Math.random() < .5, x0 = right ? -sw : W, x1 = right ? W + 20 : -sw - 20;
-      let g = '<div class="school" style="--y:' + y.toFixed(0) + '%;--sw:' + sw.toFixed(0) + 'px;--sh:' + sh.toFixed(0) + 'px;--x0:' + x0.toFixed(0) + 'px;--x1:' + x1.toFixed(0) + 'px;--d:' + d.toFixed(1) + 's;--dl:-' + rnd(0, d).toFixed(1) + 's">';
-      for (let k = 0; k < n; k++) g += '<img alt="" src="' + img(id) + '" style="left:' + rnd(0, sw - w).toFixed(0) + 'px;top:' + rnd(0, sh - w / 2).toFixed(0) + 'px;--w:' + (w * rnd(.85, 1.1)).toFixed(0) + 'px;--o:' + op + ';--wd:' + rnd(1.8, 3).toFixed(1) + 's;transform:scaleX(' + (right ? 1 : -1) + ')">';
-      return g + "</div>"; };
+      let g = '<div class="school" style="--y:' + y.toFixed(0) + '%;--sw:' + sw.toFixed(0) + 'px;--sh:' + sh.toFixed(0) + 'px;--x0:' + x0.toFixed(0) + 'px;--x1:' + x1.toFixed(0) + 'px;--d:' + d.toFixed(1) + 's;--dl:-' + rnd(0, d).toFixed(1) + 's"><div style="position:absolute;inset:0;transform:scaleX(' + (right ? 1 : -1) + ')">';   // 2026-10-29 むきは 内がわの 箱で 反転（img の transform は ゆれに 上書きされて いた）
+      for (let k = 0; k < n; k++) g += '<img alt="" src="' + img(id) + '" style="left:' + rnd(0, sw - w).toFixed(0) + 'px;top:' + rnd(0, sh - w / 2).toFixed(0) + 'px;--w:' + (w * rnd(.85, 1.1)).toFixed(0) + 'px;--o:' + op + ';--wd:' + rnd(1.8, 3).toFixed(1) + 's">';
+      return g + "</div></div>"; };
     // おく
     o += '<div class="layer" style="z-index:1">';
-    if (!MINE) for (let k = 0; k < 16; k++) o += fish(pick(TROP), rnd(.2, .3), .45, rnd(48, 64), rnd(6, 88));   // 2026-10-29 魚を 半分に
-    if (byId("maiwashi")) o += school("maiwashi", 26, .14, .5, 56, rnd(10, 30)) + school("maiwashi", 22, .14, .45, 64, rnd(55, 75));
+    if (!MINE) for (let k = 0; k < 8; k++) o += fish(pick(TROP), rnd(.2, .3), .45, rnd(48, 64), rnd(6, 88));   // 2026-10-29 魚を 半分に
+    if (byId("maiwashi")) o += school("maiwashi", 13, .14, .5, 56, rnd(10, 30)) + school("maiwashi", 11, .14, .45, 64, rnd(55, 75));
     o += '</div><div class="layer" style="z-index:2">';
     if (MINE) {   // 自分の ふしぎな 海の 生きもの：大きさで 前と 中に わける。歩く 生きものは 底を ゆっくり、クラゲは ただよう
       const n = MINE.length; let front = "";
@@ -7007,12 +6966,13 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
         const h = fish(s.id, z >= 1.7 ? .9 : 1, 1, slow ? rnd(70, 100) : rnd(26, 40), y); if (z >= 1.7) front += h; else o += h; });
       o += '</div><div class="layer" style="z-index:3">' + front + '</div>';
     } else {
-    for (let k = 0; k < 16; k++) o += fish(pick(TROP), rnd(.4, .58), .8, rnd(28, 40), rnd(4, 90));
-    if (byId("debasuzumedai")) o += school("debasuzumedai", 14, .26, .9, 34, rnd(60, 78));
-    if (byId("kingyohanadai")) o += school("kingyohanadai", 12, .3, .9, 30, rnd(12, 30));
+    for (let k = 0; k < 8; k++) o += fish(pick(TROP), rnd(.4, .58), .8, rnd(28, 40), rnd(4, 90));
+    if (byId("debasuzumedai")) o += school("debasuzumedai", 7, .26, .9, 34, rnd(60, 78));
+    if (byId("kingyohanadai")) o += school("kingyohanadai", 6, .3, .9, 30, rnd(12, 30));
+    if (byId("purplejelly")) o += fish("purplejelly", .85, .9, rnd(70, 90), rnd(15, 40)) + fish("purplejelly", .6, .75, rnd(80, 100), rnd(55, 75));   // 2026-10-29 クラゲは ゆっくり ただよう
     o += '</div><div class="layer" style="z-index:3">';
     o += fish("jinbee", 1, 1, 34, 52) + fish(BIG[1] || "jinbee", .95, 1, 26, 22);
-    for (let k = 0; k < 6; k++) o += fish(k < 2 ? pick(BIG) : pick(TROP), k < 2 ? rnd(.7, .9) : rnd(.8, 1), 1, rnd(16, 24), rnd(8, 86));
+    for (let k = 0; k < 3; k++) o += fish(k < 2 ? pick(BIG.filter(id => id !== "jinbee" && id !== BIG[1])) : pick(TROP),   /* ジンベエは 1ぴきだけ */ k < 2 ? rnd(.7, .9) : rnd(.8, 1), 1, rnd(16, 24), rnd(8, 86));
     o += "</div>";
     }
     let bubs = '<div class="layer" style="z-index:4">'; for (let i = 0; i < 10; i++) { const d = rnd(9, 16); bubs += '<i class="bub" style="left:' + rnd(2, 96).toFixed(1) + '%;--z:' + rnd(6, 14).toFixed(0) + 'px;--d:' + d.toFixed(1) + 's;--dl:-' + rnd(0, d).toFixed(1) + 's"></i>'; } bubs += "</div>";
@@ -7024,14 +6984,14 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
     if (document.getElementById("ttl")) return;
     const ov = document.createElement("div"); ov.id = "ttl"; ov.className = "pb"; ov.setAttribute("role", "button"); ov.setAttribute("aria-label", "うみのナゾずかん タップして はじめる");
     ov.innerHTML = patB() + '<div class="tap">タップして はじめる</div><button class="ttlsnd" type="button" aria-label="おとを ならす"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 8.5q2.2 3.5 0 7M18.6 6q4 6 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>おと</button>';
-    // 2026-10-29 スマホは さいしょに タップするまで 音を 出せないので、タイトルだけ 先に 音を つける ボタン
+    // スマホは さいしょに タップするまで 音を 出せないので、タイトルだけ 先に 音を つける ボタン
     const sbn = ov.querySelector(".ttlsnd");
     const sndOn = () => { try { if (typeof BGM !== "undefined" && BGM.on && BGM.song === "minato" && SFX.ctx() && SFX.ctx().state === "running") sbn.hidden = true; } catch (er) {} };
     sbn.addEventListener("click", e => { e.stopPropagation(); try { if (!BGM.on) { BGM.toggle(); if (typeof renderBgm === "function") renderBgm(); } BGM.update(); } catch (er) {} setTimeout(sndOn, 300); });
     if (fromBtn === true) setTimeout(sndOn, 300);
     ov.dataset.sig = ttlSig(); document.body.appendChild(ov);
     setTimeout(() => { if (ov.isConnected) ov.classList.add("rest"); }, 180000);
-    if (fromBtn === true) try { if (typeof BGM !== "undefined") BGM.update(); } catch (er) {}   // もどったときは 漁港の朝に きりかえ（さいしょは タップまで 音の しくみを 作らない：iPhone 対策）
+    if (fromBtn === true) try { if (typeof BGM !== "undefined") BGM.update(); } catch (er) {}   // もどったときは 漁港の朝に きりかえ
     ov.addEventListener("click", e => {
       if (ov.classList.contains("go")) return;
       const r = document.createElement("i"); r.className = "rip"; r.style.left = e.clientX + "px"; r.style.top = e.clientY + "px"; ov.appendChild(r);
@@ -7043,16 +7003,11 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
   window.showTitle = showTitle;
   window.ttlRefresh = () => { const ov = document.getElementById("ttl"); if (!ov || ov.dataset.leaving || ov.classList.contains("go") || ov.dataset.sig === ttlSig()) return;
     ov.querySelectorAll(":scope > .layer, :scope > .center").forEach(e => e.remove()); ov.insertAdjacentHTML("afterbegin", patB()); ov.dataset.sig = ttlSig(); };
-  // タップで はじめる ときは、漁港の朝を 一瞬 ならさずに そのまま ゲームの 曲へ
   window.addEventListener("pointerdown", e => { const t = document.getElementById("ttl"); if (t && t.contains(e.target) && !e.target.closest(".ttlsnd")) t.dataset.leaving = "1"; }, true);
   showTitle();
   // 2026-10-29 タイトルに もどる：ボタンと、上の ロゴを タップ
-  // 2026-10-29 ヘッダー v2：左の エンブレム と、せっていの 中の ボタンで タイトルへ。歯車で せっていを 開け閉め
-  const sp = document.getElementById("setpanel"), sb = document.getElementById("setbtn");
-  const setOpen = on => { if (!sp || !sb) return; sp.hidden = !on; sb.setAttribute("aria-expanded", String(on)); };
-  if (sb) sb.onclick = () => setOpen(sp.hidden);
-  const tb = document.getElementById("ttlbtn"); if (tb) tb.onclick = () => { setOpen(false); showTitle(true); };
-  const eb = document.getElementById("embbtn"); if (eb) { eb.innerHTML = window.umiEmblem("hdFs"); eb.onclick = () => { setOpen(false); showTitle(true); }; }
+  const tb = document.getElementById("ttlbtn"); if (tb) tb.onclick = () => showTitle(true);
+  const lg = document.querySelector("header h1.logo"); if (lg) { lg.style.cursor = "pointer"; lg.title = "タイトルに もどる"; lg.addEventListener("click", () => showTitle(true)); }
 })();
 </script>
 
