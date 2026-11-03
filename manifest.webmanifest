@@ -1,0 +1,14 @@
+{
+  "name": "うみのナゾずかん",
+  "short_name": "ウミナゾ",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#7fd0ea",
+  "theme_color": "#7fd0ea",
+  "lang": "ja",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
