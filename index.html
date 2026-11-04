@@ -15,12 +15,20 @@
 <link rel="icon" type="image/png" href="icon-192.png">
 <style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
 <!-- 2026-11-03 時計の 帯には、うしろの 海と おなじ もようを かぶせる（スクロールしても 中身が 時計の うらに 入りこまない。時計の 文字は 黒のまま） -->
-<style>body::after{content:"";position:fixed;left:0;right:0;top:0;height:env(safe-area-inset-top,0px);z-index:60;background:inherit;background-image:none;pointer-events:none}
-body[data-theme="umi"]::after{background:#c8f3f6;background-image:radial-gradient(circle at 12px 12px,#ffffff2e 2.5px,transparent 3px),radial-gradient(circle at 36px 36px,#ffffff1f 1.8px,transparent 2.3px),linear-gradient(180deg,#c8f3f6 0,#7fd0ea 14%,#3a9bd2 34%,#1d6aae 56%,#11407f 76%,#081634 100%);background-size:48px 48px,48px 48px,100% 100vh}
-body[data-theme="sango"]::after{background:#d9fbf6;background-image:radial-gradient(circle at 12px 12px,#ff9fb04d 3px,transparent 3.5px),radial-gradient(circle at 36px 36px,#ffffff59 2.5px,transparent 3px),linear-gradient(180deg,#d9fbf6 0,#9ff0e8 40%,#5fd0d8 100%);background-size:48px 48px,48px 48px,100% 100vh}
-body[data-theme="yoru"]::after{background:#13306a;background-image:radial-gradient(circle at 10px 14px,#9ff6ff66 1.2px,transparent 1.8px),radial-gradient(circle at 34px 38px,#ffffff40 1px,transparent 1.6px),linear-gradient(180deg,#13306a 0,#0a1a44 45%,#040a1e 100%);background-size:48px 48px,52px 52px,100% 100vh}</style>
+<style>/* 2026-11-03 Safari の タブで あそぶ ときは、時計の まわりの 色を Safari が 背景の 色から えらぶので、背景の いちばん 上の 色に そろえる */
+html body[data-theme="umi"]{background-color:#c8f3f6}html body[data-theme="sango"]{background-color:#d9fbf6}html body[data-theme="yoru"]{background-color:#13306a}
+/* 2026-11-03 すばやく タップしても 画面が 大きく ならないように（ゆびで 広げる ズームは そのまま） */
+html,body{touch-action:manipulation}
+/* 2026-11-04 上に とまった 細い バー：Safari は この バーの 色で 時計の まわりを ぬり、スクロールした 中身も この 下に かくれる */
+#topcap{position:fixed;left:0;right:0;top:0;height:calc(env(safe-area-inset-top,0px) + 8px);z-index:60;pointer-events:none;background-color:#f7f1dc;box-shadow:0 2px 6px #0000001f}
+body[data-theme="umi"] #topcap{background-color:#c8f3f6;background-image:radial-gradient(circle at 12px 12px,#ffffff2e 2.5px,transparent 3px),radial-gradient(circle at 36px 36px,#ffffff1f 1.8px,transparent 2.3px),linear-gradient(180deg,#c8f3f6 0,#7fd0ea 14%,#3a9bd2 34%,#1d6aae 56%,#11407f 76%,#081634 100%);background-size:48px 48px,48px 48px,100% 100vh}
+body[data-theme="sango"] #topcap{background-color:#d9fbf6;background-image:radial-gradient(circle at 12px 12px,#ff9fb04d 3px,transparent 3.5px),radial-gradient(circle at 36px 36px,#ffffff59 2.5px,transparent 3px),linear-gradient(180deg,#d9fbf6 0,#9ff0e8 40%,#5fd0d8 100%);background-size:48px 48px,48px 48px,100% 100vh}
+body[data-theme="yoru"] #topcap{background-color:#13306a;background-image:radial-gradient(circle at 10px 14px,#9ff6ff66 1.2px,transparent 1.8px),radial-gradient(circle at 34px 38px,#ffffff40 1px,transparent 1.6px),linear-gradient(180deg,#13306a 0,#0a1a44 45%,#040a1e 100%);background-size:48px 48px,52px 52px,100% 100vh}
+.a2hs .a2os{margin-top:4px}.a2hs .a2os b{font-size:12.5px}.a2hs ol{margin:2px 0 0;padding-left:1.4em}.a2hs .a2warn{margin-top:4px;color:#8a4a10;font-weight:700}
+</style>
 </head>
 <body>
+<div id="topcap" aria-hidden="true"></div>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@700;900&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap">
 <style>
 /* Layout: fishing stage on top (scene + one big action button), spot tabs above it, card zukan below. Wide: stage left, zukan right. Single deliberate sea-at-dusk theme. */
@@ -66,6 +74,7 @@ h2 { font-family: var(--display); font-weight: 900; font-size: 17px; margin: 0; 
 
 .stage { position: relative; border-radius: 22px; overflow: hidden; border: 4px solid #ffffff; box-shadow: 0 4px 0 #e2cfa0; user-select: none; touch-action: manipulation; }
 .stage > svg { display: block; width: 100%; height: auto; }
+#scene { will-change: transform; }   /* 2026-10-29（2026-11-04 うつした）iPhone で 毎コマ 一部だけ かきなおすと 砂に 1点分の 横線が のこる。つり場の 絵を 1まいの 層に して、かきなおしの はばを ずらさない */
 .msg { position: absolute; left: 0; right: 0; top: 10px; text-align: center; font-family: var(--display); font-size: clamp(20px, 5.5vw, 30px); color: #fff; text-shadow: 0 2px 0 #0008, 0 0 12px #0006; pointer-events: none; padding: 0 12px; }
 .sub { position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px #000a; pointer-events: none; padding: 0 12px; }
 .pop { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); font-family: var(--display); font-size: clamp(26px, 7vw, 40px); pointer-events: none; text-shadow: 0 3px 0 #0009; opacity: 0; white-space: nowrap; }
@@ -787,6 +796,56 @@ body.lite *:not(.pop):not(.stage), body.lite *::before, body.lite *::after { ani
 body.lite svg [filter] { filter: none !important; }
 body.lite .stage .act { background: #0a1a44d9; } body.lite .tabbar { background: #fffaf0; }
 #litebtn[aria-pressed="true"] { color: #2a8a3a; border-color: #8fd08a; }
+
+/* 2026-11-04 つり画面の 上：プレイヤーの ステータス（大きな 見出しの かわり）。動かない 絵と 数字だけ */
+header.t-tsuri { display: none !important; }
+body.pscreen header.t-tsuri { display: flex !important; } body.pscreen header.t-tsuri .hright { display: none !important; } body.pscreen .stp { display: none !important; }
+.stp { height: 376px; background: #fffaf0; border: 3px solid #fff; border-radius: 20px; box-shadow: 0 4px 0 #00000026; padding: 10px; display: grid; grid-template-columns: 132px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 8px 10px; color: var(--ink); }
+.stp .stch { all: unset; cursor: pointer; grid-row: 1; border-radius: 14px; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+.stp .stch:focus-visible { outline: 3px solid var(--win); }
+.stp .stch .scn { position: absolute; inset: 0; width: 100%; height: 100%; }
+.stp .stch .av { position: relative; margin: auto auto 58px; width: 104px; display: block; }
+.stp .stch .nm { position: absolute; left: 8px; right: 8px; bottom: 8px; display: grid; justify-items: center; background: #fffaf0f2; border-radius: 10px; padding: 3px 6px 2px; font-weight: 900; font-size: 15px; line-height: 1.25; }
+.stp .stch .nm b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.stp .stch .nm small { font-size: 10px; color: #8a6a44; font-weight: 900; white-space: nowrap; line-height: 1.3; }
+.stp .stcoin { position: absolute; left: 8px; top: 8px; display: flex; gap: 3px; align-items: center; background: #fffaf0f2; border-radius: 99px; padding: 1px 8px 1px 3px; font-size: 12px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.stp { position: relative; }
+.stp .sthelp { all: unset; cursor: pointer; position: absolute; left: 108px; top: 18px; width: 26px; height: 26px; border-radius: 50%; background: #fff3c4; color: #7a4a00; border: 2px solid #f0c040; font-family: var(--display); font-weight: 900; font-size: 15px; text-align: center; line-height: 24px; z-index: 2; box-sizing: border-box; }
+.stp .sthelp:focus-visible { outline: 3px solid var(--win); }
+@media (max-width: 360px) { .stp .sthelp { left: 88px; } }
+.stp .stcoin svg { width: 20px; height: 20px; display: block; }
+.stp .stwx { grid-row: 1; display: flex; flex-direction: column; min-width: 0; }
+.stp .sttabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+.stp .sttabs button { all: unset; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 5px 0 4px; border-radius: 12px 12px 0 0; font-size: 10px; font-weight: 900; color: #a08868; line-height: 1.1; text-align: center; }
+.stp .sttabs button svg { width: 22px; height: 22px; }
+.stp .sttabs button[aria-selected="true"] { background: var(--pc); color: var(--pt); }
+.stp .sttabs button:focus-visible { outline: 2px solid var(--win); }
+.stp .stpan { flex: 1; min-height: 0; background: var(--pc); border-radius: 14px; padding: 8px 10px; display: grid; gap: 6px; align-content: start; }
+.stp .stpan.p0 { border-top-left-radius: 0; } .stp .stpan.p3 { border-top-right-radius: 0; }
+.stp .stpan h4 { margin: 0; font-size: 11px; font-weight: 900; color: var(--pt); font-family: var(--body); }
+.stp .stbig { display: flex; align-items: baseline; gap: 4px; font-family: var(--display); font-weight: 900; } .stp .stbig b { font-size: 30px; line-height: 1; } .stp .stbig span { font-size: 13px; color: #8a7a60; }
+.stp .stbar { height: 8px; border-radius: 99px; background: #ffffffaa; overflow: hidden; } .stp .stbar i { display: block; height: 100%; border-radius: 99px; background: var(--pb); }
+.stp .stks { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 900; } .stp .stks small { color: #8a7a60; font-size: 10.5px; }
+.stp .strr { display: grid; gap: 3px; } .stp .strr div { display: grid; grid-template-columns: 5.2em 1fr 3.6em; gap: 5px; align-items: center; font-size: 10.5px; font-weight: 900; }
+.stp .strr em { font-style: normal; color: #e09a00; letter-spacing: -1.5px; font-size: 10px; } .stp .strr .stbar { height: 6px; } .stp .strr span { text-align: right; color: #6a5a40; font-variant-numeric: tabular-nums; }
+.stp .stnote { font-size: 10px; color: #8a7a60; font-weight: 800; }
+.stp .stbt { grid-column: 1 / 3; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; border-top: 2px dashed #eadcb8; padding-top: 7px; }
+.stp .steq { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; min-width: 0; }
+.stp .steq div { display: grid; justify-items: center; gap: 1px; font-weight: 900; line-height: 1.2; text-align: center; color: #6a5a40; min-width: 0; }
+.stp .steq div svg { width: 26px; height: 26px; } .stp .steq div span { font-size: 8.5px; letter-spacing: -.8px; white-space: nowrap; overflow: hidden; max-width: 100%; } .stp .steq div small { font-size: 9px; color: #a08868; }
+.stp .stset { display: grid; grid-template-columns: repeat(4, 34px); gap: 5px 5px; }
+.stp .stset button { all: unset; cursor: pointer; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; position: relative; background: #2f7a9a; color: #fff; }
+.stp .stset button.off { background: #ece4d2; color: #b0a088; }
+.stp .stset button.thm { background: #fff; box-shadow: inset 0 0 0 2px #e6d6ac; }
+.stp .stset button:focus-visible { outline: 3px solid var(--win); }
+.stp .stset button svg { width: 20px; height: 20px; }
+.stp .stset button.off::after { content: ""; position: absolute; width: 24px; height: 2.5px; background: #b0a088; transform: rotate(-40deg); border-radius: 2px; }
+.stp .stset span { font-size: 8.5px; font-weight: 900; text-align: center; color: #8a7a60; white-space: nowrap; letter-spacing: -.5px; line-height: 1; }
+.stp .stpick { grid-column: 1 / 3; grid-row: 1 / 3; align-self: center; justify-self: center; font: inherit; font-family: var(--display); font-weight: 900; font-size: 18px; border: 0; border-radius: 999px; padding: 12px 28px; background: var(--win); color: #2a1d00; cursor: pointer; box-shadow: 0 4px 0 #a8820e; }
+.seasel .sh .shr { display: flex; gap: 4px; flex: none; } .seasel .sh b { white-space: nowrap; }
+.seasel .sh .shr .sttg { white-space: nowrap; }
+.stp .hop, .stp .blink, .stp .sway { animation: none !important; }   /* 2026-11-04 パネルの キャラも うごかさない */
+@media (max-width: 360px) { .stp { grid-template-columns: 112px minmax(0, 1fr); } .stp .stch .av { width: 92px; } }
 .pmove { background: #fffaf0e6; border-radius: 14px; padding: 6px 12px; color: var(--ink); font-size: 13px; }
 .pmove summary { cursor: pointer; font-weight: 900; }
 .pmove .mvsec { display: grid; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
@@ -801,8 +860,28 @@ body.lite .stage .act { background: #0a1a44d9; } body.lite .tabbar { background:
 .pubfoot b { font-family: var(--display); font-size: 14px; }
 .pubfoot p { margin: 4px 0 0; font-weight: 500; }
 .pmove .mvmsg.ok { color: #3f9a3a; }
+.pmove .mvwho { display: flex; flex-wrap: wrap; gap: 6px; }
+.pmove .mvwho button { background: #fffaf0; color: var(--ink); border: 2px solid var(--line); box-shadow: none; font-size: 12.5px; padding: 4px 12px; }
+.pmove .mvwho button[aria-pressed="true"] { background: #2f7a9a; border-color: #2f7a9a; color: #fff; }
+.pmove .mvask { background: #fff3c4; border: 2px solid #f0c040; border-radius: 12px; padding: 8px 10px; display: grid; gap: 6px; }
+.pmove .mvask b { font-size: 13px; } .pmove button.mvsub { background: #b8ab92; }
 .a2hs { background: #fff3c4; border: 2px solid var(--win); border-radius: 14px; padding: 6px 12px; font-size: 12.5px; color: var(--ink); line-height: 1.6; }
 .a2hs b { font-family: var(--display); }
+.helpbtn { flex: 1; font: inherit; font-weight: 900; font-size: 12.5px; background: #fff3c4; color: #7a4a00; border: 2px solid #f0c040; border-radius: 999px; padding: 6px 10px; cursor: pointer; }
+.gbox.guide { max-width: 420px; text-align: left; justify-items: stretch; }
+.gbox.guide .gtitle { text-align: center; }
+.gdcele { background: #fff1b8; color: #7a4a00; font-weight: 900; border-radius: 12px; padding: 6px 10px; font-size: 13.5px; text-align: center; }
+.gdtabs { display: flex; gap: 4px; margin: 8px 0 6px; }
+.gdtabs button { flex: 1; font: inherit; font-size: 11.5px; font-weight: 900; padding: 6px 2px; border-radius: 10px; border: 2px solid var(--line); background: #fffaf0; color: #8a7a60; cursor: pointer; }
+.gdtabs button[aria-selected="true"] { background: #2f7a9a; border-color: #2f7a9a; color: #fff; }
+.gdcard { background: #fff; border-radius: 14px; padding: 10px 12px; box-shadow: 0 0 0 2px var(--line); font-size: 13.5px; line-height: 1.7; }
+.gdh { font-family: var(--display); font-weight: 900; font-size: 16px; color: #2f6a8a; margin-bottom: 4px; }
+.gdh.gdwarn { color: #c0391b; }
+.gdol { margin: 0; padding-left: 1.4em; } .gdol li { margin: 3px 0; } .gdol small { display: block; color: #8a7a60; }
+.gdg { color: #2e9a4a; } .gdp { margin: 4px 0; }
+.gdnote { margin-top: 6px; font-size: 12.5px; color: #6a5a40; background: #f6f0e0; border-radius: 10px; padding: 4px 8px; }
+.gda2 { margin: 6px 0; }
+.a2more { margin-top: 4px; } .a2more summary { cursor: pointer; font-weight: 800; font-size: 12px; color: #6a5a40; }
 
 /* 2026-10-26 毒王の 絵（かるい 版） */
 .tc.kc .kart .kd3 > * { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -979,11 +1058,13 @@ header .hright { width: 100%; max-width: 560px; justify-self: center; box-sizing
       <div class="stats"><span><small>ずかん</small><span class="sv"><b id="zc">0</b>/<span id="zt">0</span></span></span><span><small>つった数</small><b id="tc">0</b></span><span><small>かい</small><b id="coins">0</b></span></div>
       <div class="hrow"><button class="pchip" id="pchip" aria-label="プレイヤーを えらぶ"></button>
       <div class="themes" id="themes" role="group" aria-label="はいけいの いろ"><span>はいけい</span><button data-t="suna" aria-label="すなはま"></button><button data-t="umi" aria-label="うみ（あさせから しんかいへ）"></button><button data-t="sango" aria-label="さんごしょう"></button><button data-t="yoru" aria-label="しんかい"></button></div></div>
+      <div class="hrow"><button class="helpbtn" id="helpbtn" type="button">？ あそびかた・きろくの まもりかた</button></div>
       <div class="hrow"><button class="sndbtn" id="sndbtn" aria-label="こうかおん"></button>
       <button class="sndbtn" id="bgmbtn" aria-label="BGM"></button>
       <button class="sndbtn" id="litebtn" aria-label="かるい ひょうじ"></button></div>
     </div>
   </header>
+  <div class="stp t-tsuri" id="stp"></div>
 
   <div class="col">
     <div class="box players" id="players" hidden>
@@ -4124,7 +4205,7 @@ async function connectDb() {
   mode = "db";
   db.collection("players").onSnapshot(async snap => {
     const next = {};
-    snap.docs.forEach(d => { const raw = d.data(), v = raw ? JSON.parse(JSON.stringify(raw)) : raw; if (v && v.name) next[d.id] = { name: v.name, av: v.av || "same", book: v.book || {}, coins: v.coins || 0, bait: v.bait || {}, hr: Number.isFinite(v.hr) ? v.hr : 4, stats: v.stats || {}, sea: v.sea || "hare", storm: v.storm || 0, kings: v.kings || {}, fruit: v.fruit || 0, fruitAll: v.fruitAll || 0, fruitBy: v.fruitBy || {}, fruitKey: v.fruitKey || null, fruitSeen: v.fruitSeen || {}, umiSel: Array.isArray(v.umiSel) ? v.umiSel.slice(0, 21) : undefined, umiTitle: v.umiTitle || 0, netGot: v.netGot || 0, umiOpened: v.umiOpened || 0, umiTier: Number.isFinite(v.umiTier) ? v.umiTier : (v.umiOpened ? 1 : 0), sj: v.sj || {}, sjDay: v.sjDay || "", hats: v.hats || {}, hat: v.hat || null, rampage: v.rampage || 0, rampGot: v.rampGot || 0, wx: v.wx || null, eq: v.eq || null, rodMax: v.rodMax, at: v.at || 0 }; });
+    snap.docs.forEach(d => { const raw = d.data(), v = raw ? JSON.parse(JSON.stringify(raw)) : raw; if (v && v.name) next[d.id] = { name: v.name, av: v.av || "same", book: v.book || {}, coins: v.coins || 0, bait: v.bait || {}, hr: Number.isFinite(v.hr) ? v.hr : 4, stats: v.stats || {}, sea: v.sea || "hare", storm: v.storm || 0, kings: v.kings || {}, fruit: v.fruit || 0, fruitAll: v.fruitAll || 0, fruitBy: v.fruitBy || {}, fruitKey: v.fruitKey || null, fruitSeen: v.fruitSeen || {}, umiSel: Array.isArray(v.umiSel) ? v.umiSel.slice(0, 21) : undefined, umiTitle: v.umiTitle || 0, netGot: v.netGot || 0, seaN: v.seaN || {}, seaNAt: v.seaNAt || "", umiOpened: v.umiOpened || 0, umiTier: Number.isFinite(v.umiTier) ? v.umiTier : (v.umiOpened ? 1 : 0), sj: v.sj || {}, sjDay: v.sjDay || "", hats: v.hats || {}, hat: v.hat || null, rampage: v.rampage || 0, rampGot: v.rampGot || 0, wx: v.wx || null, eq: v.eq || null, rodMax: v.rodMax, at: v.at || 0 }; });
     // first sync: move players kept only on this device into the shared record
     if (snap.empty && Object.keys(players).length && !connectDb.migrated) {
       connectDb.migrated = true;
@@ -4169,7 +4250,7 @@ function pushPlayer(pid, build) {
   return run;
 }
 function saveCatch(pid, cid, rec) {
-  return pushPlayer(pid, p => ({ book: { [cid]: p.book[cid] || rec }, coins: p.coins || 0, bait: p.bait || {}, hr: hourOf(p), stats: p.stats || {}, rodMax: p.rodMax || 0, at: p.at }));
+  return pushPlayer(pid, p => ({ book: { [cid]: p.book[cid] || rec }, coins: p.coins || 0, bait: p.bait || {}, hr: hourOf(p), stats: p.stats || {}, rodMax: p.rodMax || 0, seaN: p.seaN || {}, seaNAt: p.seaNAt || "", at: p.at }));
 }
 async function removePlayer(pid) {
   delete players[pid]; if (cur === pid) cur = null;
@@ -4179,12 +4260,13 @@ async function removePlayer(pid) {
 }
 
 /* ---------- きろくの ひきつぎ（かきだし・よみこみ） ---------- */
-let mv = { open: false, out: "", msg: "", ok: false };
+let mv = { open: false, out: "", msg: "", ok: false, sel: "all", outSel: "all", pend: null };   // 2026-11-04 sel：だれの きろくを かきだすか（all＝みんな）
 const b64e = u8 => { let s = ""; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); };
 const b64d = t => { const s = atob(t), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u; };
 async function streamBytes(u8, Kind) { const st = new Blob([u8]).stream().pipeThrough(new Kind("gzip")); return new Uint8Array(await new Response(st).arrayBuffer()); }
-async function makeCode() {
-  const data = JSON.stringify({ v: 1, app: "uminazo", at: Date.now(), players });
+async function makeCode(sel) {
+  const pick = sel && sel !== "all" && players[sel] ? { [sel]: players[sel] } : players;   // 2026-11-04 1人だけも かきだせる
+  const data = JSON.stringify({ v: 1, app: "uminazo", at: Date.now(), players: pick });
   const raw = new TextEncoder().encode(data);
   if (typeof CompressionStream !== "undefined") { try { return "UMINAZO2:" + b64e(await streamBytes(raw, CompressionStream)); } catch (e) {} }
   return "UMINAZO1:" + b64e(raw);
@@ -4237,45 +4319,64 @@ function importPlayers(got) {
   let add = 0, upd = 0;
   for (const [pid, p] of Object.entries(got)) {
     if (!p || typeof p.name !== "string" || !p.name) continue;
-    const q = { name: p.name.slice(0, 10), av: p.av || "same", book: p.book || {}, coins: p.coins || 0, bait: p.bait || {}, hr: Number.isFinite(p.hr) ? p.hr : 4, stats: p.stats || {}, sea: SEAS && SEAS[p.sea] ? p.sea : "hare", storm: p.storm || 0, kings: p.kings || {}, fruit: p.fruit || 0, fruitAll: p.fruitAll || 0, fruitBy: numMap(p.fruitBy), fruitKey: SERIES[p.fruitKey] ? p.fruitKey : null, fruitSeen: numMap(p.fruitSeen), umiSel: Array.isArray(p.umiSel) ? p.umiSel.filter(id => typeof id === "string" && umiById(id)).slice(0, 21) : undefined, umiTitle: p.umiTitle ? 1 : 0, netGot: p.netGot ? 1 : 0, umiOpened: p.umiOpened ? 1 : 0, umiTier: Number.isFinite(p.umiTier) ? Math.max(0, Math.min(UMI_TOP, Math.floor(p.umiTier))) : (p.umiOpened ? 1 : 0), sj: (p.sj && typeof p.sj === "object") ? Object.fromEntries(Object.entries(p.sj).filter(([k, v]) => SJ[k] && v && typeof v === "object").map(([k, v]) => [k, { pg: Math.max(1, Math.min(SJ[k].pages.length, Math.floor(+v.pg || 1))), c: Math.max(0, Math.floor(+v.c || 0)), d: typeof v.d === "string" ? v.d.slice(0, 12) : "", ids: Array.isArray(v.ids) ? v.ids.filter(id => typeof id === "string" && byId(id)).slice(0, 20) : [] }])) : {}, sjDay: typeof p.sjDay === "string" ? p.sjDay.slice(0, 12) : "", hats: (p.hats && typeof p.hats === "object") ? Object.fromEntries(Object.keys(p.hats).filter(h => SJ_HATS[h]).map(h => [h, 1])) : {}, hat: SJ_HATS[p.hat] && p.hats && p.hats[p.hat] ? p.hat : null, rampage: p.rampage || 0, rampGot: p.rampGot || 0, wx: p.wx || null, eq: (p.eq && typeof p.eq === "object") ? { rod: KGEAR[p.eq.rod] || /^t\d$/.test(p.eq.rod || "") ? p.eq.rod : null, reel: KGEAR[p.eq.reel] || /^t\d$/.test(p.eq.reel || "") ? p.eq.reel : null } : null, rodMax: p.rodMax, at: p.at || Date.now() };
+    const q = { name: p.name.slice(0, 10), av: p.av || "same", book: p.book || {}, coins: p.coins || 0, bait: p.bait || {}, hr: Number.isFinite(p.hr) ? p.hr : 4, stats: p.stats || {}, sea: SEAS && SEAS[p.sea] ? p.sea : "hare", storm: p.storm || 0, kings: p.kings || {}, fruit: p.fruit || 0, fruitAll: p.fruitAll || 0, fruitBy: numMap(p.fruitBy), fruitKey: SERIES[p.fruitKey] ? p.fruitKey : null, fruitSeen: numMap(p.fruitSeen), umiSel: Array.isArray(p.umiSel) ? p.umiSel.filter(id => typeof id === "string" && umiById(id)).slice(0, 21) : undefined, umiTitle: p.umiTitle ? 1 : 0, netGot: p.netGot ? 1 : 0, guide1: p.guide1 ? 1 : 0, guide50: p.guide50 ? 1 : 0, seaN: (p.seaN && typeof p.seaN === "object") ? Object.fromEntries(Object.entries(p.seaN).filter(([k, v]) => SEAS[k] && Number.isFinite(+v)).map(([k, v]) => [k, Math.max(0, Math.floor(+v))])) : {}, seaNAt: typeof p.seaNAt === "string" ? p.seaNAt.slice(0, 12) : "", umiOpened: p.umiOpened ? 1 : 0, umiTier: Number.isFinite(p.umiTier) ? Math.max(0, Math.min(UMI_TOP, Math.floor(p.umiTier))) : (p.umiOpened ? 1 : 0), sj: (p.sj && typeof p.sj === "object") ? Object.fromEntries(Object.entries(p.sj).filter(([k, v]) => SJ[k] && v && typeof v === "object").map(([k, v]) => [k, { pg: Math.max(1, Math.min(SJ[k].pages.length, Math.floor(+v.pg || 1))), c: Math.max(0, Math.floor(+v.c || 0)), d: typeof v.d === "string" ? v.d.slice(0, 12) : "", ids: Array.isArray(v.ids) ? v.ids.filter(id => typeof id === "string" && byId(id)).slice(0, 20) : [] }])) : {}, sjDay: typeof p.sjDay === "string" ? p.sjDay.slice(0, 12) : "", hats: (p.hats && typeof p.hats === "object") ? Object.fromEntries(Object.keys(p.hats).filter(h => SJ_HATS[h]).map(h => [h, 1])) : {}, hat: SJ_HATS[p.hat] && p.hats && p.hats[p.hat] ? p.hat : null, rampage: p.rampage || 0, rampGot: p.rampGot || 0, wx: p.wx || null, eq: (p.eq && typeof p.eq === "object") ? { rod: KGEAR[p.eq.rod] || /^t\d$/.test(p.eq.rod || "") ? p.eq.rod : null, reel: KGEAR[p.eq.reel] || /^t\d$/.test(p.eq.reel || "") ? p.eq.reel : null } : null, rodMax: p.rodMax, at: p.at || Date.now() };
     if (players[pid]) upd++; else add++;
     players[pid] = q;
   }
   lsSet(LS_PLAYERS, players);
   return [add, upd];
 }
+function mvWho() {   // 2026-11-04 だれの きろくを かきだす？
+  const L = Object.entries(players).sort((a, b) => (a[1].at || 0) - (b[1].at || 0)); if (mv.sel !== "all" && !players[mv.sel]) mv.sel = "all";
+  return '<div class="mvwho" role="group" aria-label="だれの きろく？"><button data-sel="all" aria-pressed="' + (mv.sel === "all") + '">みんな</button>' + L.map(([pid, p]) => '<button data-sel="' + pid + '" aria-pressed="' + (mv.sel === pid) + '">' + esc(p.name) + '</button>').join("") + '</div>';
+}
+function mvFileName() { const d = new Date(), w = mv.outSel !== "all" && players[mv.outSel] ? "-" + players[mv.outSel].name : ""; return "uminazo-kiroku" + w + "-" + d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0") + ".txt"; }
 function renderMove() {
   const el = $("pmove"); if (!el) return;
   const has = Object.keys(players).length > 0;
   el.innerHTML = '<details class="pmove"' + (mv.open ? " open" : "") + '><summary>きろくの ひきつぎ（べつの 端末（たんまつ）へ うつす）</summary>' +
-    '<div class="mvsec"><b>① この 端末（たんまつ）の きろくを かきだす</b><p>プレイヤー みんなの きろくが、ながい 文字の 列（ひきつぎコード）に なるよ。コピーして メモや LINE などに とっておくか、ファイルで ほぞん してね。</p>' +
+    '<div class="mvsec"><b>① この 端末（たんまつ）の きろくを かきだす</b><p>えらんだ 人の きろくが、ながい 文字の 列（ひきつぎコード）に なるよ。「おくる」で LINE や メールに そのまま おくれるよ。1人だけ えらぶと、べつの 端末（たんまつ）の ウミナゾに その 人を ふやせるよ。</p>' + mvWho() +
     '<div class="mvrow"><button id="mvmake"' + (has ? "" : " disabled") + '>ひきつぎコードを つくる</button></div>' +
-    (mv.out ? '<textarea id="mvout" readonly autocapitalize="off" autocorrect="off" spellcheck="false">' + esc(mv.out) + '</textarea><div class="mvrow"><button id="mvcopy">コピー</button><button id="mvsave">ファイルで ほぞん</button></div>' : "") + '</div>' +
-    '<div class="mvsec"><b>② べつの 端末（たんまつ）で よみこむ</b><p>コードを はりつけるか、ほぞんした ファイルを えらんでね。おなじ プレイヤーが いたら、よみこんだ きろくで うわがき するよ。</p>' +
+    (mv.out ? '<textarea id="mvout" readonly autocapitalize="off" autocorrect="off" spellcheck="false">' + esc(mv.out) + '</textarea><div class="mvrow"><button id="mvsave">おくる・ファイルで ほぞん</button><button id="mvcopy">コピー</button></div>' : "") + '</div>' +
+    '<div class="mvsec"><b>② べつの 端末（たんまつ）で よみこむ</b><p>コードを はりつけるか、とどいた ファイルを えらんでね。おなじ プレイヤーが いたら、うわがき するか べつの 人として ふやすか えらべるよ。</p>' +
     '<textarea id="mvin" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" placeholder="UMINAZO から はじまる コードを ここに はりつけ"></textarea>' +
     '<div class="mvrow"><button id="mvread">よみこむ</button><label class="mvfile">ファイルから<input type="file" id="mvfile" accept=".txt,text/plain"></label></div></div>' +
+    (mv.pend ? '<div class="mvask"><b>おなじ プレイヤーが もう いるよ：' + esc(mv.pend.dup.join("・")) + '</b><div class="mvrow"><button id="mvover">うわがき する</button><button id="mvnew">べつの 人として ふやす</button><button id="mvstop" class="mvsub">やめる</button></div></div>' : "") +
     '<div class="mvmsg' + (mv.ok ? " ok" : "") + '" id="mvmsg">' + esc(mv.msg) + '</div></details>';
   const det = el.querySelector("details"); det.ontoggle = () => { mv.open = det.open; };
   const say = (t, ok) => { mv.msg = t; mv.ok = !!ok; const m = $("mvmsg"); if (m) { m.textContent = t; m.className = "mvmsg" + (ok ? " ok" : ""); } };
-  if ($("mvmake")) $("mvmake").onclick = async () => { mv.out = await makeCode(); mv.msg = "コードが できたよ。コピーか ファイルで とっておいてね。"; mv.ok = true; renderMove(); };
+  el.querySelectorAll(".mvwho button").forEach(b => b.onclick = () => { mv.sel = b.dataset.sel; mv.out = ""; mv.msg = ""; renderMove(); });
+  if ($("mvmake")) $("mvmake").onclick = async () => { mv.outSel = mv.sel; mv.out = await makeCode(mv.sel); mv.msg = (mv.sel !== "all" && players[mv.sel] ? players[mv.sel].name + "の " : "みんなの ") + "コードが できたよ。「おくる」で LINE や メールに おくるか、コピーしてね。"; mv.ok = true; renderMove(); };
   if ($("mvcopy")) $("mvcopy").onclick = async () => {
     try { await navigator.clipboard.writeText(mv.out); say("コピーしたよ！", true); }
     catch (e) { const t = $("mvout"); t.focus(); t.select(); try { document.execCommand("copy"); say("コピーしたよ！", true); } catch (e2) { say("コードを ながおしして コピーしてね"); } }
   };
   if ($("mvsave")) $("mvsave").onclick = async () => {
-    const d = new Date(), nm = "uminazo-kiroku-" + d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0") + ".txt";
-    const file = new File([mv.out], nm, { type: "text/plain" });
-    try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "うみのナゾずかん きろく" }); say("ほぞん したよ！", true); return; } } catch (e) { if (e && e.name === "AbortError") return; }
+    const nm = mvFileName(), file = new File([mv.out], nm, { type: "text/plain" });
+    try { if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "うみのナゾずかん きろく" }); say("おくったよ！ うけとった 人は「ファイルから」で よみこんでね", true); return; } } catch (e) { if (e && e.name === "AbortError") return; }
     const a = document.createElement("a"); a.href = URL.createObjectURL(file); a.download = nm; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
     say("ファイルを ほぞん したよ！", true);
   };
+  const finish = (got, how) => {   // how：over＝うわがき / new＝おなじ 人は べつの 人として ふやす
+    if (how === "new") { const names = new Set(Object.values(players).map(p => p.name)), g2 = {};
+      for (const [pid, p] of Object.entries(got)) { if (!players[pid]) { g2[pid] = p; continue; }
+        let nm = String(p.name || "").slice(0, 9), k = 2; while (names.has(nm + k)) k++; nm = names.has(nm) ? (nm + k).slice(0, 10) : nm; names.add(nm);
+        g2[newId()] = { ...p, name: nm }; }
+      got = g2; }
+    const [add, upd] = importPlayers(got); mv.pend = null;
+    if (!add && !upd) { mv.msg = "よみこめる プレイヤーが いなかったよ"; mv.ok = false; renderMove(); return; }
+    if (!players[cur]) { cur = null; }
+    mv.msg = "よみこんだよ！（あたらしく " + add + "人・うわがき " + upd + "人）"; mv.ok = true;
+    renderAll(); renderPlayers();
+  };
+  if ($("mvover")) $("mvover").onclick = () => finish(mv.pend.got, "over");
+  if ($("mvnew")) $("mvnew").onclick = () => finish(mv.pend.got, "new");
+  if ($("mvstop")) $("mvstop").onclick = () => { mv.pend = null; mv.msg = "よみこみを やめたよ"; mv.ok = false; renderMove(); };
   const doRead = async text => {
     try {
-      const got = await readCode(text), [add, upd] = importPlayers(got);
-      if (!add && !upd) { say("よみこめる プレイヤーが いなかったよ"); return; }
-      if (!players[cur]) { cur = null; }
-      mv.msg = "よみこんだよ！（あたらしく " + add + "人・うわがき " + upd + "人）"; mv.ok = true;
-      renderAll(); renderPlayers();
+      const got = await readCode(text), dup = Object.keys(got).filter(pid => players[pid] && got[pid] && got[pid].name).map(pid => players[pid].name);
+      if (dup.length) { mv.pend = { got, dup }; mv.msg = ""; renderMove(); return; }
+      finish(got, "over");
     } catch (e) {
       const why = e && e.message;
       say(why === "old" ? "この ブラウザでは よみこめない 形の コードだよ。ブラウザを 新しく してね"
@@ -4288,19 +4389,30 @@ function renderMove() {
   $("mvread").onclick = () => doRead($("mvin").value);
   $("mvfile").onchange = async e => { const f = e.target.files && e.target.files[0]; if (f) doRead(await f.text()); e.target.value = ""; };
 }
-/* iPhone/iPad の Safari で ひらいている ときだけ、ホーム画面への 追加を すすめる */
+/* ホーム画面への 追加の しかた（2026-11-04 iOS 26 と Android も）。ホーム画面から ひらいている ときは 出さない */
 function a2hsNote() {
-  const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  const standalone = navigator.standalone === true || matchMedia("(display-mode: standalone)").matches;
-  if (!ios || standalone || $("a2hs")) return;
+  if (isStandalone() || $("a2hs")) return;
   const n = document.createElement("div"); n.className = "a2hs"; n.id = "a2hs";
-  n.innerHTML = '<b>📱 ホーム画面に 追加して あそぼう</b><br>Safariの 共有ボタン（□に↑）→「ホーム画面に追加」で、アプリの ように ひらけるよ。しばらく あそばなくても きろくが きえにくく なるよ。';
+  n.innerHTML = '<b>📱 ホーム画面に 追加して あそぼう</b><br>アプリの ように ひらけて、しばらく あそばなくても きろくが きえにくく なるよ。' + a2hsSteps() + A2HS_WARN;
   const pl = $("players"); pl.insertBefore(n, $("plist"));
+}
+const A2HS_WARN = '<div class="a2warn">⚠ ホーム画面の アイコンを けすと、きろくも いっしょに きえるよ。けす まえに「きろくの ひきつぎ」で コードを とっておいてね。</div>';
+const isStandalone = () => navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+function a2hsSteps() {
+  const ua = navigator.userAgent, ios = /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1), and = /Android/i.test(ua);
+  const iosTxt = '<div class="a2os"><b>iPhone（Safari）</b><ol><li>iOS 26：右下の「…」→「共有」→「その他」→「ホーム画面に追加」→「追加」</li><li>それより 前の iOS：下の 共有ボタン（□に↑）→「ホーム画面に追加」→「追加」</li></ol>' + (ios && /CriOS|FxiOS|EdgiOS/.test(ua) ? '<small>Safari で ひらいてから すると かんたんだよ。</small>' : "") + '</div>';
+  const andTxt = '<div class="a2os"><b>Android（Chrome）</b><ol><li>右上の「⋮」→「ホーム画面に追加」（「アプリを インストール」と 出る ことも あるよ）→「インストール」か「追加」</li></ol></div>';
+  // 2026-11-04 じぶんの スマホの 手順を 先に。もう ひとつの スマホの 手順も 下に ひらける 形で のせる（家族に 教える とき 用）
+  if (ios) return iosTxt + '<details class="a2more"><summary>Android の スマホの ばあい</summary>' + andTxt + '</details>';
+  if (and) return andTxt + '<details class="a2more"><summary>iPhone の ばあい</summary>' + iosTxt + '</details>';
+  return iosTxt + andTxt;
 }
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
 
 /* ---------- player screen ---------- */
+document.addEventListener("click", e => { if (e.target && e.target.id === "helpbtn") showGifts([{ kind: "guide", why: 0, page: 0 }]); });
 function showPlayers(on) {
+  document.body.classList.toggle("pscreen", !!on);   // 2026-11-04 えらぶ 画面では 上の ステータスを かくす
   $("players").hidden = !on; $("game").hidden = on;
   if (on) { cancelAnimationFrame(raf); S = { st: "idle" }; }
   if (typeof BGM !== "undefined") BGM.update();
@@ -4525,7 +4637,8 @@ function drawScene() {
     o += '<g id="angler"></g>';
     o += bt[1];
   }
-  o += '<svg id="fishS" x="0" y="0" width="120" height="60" viewBox="0 0 300 150" opacity="0"></svg>';
+  // 2026-10-29（2026-11-04 うつした）iPhone（WebKit）で 入れこの svg を 毎コマ うごかすと、かきなおし範囲が ずれて 砂に 横線が のこる。<g> の 移動・拡大に かえる（見た目は 同じ。はみ出しは 切りとる）
+  o += '<clipPath id="fishSc"><rect width="300" height="150"/></clipPath><g id="fishP" transform="translate(0 0) scale(.4)" opacity="0"><g id="fishS" clip-path="url(#fishSc)"></g></g>';
   o += '<path id="ln" d="" stroke="#ffffffcc" stroke-width="1" fill="none"/>';
   o += '<g id="rings" opacity="0"><ellipse cx="290" cy="91" rx="10" ry="3" fill="none" stroke="#fff" stroke-width="1.5"/><ellipse cx="290" cy="91" rx="20" ry="5" fill="none" stroke="#fff" stroke-width="1" opacity=".6"/></g>';
   o += '<g id="bob" opacity="0"><ellipse cx="0" cy="0" rx="5" ry="7" fill="#fff"/><path d="M-5 -1 A5 7 0 0 1 5 -1Z" fill="#e8413c"/><rect x="-1" y="-13" width="2" height="7" fill="#e8413c"/></g>';
@@ -4533,7 +4646,7 @@ function drawScene() {
   $("clock").innerHTML = cur ? clockHTML() : "";
   $("stage").dataset.dark = cur ? darkLevel() : 0;
   $("fchipw").innerHTML = cur ? fruitChip() : "";
-  renderAngler("normal");
+  renderAngler("normal"); renderStat();
 }
 function renderAngler(mood) {
   const g = $("angler"); if (!g) return;
@@ -4563,7 +4676,7 @@ function netPole(pt) {
 }
 function setLine(x2, y2, sag) { netPole([x2, y2]); const x1 = 168, y1 = 22, mx = (x1 + x2) / 2, my = (y1 + y2) / 2 + (sag || 18); $("ln").setAttribute("d", "M" + x1 + " " + y1 + " Q" + mx + " " + my + " " + x2 + " " + y2); }
 function setBob(x, y, show) { const b = $("bob"); b.setAttribute("transform", "translate(" + x + " " + y + ")"); b.setAttribute("opacity", show ? 1 : 0); }
-function fishAt(x, y, w, op) { const f = $("fishS"); f.setAttribute("x", x); f.setAttribute("y", y); f.setAttribute("width", w); f.setAttribute("height", w / 2); f.setAttribute("opacity", op); }
+function fishAt(x, y, w, op) { const f = $("fishP"); if (!f) return; f.setAttribute("transform", "translate(" + (+x).toFixed(2) + " " + (+y).toFixed(2) + ") scale(" + (w / 300).toFixed(4) + ")"); f.setAttribute("opacity", op); }
 
 /* ---------- tools: rods & reels (zukan goals), bait (shells) ---------- */
 const TG = (n) => ({ t: "total", n, txt: "ずかんを " + n + "種 あつめる" });
@@ -4779,18 +4892,22 @@ function renderSea() {
   const el = $("seasel"); if (!el) return;
   const k = seaK(), busy = S && (S.st === "wait" || S.st === "hook" || S.st === "reel");
   const on = stampOn();
-  el.innerHTML = '<div class="sh"><b>うみの ようす</b><button class="sttg" id="sttg" aria-pressed="' + on + '" aria-label="カードに スタンプを おす"><span>スタンプ</span><i>' + (on ? "おす" : "おさない") + '</i></button></div><div class="seabtns" role="group" aria-label="うみの ようす">' +
+  el.innerHTML = '<div class="sh"><b>うみの ようす</b><div class="shr"><button class="sttg" id="mapall" aria-pressed="' + mapAll() + '" aria-label="ちずの 数を ぜんぶの 日の 合計に する"><span>ぜんぶ</span><i>' + (mapAll() ? "みる" : "みない") + '</i></button><button class="sttg" id="sttg" aria-pressed="' + on + '" aria-label="カードに スタンプを おす"><span>スタンプ</span><i>' + (on ? "おす" : "おさない") + '</i></button></div></div><div class="seabtns" role="group" aria-label="うみの ようす">' +
     SEA_KEYS.filter(seaOpen).map(x => '<button data-s="' + x + '" aria-pressed="' + (x === k) + '"' + (busy ? " disabled" : "") + '>' + markSVG(x, 34, { nolabel: true }) + '<div><b>' + UMI_DAYS[x].label + '</b><span>' + UMI_DAYS[x].sub + '</span></div></button>').join("") +
     '</div><div class="seadesc' + (k === "arashi" ? " arashi" : "") + '">' + SEAS[k].desc + '</div>';
   $("sttg").onclick = () => { try { localStorage.setItem("umiNazoHideStamp", on ? "1" : "0"); } catch (e) {} renderSea(); };
+  $("mapall").onclick = () => { try { localStorage.setItem("umiNazoMapAll", mapAll() ? "0" : "1"); } catch (e) {} renderSea(); renderSpots(); };
   el.querySelectorAll("[data-s]").forEach(b => b.onclick = () => {
     const p = players[cur]; if (!p) { showPlayers(true); renderPlayers(); return; }
     if (S && (S.st === "wait" || S.st === "hook" || S.st === "reel")) return;
     p.sea = b.dataset.s; p.at = Date.now(); pushPlayer(cur, x => ({ sea: x.sea, at: x.at }));
-    renderSea(); renderAngler("happy"); seaStage(); renderTools();
+    renderSea(); renderAngler("happy"); seaStage(); renderTools(); if (!mapAll()) renderSpots();
   });
   seaStage();
 }
+/* 2026-11-04 ちずの 数：ぜんぶ＝合計、みない＝いまの うみの ようすの 日に つった 数 */
+function mapAll() { try { return localStorage.getItem("umiNazoMapAll") !== "0"; } catch (e) { return true; } }
+const mapHas = r => !!r && (mapAll() || !!(recDs(r) & (1 << SEAS[seaK()].i)));
 function seaStage() {
   const st = $("stage"), k = seaK(); if (!st) return;
   SEA_KEYS.forEach(x => st.classList.toggle("sea-" + x, x === k));
@@ -5041,9 +5158,45 @@ function reelIcon(it, sz, emb) { if (it && it.k) return kgIcon(it, sz, emb); con
   '<path d="M18 26 A14 14 0 0 1 26 20" stroke="#ffffffcc" stroke-width="2.5" fill="none" stroke-linecap="round"/>' +
   (lg ? '<path d="M48 8 l1.5 3.5 l3.5 1.5 l-3.5 1.5 l-1.5 3.5 l-1.5 -3.5 l-3.5 -1.5 l3.5 -1.5Z" fill="#fff"/>' : "") + (emb ? stormIconTop() : "") + '</svg>'; }
 let giftQ = [];
+/* 2026-11-04 ガイド：はじめて つれた とき・50ぴき つった とき・「？」ボタン */
+const GUIDE_TABS = ["あそびかた", "きろくを まもる", "スマホを かえる"];
+function guidePage(i) {
+  if (i === 0) return '<div class="gdh">つりの しかた</div><ol class="gdol">' +
+    '<li><b>「キャストする」</b>で うきを なげるよ。<small>ちずを タップすると つり場が かわるよ</small></li>' +
+    '<li><b>ヒット！</b>したら、白い 線が <b class="gdg">緑</b>に 入った ときに<b>「あわせる！」</b></li>' +
+    '<li>白い 線が <b class="gdg">緑</b>に 入るたびに<b>「ひく！」</b>。つりあげたら ずかんに のるよ</li></ol>' +
+    '<div class="gdnote">さお・リールは つった 生きものが ふえると 手に 入るよ。「どうぐ」で もちかえてね。</div>';
+  if (i === 1) return isStandalone()
+    ? '<div class="gdh">きろくは だいじょうぶ！</div><p class="gdp">ホーム画面から あそんでいるね。これで きろくは きえにくいよ。</p><p class="gdp">ねんのため、ときどき プレイヤーを えらぶ 画面の「きろくの ひきつぎ」で コードを とっておくと あんしん。</p>' + A2HS_WARN
+    : '<div class="gdh gdwarn">つった きろく、きえちゃうかも！？</div><p class="gdp">いまの ままだと、しばらく あそばない ときに、きろくが けされて しまう ことが あるよ。</p><p class="gdp"><b>スマホの ホーム画面に アイコンを おく</b>と、アプリの ように ひらけて、きろくが きえにくく なるよ。</p><div class="a2hs gda2">' + a2hsSteps() + '</div>' + A2HS_WARN;
+  return '<div class="gdh">べつの スマホや ブラウザで あそぶ とき</div><p class="gdp">きろくは、スマホごと・ブラウザ（Safari や Chrome）ごと・ホーム画面の アプリごとに、べつべつに ほぞん されるよ。</p>' +
+    '<ol class="gdol"><li>プレイヤーを えらぶ 画面の<b>「きろくの ひきつぎ」</b>を ひらく</li><li><b>「ひきつぎコードを つくる」</b>→ コピーか ファイルで ほぞん</li><li>あたらしい ほうで ひらいて、コードを はりつけて<b>「よみこむ」</b></li></ol>';
+}
+function guideOpen(g) {
+  const box = $("gift").querySelector(".gbox"); box.classList.remove("storm", "awaken"); box.classList.add("guide");
+  let pg = g.page || 0; const prev = $("gok").onclick;
+  $("gtitle").textContent = g.why === 50 ? "50ぴき つった！ すごい！" : g.why === 1 ? "はじめての 1ぴき！" : "あそびかた ガイド";
+  const draw = () => {
+    $("gbody").innerHTML = (g.why === 50 ? '<div class="gdcele">🎉 15分くらい あそんだね。ここまで あつめた ずかんを まもろう！</div>' : g.why === 1 ? '<div class="gdcele">ずかんに のったよ！ この きろくを なくさない ために…</div>' : "") +
+      '<div class="gdtabs" role="tablist">' + GUIDE_TABS.map((t, i) => '<button role="tab" aria-selected="' + (i === pg) + '" data-p="' + i + '">' + t + '</button>').join("") + '</div>' +
+      '<div class="gdcard">' + guidePage(pg) + '</div>';
+    $("gbody").querySelectorAll(".gdtabs button").forEach(b => b.onclick = () => { pg = +b.dataset.p; draw(); });
+    $("gok").textContent = pg < 2 ? "つぎへ →" : "わかった！";
+  };
+  $("gok").onclick = () => { if (pg < 2) { pg++; draw(); return; } box.classList.remove("guide"); $("gok").onclick = prev; if (prev) prev(); else nextGift(); };
+  draw(); $("gift").hidden = false; setTimeout(() => { try { $("gok").focus(); } catch (e) {} }, 50);
+}
+function guideCheck(p) {   // つった あとに よぶ。出す ものが あれば ガイドを かえす
+  const tot = Object.values(p.book || {}).reduce((a, r) => a + (r.n || 0), 0); let g = null;
+  if (!p.guide1) { p.guide1 = 1; if (tot >= 50) p.guide50 = 1; g = { kind: "guide", why: 1, page: 0 }; }
+  else if (!p.guide50 && tot >= 50) { p.guide50 = 1; g = { kind: "guide", why: 50, page: 1 }; }
+  if (g) pushPlayer(cur, x => ({ guide1: x.guide1 || 0, guide50: x.guide50 || 0, at: x.at }));
+  return g;
+}
 function showGifts(list) { giftQ = giftQ.concat(list); if ($("gift").hidden) nextGift(); }
 function nextGift() {
   const g = giftQ.shift(); if (!g) { $("gift").hidden = true; return; }
+  if (g.kind === "guide") { guideOpen(g); return; }
   $("gtitle").textContent = g.kind === "rumor" ? "でんせつの うわさを 聞いた！" : "あたらしい どうぐ！";
   $("gok").textContent = "やったー！"; $("gift").querySelector(".gbox").classList.remove("awaken");
   if (g.kind === "awaken") {   // 実が 7こ そろった：イベントの はじまりと、王を よびよせる ヒント
@@ -5750,9 +5903,11 @@ function catchIt() {
   const gifts = (rt1 > rt0 ? [{ kind: "rod", it: RODS[rt1] }] : []).concat(lt1 > lt0 ? [{ kind: "reel", it: REELS[lt1] }] : []).concat(r4first ? [{ kind: "rumor", spot: f.spot, fish: f }] : []).concat(embNew).concat(!storm0 && stormOpen(p.book) ? [{ kind: "storm" }] : []);
   if (!storm0 && stormOpen(p.book)) { p.storm = 1; pushPlayer(cur, x => ({ storm: 1, at: x.at })); }
   if (sjr.gift) gifts.push(sjr.gift);
+  { const gd = guideCheck(p); if (gd) gifts.push(gd); }   // 2026-11-04 ガイドは さいごに
   if (gifts.length) setTimeout(() => showGifts(gifts), 900);
   if (isNew) newIds.add(f.id);
-  saveCatch(cur, f.id, rec);
+  { const sk0 = SEA_KEYS[si]; p.seaN = { ...(p.seaN || {}), [sk0]: ((p.seaN || {})[sk0] || 0) + 1 }; if (!p.seaNAt) p.seaNAt = sjToday(); }   // 2026-11-04 日ごとの つった数
+  saveCatch(cur, f.id, rec); renderStat();
   S.st = "caught"; $("stage").classList.add("revealing"); SFX.catchFan(f.r, isNew); BGM.update(f.r >= 3 ? (f.r >= 4 ? 3200 : 1600) : 0);
   fishAt(0, 0, 10, 0); $("ln").setAttribute("d", ""); netPole(null);
   say("", "");
@@ -6493,7 +6648,7 @@ function renderSpots() {
   const bk = book(), host = $("spots");
   let o = mapArt();
   Object.entries(MAP_SPOTS).forEach(([k, m]) => {
-    const sp = SPOTS[k], got = sp.ids.filter(id => bk[id]).length, on = k === spot, dark = k === "deep" || k === "river";
+    const sp = SPOTS[k], got = sp.ids.filter(id => mapHas(bk[id])).length, on = k === spot, dark = k === "deep" || k === "river";
     const fs = sp.name.length > 4 ? 10 : 11, w = Math.max(sp.name.length * fs + 12, 48);
     o += '<g class="mspot' + (on ? ' on' : '') + '" data-k="' + k + '" role="button" tabindex="0" aria-pressed="' + on + '" aria-label="' + sp.name + '（' + sp.desc + '） ' + got + '/' + sp.ids.length + '">';
     o += '<path class="mhit" d="' + m.hit + '"/>';
@@ -6504,7 +6659,7 @@ function renderSpots() {
     o += '</g>';
   });
   const cur = SPOTS[spot];
-  host.innerHTML = '<svg class="smap" viewBox="0 0 360 220" role="group" aria-label="つり場を えらぶ ちず">' + o + '</svg><div class="snow"><b>' + cur.name + (cur.yomi ? '<small>（' + cur.yomi + '）</small>' : '') + '</b> ' + cur.desc + ' ・ ' + cur.ids.filter(id => bk[id]).length + '/' + cur.ids.length + '<span>ちずの 場所を タップすると つり場が かわるよ</span></div>';
+  host.innerHTML = '<svg class="smap" viewBox="0 0 360 220" role="group" aria-label="つり場を えらぶ ちず">' + o + '</svg><div class="snow"><b>' + cur.name + (cur.yomi ? '<small>（' + cur.yomi + '）</small>' : '') + '</b> ' + cur.desc + ' ・ ' + cur.ids.filter(id => mapHas(bk[id])).length + '/' + cur.ids.length + '<span>ちずの 場所を タップすると つり場が かわるよ</span></div>';
   host.querySelectorAll(".mspot").forEach(g => {
     const go = () => { if (host.classList.contains("locked") || S.st === "wait" || S.st === "hook" || S.st === "reel") return; if (spot === g.dataset.k) return; spot = g.dataset.k; resetStage(); renderSpots(); renderTools(); };
     g.onclick = go; g.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } };
@@ -6786,9 +6941,100 @@ function umiOpen() {
 }
 addEventListener("resize", () => { if (document.body.dataset.tab === "umi") umiBuild(); });
 document.addEventListener("visibilitychange", () => { if (!document.hidden && document.body.dataset.tab === "umi") umiGo(); });
+
+/* ---------- 2026-11-04 つり画面の 上：プレイヤーの ステータス ---------- */
+let stTab = null;
+const ST_T = { all: { l: "ぜんぶ", si: -1, pc: "#fff1c8", pt: "#8a5a10", pb: "#e8a820" }, nagi: { l: "なぎの日", si: 0, pc: "#e4e8fb", pt: "#3a3a8a", pb: "#5a6ad8" }, hare: { l: "はれの日", si: 1, pc: "#ddf2fb", pt: "#1f6a8a", pb: "#2fa0d0" }, arashi: { l: "あらしの日", si: 3, pc: "#ebe3f4", pt: "#5a3a7a", pb: "#8a5ac0" } };
+const ST_ICON = {
+  snd: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
+  bgm: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 17.5a3 3 0 1 1-2-2.8V5.2l11-2.4v12.2a3 3 0 1 1-2-2.8V6.3L9 7.8z"/></svg>',
+  lite: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4C10 4 5 9 5 19c10 0 15-5 15-15z"/><path d="M5 19L14 10"/></svg>',
+  star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#f2c230" stroke="#c88a08" stroke-width="1"/></svg>'
+};
+// 2026-11-04 かい：どうぐの さいふと おなじ 貝の しるし（大むかし、貝がらが お金に つかわれて いた）
+const ST_SHELL = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3 Q17 4 18 12 Q14 17 10 17 Q6 17 2 12 Q3 4 10 3Z" fill="#ffd2b0" stroke="#e8a080" stroke-width=".8"/><path d="M10 4 L10 16 M10 4 L6 15 M10 4 L14 15 M10 4 L3 12 M10 4 L17 12" stroke="#e8a080" stroke-width="1"/><path d="M8 16.5 h4 v1.6 h-4z" fill="#e8a080"/></svg>';
+const ST_THEMES = ["suna", "umi", "sango", "yoru"], ST_THEME_NM = { suna: "すなはま", umi: "うみ", sango: "さんご", yoru: "よる" };
+const ST_THEME_BG = { suna: "radial-gradient(circle at 35% 35%,#efe4c2 3px,transparent 3.5px),#f7f1dc", umi: "linear-gradient(180deg,#c8f3f6,#3a9bd2 50%,#081634)", sango: "radial-gradient(circle at 65% 40%,#ff9fb0 3px,transparent 3.5px),linear-gradient(180deg,#d9fbf6,#5fd0d8)", yoru: "radial-gradient(circle at 35% 40%,#9ff6ff 1.5px,transparent 2px),linear-gradient(180deg,#13306a,#040a1e)" };
+// 出航まえの 港の さんばし（2026-11-04 船は キャラの 右に 見えるように。空と 海の 色は つりの 時間に あわせる：昼・まずめ・夕方・夜）
+function stHarbor(h) {
+  const band = timeBand(h), sky = skyFor(h, ["#8fd6f5", "#e2f6ff"]), night = band === "night", dusk = band === "twilight" || band === "mazume";
+  const sea = night ? ["#1a3a6a", "#0c2244"] : dusk ? ["#5a9ac8", "#2a6aa8"] : ["#4fb4dc", "#2a86c0"];
+  const lit = night || band === "twilight";
+  let o = '<svg class="scn" viewBox="0 0 132 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="sths" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + sky[0] + '"/><stop offset="1" stop-color="' + sky[1] + '"/></linearGradient><linearGradient id="sthw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + sea[0] + '"/><stop offset="1" stop-color="' + sea[1] + '"/></linearGradient></defs>' +
+    '<rect width="132" height="300" fill="url(#sths)"/>';
+  if (night) o += '<g fill="#fff"><circle cx="20" cy="30" r="1"/><circle cx="50" cy="18" r=".8"/><circle cx="84" cy="40" r="1.1"/><circle cx="110" cy="22" r=".8"/><circle cx="66" cy="64" r=".7"/><circle cx="14" cy="80" r=".8"/><circle cx="96" cy="90" r=".7"/></g><path d="M104 46 a10 10 0 1 0 8 14 8 8 0 1 1 -8 -14z" fill="#ffe9a0"/>';
+  else o += '<g fill="#fff" opacity="' + (dusk ? .55 : .9) + '"><ellipse cx="30" cy="40" rx="16" ry="6"/><ellipse cx="42" cy="35" rx="10" ry="7"/><ellipse cx="104" cy="70" rx="12" ry="4.5"/></g>';
+  o += '<path d="M0 114 Q18 102 38 110 L38 120 L0 120Z" fill="' + (night ? "#2a4a3a" : "#7cc06a") + '"/>' +
+    '<g transform="translate(118 72)"><rect x="-5" y="0" width="10" height="48" fill="' + (night ? "#c8ccd8" : "#fff") + '"/><rect x="-5" y="10" width="10" height="7" fill="#e84a3a"/><rect x="-5" y="28" width="10" height="7" fill="#e84a3a"/><rect x="-7" y="-9" width="14" height="9" rx="2" fill="#5a6a7a"/><path d="M-8 -9 L0 -16 L8 -9Z" fill="#e84a3a"/><circle cy="-4.5" r="2.5" fill="#ffe36a"/>' +
+    (lit ? '<circle cy="-4.5" r="11" fill="#ffe36a" opacity=".28"/><path d="M0 -4.5 L-60 -22 L-60 8Z" fill="#ffe9a0" opacity=".14"/>' : '') + '</g>' +
+    '<rect y="118" width="132" height="182" fill="url(#sthw)"/><g stroke="#fff" stroke-width="1.5" fill="none" opacity="' + (night ? .3 : .6) + '"><path d="M8 150 q6 -3 12 0 M104 140 q6 -3 12 0 M14 186 q6 -3 12 0 M108 178 q6 -3 12 0"/></g>' +
+    // まっている 船：キャラの 右がわ、さんばしの そば
+    '<g transform="translate(24 119) scale(.5)"><path d="M-26 0 L26 0 L19 12 L-21 12Z" fill="' + (night ? "#d8dce8" : "#fff") + '"/><path d="M-26 0 L26 0 L24 4 L-24 4Z" fill="#3a8ad8"/><rect x="-4" y="-15" width="16" height="15" fill="' + (night ? "#d8dce8" : "#fff") + '" stroke="#3a6a9a" stroke-width="1.3"/><rect x="-1" y="-12" width="5" height="5" fill="' + (lit ? "#ffd36b" : "#8fd0ff") + '"/><rect x="6" y="-12" width="4" height="5" fill="' + (lit ? "#ffd36b" : "#8fd0ff") + '"/><line x1="-15" y1="0" x2="-15" y2="-24" stroke="#5a4a3a" stroke-width="1.8"/><path d="M-15 -24 L-4 -19 L-15 -15Z" fill="#ff5a4a"/>' +
+    (lit ? '<circle cx="-15" cy="-25" r="2" fill="#ffd36b"/><circle cx="-15" cy="-25" r="7" fill="#ffd36b" opacity=".25"/>' : '') + '</g>' +
+    '<path d="M0 214 L132 206 L132 300 L0 300Z" fill="#b8844c"/><g stroke="#8a5a30" stroke-width="1.6"><path d="M0 232 L132 226 M0 252 L132 247 M0 272 L132 268"/></g><path d="M0 214 L132 206 L132 211 L0 219Z" fill="#d4a46a"/>' +
+    '<rect x="104" y="196" width="9" height="16" rx="3" fill="#7a5028"/><ellipse cx="108.5" cy="196" rx="6" ry="2.4" fill="#5a3a1a"/>' +
+    '<g transform="translate(16 224)"><path d="M-8 -12 L8 -12 L6 4 L-6 4Z" fill="#4aa0e0" stroke="#2a6a9a" stroke-width="1"/><path d="M-8 -12 Q0 -22 8 -12" stroke="#5a6a7a" stroke-width="1.2" fill="none"/></g>';
+  if (night) o += '<rect y="200" width="132" height="100" fill="#0a1440" opacity=".38"/>';
+  else if (dusk) o += '<rect width="132" height="300" fill="#ff8a5a" opacity=".08"/>';
+  return o + '</svg>';
+}
+function stHatName(k) { if (!k) return ""; const d = Object.values(SJ).find(x => x.hat === k); return d ? d.hatName : ""; }
+function stFront(p, rd, rl) {   // 正面の キャラが さおを 立てて もつ（ぼうし・さお・リールの 色も いま つかって いる もの）
+  const net = !!rd.net, c1 = net ? "#d9a86a" : rd.c, c2 = net ? "#d9a86a" : rd.c2;
+  return '<svg class="av" viewBox="-52 -134 104 138" aria-hidden="true">' +
+    '<path d="M-27 -14 L-36 -128" stroke="#6a4e34" stroke-width="7" stroke-linecap="round"/><path d="M-27 -14 L-36 -128" stroke="' + c1 + '" stroke-width="4.4" stroke-linecap="round"/><path d="M-26 -6 L-28 -30" stroke="' + c2 + '" stroke-width="6" stroke-linecap="round"/>' +
+    (net ? '<g transform="translate(-36 -128)"><path d="M-11 0 Q-9 15 0 17 Q9 15 11 0Z" fill="#e8f4ff" fill-opacity=".5" stroke="#9cc8e0" stroke-width="1"/><ellipse rx="11" ry="4" fill="none" stroke="#9cc8e0" stroke-width="1.6"/></g>' : '') +
+    animal(p.av || "kuma", 0, 0, 1, { mood: "happy", hat: p.hat }) +
+    (net ? '' : '<circle cx="-31" cy="-24" r="6.5" fill="' + rl.c + '" stroke="#6a4e34" stroke-width="2"/><circle cx="-31" cy="-24" r="2.5" fill="' + rl.c2 + '"/>') + '</svg>';
+}
+function renderStat() {
+  const el = $("stp"); if (!el) return; const p = players[cur]; let html;
+  { const ps = $("players"); document.body.classList.toggle("pscreen", !!ps && !ps.hidden); }
+  if (!p) html = '<button class="stpick" data-st="sw">プレイヤーを えらぶ</button>';
+  else {
+    const bk = p.book || {}, rd = eqRod(), rl = eqReel();
+    if (!stTab || !ST_T[stTab]) { const k = seaK(); stTab = ST_T[k] ? k : "all"; }
+    const t = ST_T[stTab], has = r => t.si < 0 ? !!r : !!r && !!(recDs(r) & (1 << t.si));
+    const zk = SHARKS.filter(s => has(bk[s.id])).length, tot = Object.values(bk).reduce((a, r) => a + (r.n || 0), 0);
+    const rr = [5, 4, 3, 2, 1].map(r => { const L = SHARKS.filter(s => s.r === r); return { r, n: L.filter(s => has(bk[s.id])).length, t: L.length }; });
+    const pct = (n, m) => m ? Math.round(n / m * 100) : 0, keys = Object.keys(ST_T), ix = keys.indexOf(stTab);
+    const nAt = p.seaNAt ? p.seaNAt.split("-").slice(1).join("/") : "", dayN = (p.seaN || {})[stTab] || 0;
+    // 2026-11-04 パネルの 絵は うごかさない：どうぐの アイコンの キラキラ（SMIL）を とりのぞく。うごく 絵が あると、つっている あいだも パネルを かきなおして 重くなる
+    const still = h => String(h).replace(/<animate(?:Transform|Motion)?\b[^>]*\/>/g, "").replace(/<animate(?:Transform|Motion)?\b[^>]*>[\s\S]*?<\/animate(?:Transform|Motion)?>/g, "");
+    const rIc = rd.net ? netIcon(26) : rd.k ? kgIcon(rd, 26, kgEmb(p, rd.k)) : rodIcon(rd, 26, hasEmb(RODS, RODS.indexOf(rd), bk));
+    const lIc0 = rl.k ? kgIcon(rl, 26, kgEmb(p, rl.k)) : reelIcon(rl, 26, hasEmb(REELS, REELS.indexOf(rl), bk));
+    const hatNm = stHatName(p.hat), hatIc = p.hat && SJ_HATS[p.hat] ? '<svg viewBox="-30 -70 60 40" aria-hidden="true">' + SJ_HATS[p.hat](-50, false) + '</svg>' : '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="#d8c8a0" stroke-width="2" stroke-dasharray="3 3"/></svg>';
+    const th = document.body.dataset.theme || "umi", lite = liteOn();
+    const short = (nm, w) => String(nm || "").replace(new RegExp("の\\s*" + w + "$"), "");
+    html = '<button class="stch" data-st="sw" aria-label="' + esc(p.name) + '（プレイヤーを きりかえる）">' + stHarbor(curHour()) + '<span class="stcoin" title="かい">' + ST_SHELL + (p.coins || 0) + '</span>' + stFront(p, rd, rl) +
+      '<span class="nm"><b>' + esc(p.name) + '</b><small>プレイヤー きりかえ ▸</small></span></button><button class="sthelp" data-st="help" aria-label="あそびかた・きろくの まもりかた">？</button>' +
+      '<div class="stwx" style="--pc:' + t.pc + ';--pt:' + t.pt + ';--pb:' + t.pb + '"><div class="sttabs" role="tablist" aria-label="どの 日の きろく？">' +
+      keys.map(k => '<button role="tab" data-st="tab:' + k + '" aria-selected="' + (k === stTab) + '">' + (k === "all" ? ST_ICON.star : markSVG(k, 22, { nolabel: true })) + ST_T[k].l + '</button>').join("") + '</div>' +
+      '<div class="stpan p' + ix + '" role="tabpanel"><h4>' + (stTab === "all" ? "ぜんぶの きろく" : t.l + "に つった ずかん") + '</h4>' +
+      '<div class="stbig"><b>' + zk + '</b><span>/ ' + SHARKS.length + ' しゅ</span></div><div class="stbar"><i style="width:' + pct(zk, SHARKS.length) + '%"></i></div>' +
+      (stTab === "all" ? '<div class="stks"><small>つった 数</small><span>' + tot + ' ひき</span></div><div class="stks"><small>つった 王</small><span>' + KINGS.filter(k => (p.kings || {})[k.id]).length + ' / ' + KINGS.length + '</span></div>'
+        : nAt ? '<div class="stks"><small>つった 数（' + nAt + 'から）</small><span>' + dayN + ' ひき</span></div>' : '<div class="stnote">つった 数は、つぎに つった ときから かぞえるよ</div>') +
+      '<div class="strr">' + rr.map(x => '<div><em>' + "★".repeat(x.r) + '</em><div class="stbar"><i style="width:' + pct(x.n, x.t) + '%"></i></div><span>' + x.n + '/' + x.t + '</span></div>').join("") + '</div></div></div>' +
+      '<div class="stbt"><div class="steq"><div>' + still(rIc) + '<span>' + esc(short(rd.name, "さお")) + '</span><small>' + (rd.net ? "あみ" : "さお") + '</small></div><div>' + still(lIc0) + '<span>' + esc(short(rl.name, "リール")) + '</span><small>リール</small></div><div>' + hatIc + '<span>' + (hatNm ? esc(short(hatNm, "ぼうし")) : "なし") + '</span><small>ぼうし</small></div></div>' +
+      '<div class="stset"><button data-st="snd" class="' + (SFX.on ? "" : "off") + '" aria-pressed="' + SFX.on + '" aria-label="こうかおん">' + ST_ICON.snd + '</button><button data-st="bgm" class="' + (BGM.on ? "" : "off") + '" aria-pressed="' + BGM.on + '" aria-label="きょく">' + ST_ICON.bgm + '</button>' +
+      '<button data-st="lite" class="' + (lite ? "" : "off") + '" aria-pressed="' + lite + '" aria-label="かるい ひょうじ">' + ST_ICON.lite + '</button><button data-st="thm" class="thm" aria-label="はいけい：' + ST_THEME_NM[th] + '（タップで かわる）"><i style="width:20px;height:20px;border-radius:50%;display:block;box-shadow:0 0 0 1.5px #fff,0 0 0 2.5px #d8c8a0;background:' + ST_THEME_BG[th] + '"></i></button>' +
+      '<span>こうかおん</span><span>きょく</span><span>かるい</span><span>はいけい</span></div></div>';
+  }
+  if (el._h === html) return; el._h = html; el.innerHTML = html;
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest && e.target.closest("#stp [data-st]"); if (!b) return; const a = b.dataset.st;
+  if (a === "sw") { $("pchip").click(); return; }
+  if (a === "help") { showGifts([{ kind: "guide", why: 0, page: 0 }]); return; }   // 2026-11-04 ガイドは パネルの「？」から
+  if (a.startsWith("tab:")) { stTab = a.slice(4); renderStat(); return; }
+  if (a === "snd") { $("sndbtn").click(); renderStat(); return; }
+  if (a === "bgm") { $("bgmbtn").click(); renderStat(); return; }
+  if (a === "lite") { $("litebtn").click(); renderStat(); return; }
+  if (a === "thm") { const th = document.body.dataset.theme || "umi"; applyTheme(ST_THEMES[(ST_THEMES.indexOf(th) + 1) % ST_THEMES.length]); renderStat(); }
+});
 function renderAll() {
   renderTools(); renderSea(); renderAngler(S && S.st === "lost" ? "sad" : "happy");
-  renderChip(); renderSpots(); renderBook(); umiTabBtn(); sjRenderBottle();
+  renderChip(); renderSpots(); renderBook(); umiTabBtn(); sjRenderBottle(); renderStat();
   if (!$("players").hidden) renderPlayers();
 }
 
