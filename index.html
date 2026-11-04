@@ -826,7 +826,7 @@ body.pscreen header.t-tsuri { display: flex !important; } body.pscreen header.t-
 .stp .stbig { display: flex; align-items: baseline; gap: 4px; font-family: var(--display); font-weight: 900; } .stp .stbig b { font-size: 30px; line-height: 1; } .stp .stbig span { font-size: 13px; color: #8a7a60; }
 .stp .stbar { height: 8px; border-radius: 99px; background: #ffffffaa; overflow: hidden; } .stp .stbar i { display: block; height: 100%; border-radius: 99px; background: var(--pb); }
 .stp .stks { display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 900; } .stp .stks small { color: #8a7a60; font-size: 10.5px; }
-.stp .strr { display: grid; gap: 3px; } .stp .strr div { display: grid; grid-template-columns: 5.2em 1fr 3.6em; gap: 5px; align-items: center; font-size: 10.5px; font-weight: 900; }
+.stp .strr { display: grid; gap: 3px; } .stp .strr > div { display: grid; grid-template-columns: 5.2em 1fr 3.6em; gap: 5px; align-items: center; font-size: 10.5px; font-weight: 900; }   /* 2026-11-04 バーの 中まで 3れつに ならないよう「> div」 */
 .stp .strr em { font-style: normal; color: #e09a00; letter-spacing: -1.5px; font-size: 10px; } .stp .strr .stbar { height: 6px; } .stp .strr span { text-align: right; color: #6a5a40; font-variant-numeric: tabular-nums; }
 .stp .stnote { font-size: 10px; color: #8a7a60; font-weight: 800; }
 .stp .stbt { grid-column: 1 / 3; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; border-top: 2px dashed #eadcb8; padding-top: 7px; }
@@ -867,6 +867,7 @@ body.pscreen header.t-tsuri { display: flex !important; } body.pscreen header.t-
 .pmove .mvask b { font-size: 13px; } .pmove button.mvsub { background: #b8ab92; }
 .a2hs { background: #fff3c4; border: 2px solid var(--win); border-radius: 14px; padding: 6px 12px; font-size: 12.5px; color: var(--ink); line-height: 1.6; }
 .a2hs b { font-family: var(--display); }
+.phelp { justify-self: center; flex: none; padding: 8px 18px; font-size: 13.5px; box-shadow: 0 3px 0 #d8a820; }
 .helpbtn { flex: 1; font: inherit; font-weight: 900; font-size: 12.5px; background: #fff3c4; color: #7a4a00; border: 2px solid #f0c040; border-radius: 999px; padding: 6px 10px; cursor: pointer; }
 .gbox.guide { max-width: 420px; text-align: left; justify-items: stretch; }
 .gbox.guide .gtitle { text-align: center; }
@@ -4390,6 +4391,12 @@ function renderMove() {
   $("mvfile").onchange = async e => { const f = e.target.files && e.target.files[0]; if (f) doRead(await f.text()); e.target.value = ""; };
 }
 /* ホーム画面への 追加の しかた（2026-11-04 iOS 26 と Android も）。ホーム画面から ひらいている ときは 出さない */
+/* 2026-11-04 プレイヤーを えらぶ 画面にも ガイド（あそびかた・きろくを まもる・スマホを かえる） */
+function pHelpBtn() {
+  if ($("phelp")) return; const pl = $("players"), ls = $("plist"); if (!pl || !ls) return;
+  const b = document.createElement("button"); b.type = "button"; b.id = "phelp"; b.className = "helpbtn phelp"; b.textContent = "？ あそびかた・きろくの まもりかた";
+  b.onclick = () => showGifts([{ kind: "guide", why: 0, page: 0 }]); pl.insertBefore(b, $("a2hs") || ls);
+}
 function a2hsNote() {
   if (isStandalone() || $("a2hs")) return;
   const n = document.createElement("div"); n.className = "a2hs"; n.id = "a2hs";
@@ -4460,7 +4467,7 @@ function renderPlayers() {
   const fmtT = ms => { const m = Math.round((ms || 0) / 60000); return m >= 60 ? Math.floor(m / 60) + "時間" + (m % 60) + "分" : m + "分"; };
   const rows = list.map(([pid, p]) => { const st = p.stats || {}, pl = st._p || {}; return '<tr class="pn"><th colspan="5">' + esc(p.name) + '<span class="pplay">なげた回数 ' + (pl.n || 0) + '回 ・ 遊んだ時間 約' + fmtT(pl.ms) + '</span></th></tr>' + (() => { const dd = st._d || {}, ks = Object.keys(dd).sort((x, y) => dayNum(y) - dayNum(x)).slice(0, 7); if (!ks.length) return ""; const td = sjToday(); return '<tr class="pday"><td colspan="5"><b>日ごとの 遊んだ時間</b> ' + ks.map(k => '<span>' + (k === td ? 'きょう' : k.split('-').slice(1).join('/')) + ' ' + fmtT(dd[k].ms) + '</span>').join('') + '</td></tr>'; })() + [1, 2, 3, 4, 5].map(r => { const o = st[r] || {}; return '<tr><td>★' + r + '</td><td>' + (o.c || 0) + ' / ' + (o.l || 0) + '</td><td>' + pct(o.hok || 0, o.h || 0) + '</td><td>' + pct((o.h2 || 0) + (o.t2 || 0), (o.hok || 0) + ((o.t || 0) - (o.tm || 0))) + '</td><td>' + pct(o.tm || 0, o.t || 0) + '</td></tr>'; }).join(""); }).join("");
   $("pstats").innerHTML = list.length ? '<details class="adult"><summary>おとな用：うでまえの きろく</summary><div class="tw"><table><thead><tr><th>レア度</th><th>つれた / にげた</th><th>あわせ 成功</th><th>ビタッ率</th><th>ひきあげ ミス</th></tr></thead><tbody>' + rows + '</tbody></table></div><p class="small">あわせ成功＝ヒットの ゲージで 緑に 入れた わりあい。ビタッ率＝成功した タップの うち 赤の まんなかに 入った わりあい。遊んだ時間は、キャストと キャストの 間（3分まで）を 足した めやすです。日ごとの 時間は さいごの 7日ぶんを 出しています。きろくは こうしんした ときから 数えはじめます。</p></details>' : "";
-  renderMove(); a2hsNote();
+  renderMove(); a2hsNote(); pHelpBtn();
   $("pnote").textContent = mode === "db" ? "きろくは プレイヤーごとに ほぞんされ、ほかの 端末（たんまつ）から ひらいても のこっているよ。" : "きろくは この 端末（たんまつ）の 中だけに ほぞんされるよ。";
 }
 function renderChip() {
