@@ -4178,9 +4178,10 @@ const SERIES = {
   doku: { k: "doku", name: "毒王", title: "七つの海の 毒王", bases: DOKU_BASES, art: poisonArt, mul: 1, fruit: "毒の実" },
   bou: { k: "bou", name: "暴王", title: "七つの海の 暴王", bases: BOU_BASES, art: rageArt, mul: 1, fruit: "いかりの実" },
   jin: { k: "jin", name: "迅王", title: "七つの海の 迅王", bases: JIN_BASES, art: windArt, mul: 1, fruit: "風の実" },
-  kage: { k: "kage", name: "影王", title: "七つの海の 影王", bases: KAGE_BASES, art: a => JSON.parse(JSON.stringify(a)), mul: 1, fruit: "かくれんぼの実" }   // 2026-11-03 試作：まだ 季節の じゅんには 入れない
+  kage: { k: "kage", name: "影王", title: "七つの海の 影王", bases: KAGE_BASES, art: a => JSON.parse(JSON.stringify(a)), mul: 1, fruit: "かくれんぼの実" }   // 2026-11-03 試作 → 2026-11-11 季節の じゅんに 入れた
 };
-const SEASON_ORDER = ["dai", "doku", "bou", "jin"], SEASON_START = Date.UTC(2026, 9, 17, 15), SEASON_LEN = 7 * 864e5;   // 2026-11-02 日曜はじまりに（土日で ちがう 王に 会える）。2026年10月18日（日）0時から    // 2026年10月19日（月）0時から 1週間ずつ（ためし期間。2週間に もどすなら 14）
+const SEASON_ORDER = ["dai", "doku", "bou", "jin", "kage"],   // 2026-11-11 影王を 5ばんめに（今週の 迅王は そのまま、次の 日曜から 影王）
+      SEASON_START = Date.UTC(2026, 9, 17, 15), SEASON_LEN = 7 * 864e5;   // 2026-11-02 日曜はじまりに（土日で ちがう 王に 会える）。2026年10月18日（日）0時から    // 2026年10月19日（月）0時から 1週間ずつ（ためし期間。2週間に もどすなら 14）
 const SEASON_TEST = (new URLSearchParams(location.search).get("season") || "");
 const seasonIdx = (t = Date.now()) => t < SEASON_START ? 0 : Math.floor((t - SEASON_START) / SEASON_LEN);
 const seasonKey = () => SERIES[SEASON_TEST] ? SEASON_TEST : SEASON_ORDER[seasonIdx() % SEASON_ORDER.length];
@@ -5258,8 +5259,9 @@ const stormOpen = bk => legendsOf(bk || book()) >= STORM_LEGENDS;
 const seaOpen = k => k === "nagi" || k === "hare" || (k === "arashi" && stormOpen());
 const seaK = () => { const p = players[cur]; return p && SEAS[p.sea] && seaOpen(p.sea) ? p.sea : "hare"; };
 const fightSea = () => SEAS[(S && S.sea) || seaK()];
-const rodMult = () => { if (fightSea().noTools) return 1; const it = eqRod(); return it.kmult && kgOn() ? it.kmult : it.mult; };
-const reelMult = () => { if (fightSea().noTools) return 1; const it = eqReel(); return it.kmult && kgOn() ? it.kmult : it.mult; };
+/* 2026-11-11 kw＝王と でんせつの ときだけの 緑の はば（ヘルメス・ハデス）。計算で ほかの 王の どうぐと 横ならび（中くらいの うでまえで 王を つれる 割合 65%前後、てんくうより 上）に そろえた */
+const rodMult = () => { if (fightSea().noTools) return 1; const it = eqRod(); return (it.kmult || it.kw) && kgOn() ? (it.kmult || it.kw) : it.mult; };
+const reelMult = () => { if (fightSea().noTools) return 1; const it = eqReel(); return (it.kmult || it.kw) && kgOn() ? (it.kmult || it.kw) : it.mult; };
 const reelPinch = () => { if (fightSea().noTools) return REELS[0].pinch; const it = eqReel(); return it.kpinch && kgOn() ? it.kpinch : it.pinch; };
 // つった 日の きろく：d = いちばん あれた 日（0〜3）、ds = つった 日の あつまり（ビット）。前の きろくは「はれの日」あつかい
 const recD = r => r ? (Number.isFinite(r.d) ? r.d : (r.n ? 1 : -1)) : -1;
@@ -5355,10 +5357,16 @@ const KGEAR = {
     game: "伝説の かいぶつを 人が のりこえた しるし。何度 はずしても あきらめない 者の さおの ひびで、いまも あかく 光っている。"
   },
   jin: {
-    rod:  { name: "ヘルメスの さお", c: "#e8f4ff", c2: "#3a9ae8", mult: 1.25, kcut: 1, hk: "ヘルメスの さおが 風を よんだ！ 引き上げが 1回 へる" },
-    reel: { name: "ヘルメスの リール", c: "#e8f4ff", c2: "#3a9ae8", mult: 1.25, pinch: 3, kcut: 2, kpinch: 4 },
+    rod:  { name: "ヘルメスの さお", c: "#e8f4ff", c2: "#3a9ae8", mult: 1.25, kw: 1.55, kcut: 1, hk: "ヘルメスの さおが 風を よんだ！ 引き上げが 1回 へる" },
+    reel: { name: "ヘルメスの リール", c: "#e8f4ff", c2: "#3a9ae8", mult: 1.25, kw: 1.55, pinch: 3, kcut: 2, kpinch: 4 },
     story: "ギリシャ神話の ヘルメスは、神々の 手紙を とどける 使いの 神。つばさの ついた サンダルを はいて、空も 海も 風のように かけぬけたと いう。",
     game: "速さは 生まれつきでは ない。くる日も くる日も さおを ふりつづけた 者に だけ、ヘルメスの つばさは 力を かす。"
+  },
+  kage: {   // 2026-11-11 影王の どうぐ。ハデスの「かくれかぶと」：気づかれずに 近づけるので、さいしょから 魚が つかれている
+    rod:  { name: "ハデスの さお", c: "#1f2a24", c2: "#6adf8a", mult: 1.25, kw: 1.5, ksneak: .2, hk: "ハデスの さおで 気づかれずに 近づいた！ 魚は もう つかれている" },
+    reel: { name: "ハデスの リール", c: "#1f2a24", c2: "#6adf8a", mult: 1.25, kw: 1.5, pinch: 3, ksneak: .2, kpinch: 4 },
+    story: "ギリシャ神話の ハデスは、地の 下の 国の 神。かぶると すがたが 見えなくなる「かくれかぶと」を もっていた。人間の わかもの ペルセウスは、この かぶとを かりて、メドゥーサの もとへ しのびこんだと いう。",
+    game: "かくれるのが うまい 王を 見つけられるのは、目を こらしつづけた 者だけ。見つけて もらえた 王は うれしくて、その 力を かして くれる。"
   }
 };
 Object.entries(KGEAR).forEach(([k, g]) => { g.rod.k = k; g.reel.k = k; g.rod.part = "rod"; g.reel.part = "reel"; });
@@ -5368,7 +5376,8 @@ const kgDone = (key, bit, kings) => seriesKings(key).every(k => (recDs((kings ||
 const kgHave = (p, key, part) => !!p && !!KGEAR[key] && kgDone(key, KG_BIT[part], p.kings);
 const kgEmb = (p, key) => !!p && !!KGEAR[key] && kgDone(key, KG_BIT.emb, p.kings);
 const kgAllOf = (key, kings) => seriesKings(key).every(k => (kings || {})[k.id]);
-const kgOuja = kings => SEASON_ORDER.every(k => kgAllOf(k, kings));
+const OUJA_KEYS = ["dai", "doku", "bou", "jin"];   // 2026-11-11 影王を 季節に 入れても、もう「うみの おうじゃ」に なった 子の しょうごうは へらさない（ナーフしない）
+const kgOuja = kings => OUJA_KEYS.every(k => kgAllOf(k, kings));
 const kgTitles = p => { const ks = (p && p.kings) || {}; const t = SEASON_ORDER.filter(k => kgAllOf(k, ks)).map(k => SERIES[k].name + " ハンター"); if (kgOuja(ks)) t.push("うみの おうじゃ"); return t; };
 const eqTier = (p, part) => { const k = p && p.eq && p.eq[part]; if (!k || k[0] !== "t") return -1; const i = +k.slice(1), max = part === "rod" ? rodTier(p) : tierOf(REELS, p.book || {}); return Number.isInteger(i) && i >= 0 && i <= max ? i : -1; };
 const eqRod = () => { const p = players[cur], k = p && p.eq && p.eq.rod; if (k === "net" && netHave(p)) return netItem(p); if (k && KGEAR[k] && kgHave(p, k, "rod")) return KGEAR[k].rod; const i = eqTier(p, "rod"); return i >= 0 ? RODS[i] : myRod(); };
@@ -5377,9 +5386,10 @@ const kgOn = () => !fightSea().noTools && kgStrong(S && S.fish);
 const hSpd = () => { const it = eqRod(); return it.kspd && kgOn() ? it.kspd : 1; };
 const rSpd = () => { const it = eqReel(); return it.kspd && kgOn() ? it.kspd : 1; };
 const kCut = () => kgOn() ? (eqRod().kcut || 0) + (eqReel().kcut || 0) : 0;   // ヘルメスの どうぐ：王と でんせつは 引き上げる 回数が へる
+const kSneak = () => kgOn() ? (eqRod().ksneak || 0) + (eqReel().ksneak || 0) : 0;   // 2026-11-11 ハデスの どうぐ：王と でんせつは さいしょから 魚が つかれている
 const kRetry = () => { const it = eqRod(); return it.retry && kgOn() ? it.retry : 0; };
-const kgSpecial = (it, part) => "王と でんせつには " + (it.kmult ? "緑が " + it.kmult + "ばい" : it.kspd ? "ゲージが ゆっくり（" + it.kspd + "ばい）" : it.kcut ? "引き上げが " + it.kcut + "回 少ない" : part === "rod" ? "1回 かけなおせる" : "") + (part === "reel" ? (it.kmult || it.kspd || it.kcut ? "・" : "") + "ミス " + it.kpinch + "回まで" : "");
-const kgShort = (it, part) => "王・伝説に " + (it.kmult ? "×" + it.kmult : it.kspd ? "ゆっくり" : it.kcut ? "引き−" + it.kcut : part === "rod" ? "かけなおし" : "") + (part === "reel" ? (it.kmult || it.kspd || it.kcut ? "・" : "") + "ミス" + it.kpinch + "回" : "");
+const kgSpecial = (it, part) => "王と でんせつには " + (it.kmult ? "緑が " + it.kmult + "ばい" : it.kspd ? "ゲージが ゆっくり（" + it.kspd + "ばい）" : it.kcut ? "引き上げが " + it.kcut + "回 少ない" : it.ksneak ? "さいしょから 魚が つかれている" : part === "rod" ? "1回 かけなおせる" : "") + (it.kw ? "・緑が " + it.kw + "ばい" : "") + (part === "reel" ? (it.kmult || it.kspd || it.kcut || it.ksneak ? "・" : "") + "ミス " + it.kpinch + "回まで" : "");
+const kgShort = (it, part) => "王・伝説に " + (it.kmult ? "×" + it.kmult : it.kspd ? "ゆっくり" : it.kcut ? "引き−" + it.kcut : it.ksneak ? "つかれ" : part === "rod" ? "かけなおし" : "") + (it.kw ? "・×" + it.kw : "") + (part === "reel" ? (it.kmult || it.kspd || it.kcut || it.ksneak ? "・" : "") + "ミス" + it.kpinch + "回" : "");
 const kgStoryHTML = it => '<div class="kgst">' + KGEAR[it.k].story + '<br>' + KGEAR[it.k].game + '<span class="kstory">（ゲームの お話）</span></div>';
 const kgBusy = () => !!S && (S.st === "wait" || S.st === "hook" || S.st === "reel");
 function setEq(part, key) {
@@ -5423,6 +5433,15 @@ function kgArt(it) {
     return pool + reelBody("#2a1440", "#7a3fb8", '<path d="M30 70 q8 6 14 0 q6 8 12 1 q7 7 13 0 q6 6 12 -2 A30 30 0 0 1 30 70Z" fill="#4e1f80" opacity=".8"><animate attributeName="opacity" values=".55;.9;.55" dur="7s" repeatCount="indefinite"/></path>', "#c9a33a", "#c9a33a", "#c9a33a") +
       drop(99, 89, 14, 5, 0) + '<path d="M36 46 A28 28 0 0 1 50 36" stroke="#ead6ff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".6"/>';
   }
+  if (k === "kage") {   // 2026-11-11 ハデスの どうぐ：黒い さおに 小さな かくれかぶと。緑の きりが ゆっくり うすくなったり こくなったり
+    const helm = (x, y, sc) => '<g transform="translate(' + x + ' ' + y + ') scale(' + sc + ')"><path d="M-12 6 Q-13 -12 0 -14 Q13 -12 12 6 L7 6 L7 -1 L-7 -1 L-7 6Z" fill="#2a3a30" stroke="#6adf8a" stroke-width="1.6"/><path d="M0 -14 Q-3 -22 4 -26 Q2 -20 6 -16" fill="#6adf8a"/><path d="M-5 -6 h10" stroke="#6adf8a" stroke-width="1.6"/></g>';
+    const mist = (cx, cy, rx, dur, beg) => '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + (rx * .4) + '" fill="#9ff0b8" opacity="0"><animate attributeName="opacity" values="0;.35;0" dur="' + dur + 's" begin="' + beg + 's" repeatCount="indefinite"/></ellipse>';
+    if (rod) return '<path d="M18 106 L104 10" stroke="#0e1612" stroke-width="10" stroke-linecap="round"/><path d="M18 106 L104 10" stroke="#2a3a30" stroke-width="6.5" stroke-linecap="round"/>' +
+      '<path d="M18 106 L40 82" stroke="#0e1612" stroke-width="12" stroke-linecap="round"/><path d="M22 101 l5 -1 M27 96 l5 -1 M32 90 l5 -1" stroke="#6adf8a" stroke-width="2"/>' +
+      helm(46, 74, 1) + guides("#6adf8a", "#1f2a24") + line("#b8e8c4") + mist(70, 66, 16, 6, 0) + mist(88, 40, 12, 7, 2.5);
+    return reelBody("#0e1612", "#2a3a30", '<circle cx="60" cy="62" r="29" fill="none" stroke="#6adf8a" stroke-width="2" stroke-dasharray="4 10" opacity=".8"><animate attributeName="opacity" values=".2;.8;.2" dur="6s" repeatCount="indefinite"/></circle>', "#6adf8a", "#0e1612", "#2a3a30") +
+      helm(60, 66, 1.1) + mist(30, 100, 14, 6.5, 0) + mist(96, 26, 12, 7.5, 3);
+  }
   if (k === "jin") {   // ヘルメスの どうぐ：白い さおに 小さな つばさ。風の すじが ながれる
     const wing = (x, y, sx) => '<path transform="translate(' + x + ' ' + y + ') scale(' + sx + ' 1)" d="M0 0 Q-6 -14 -20 -20 Q-12 -10 -14 -4 Q-20 -10 -28 -8 Q-18 -2 -16 4 Q-22 2 -26 6 Q-12 8 0 0Z" fill="#fff" stroke="#3a9ae8" stroke-width="1.4" stroke-linejoin="round"/>';
     const wind = (d, dur, beg) => '<path d="' + d + '" stroke="#9fe0ff" stroke-width="2" fill="none" stroke-linecap="round" opacity="0"><animate attributeName="opacity" values="0;.9;0" dur="' + dur + 's" begin="' + beg + 's" repeatCount="indefinite"/></path>';
@@ -5447,11 +5466,11 @@ function kgIcon(it, sz, emb) {
 
 /* 王の しるし（ずかんの 王の たな）：王を 1ぴき つるたびに 1つ ふえる。7つで せいは
    大王＝オリハルコンの 柱に しるしが きざまれる（プラトン）、毒王＝布が 1すじ むらさきに 染まる（巻き貝の むらさき）、暴王＝赤い サンゴが 1本 そだつ（変身物語） */
-const KMON_CAP = { dai: "オリハルコンの 柱：王を つると、しるしが 1つ きざまれる", doku: "むらさきの 布：王を つると、1すじ むらさきに 染まる", bou: "赤い サンゴ：王を つると、1本 そだつ", jin: "ヘルメスの はね：王を つると、はねが 1まい 白く かがやく" };
+const KMON_CAP = { dai: "オリハルコンの 柱：王を つると、しるしが 1つ きざまれる", doku: "むらさきの 布：王を つると、1すじ むらさきに 染まる", bou: "赤い サンゴ：王を つると、1本 そだつ", jin: "ヘルメスの はね：王を つると、はねが 1まい 白く かがやく", kage: "ハデスの きり：王を 見つけると、きりが 1つ はれて すがたが 見える" };
 let kmonN = 0;
 function kmonSil(k, x, y, w) {
   const s = creatureSVG(byId(k.base) || k, { sil: true, nobg: true }), vb = ((s.match(/viewBox="([^"]*)"/) || [, "0 0 300 150"])[1]).split(/[ ,]+/).map(Number);
-  const c = { dai: "#ffe2a0", doku: "#f3e3ff", bou: "#7a5a30", jin: "#1a4f88", kage: "#1f5a34" }[k.king] || "#fff", sc = w / vb[2];
+  const c = { dai: "#ffe2a0", doku: "#f3e3ff", bou: "#7a5a30", jin: "#1a4f88", kage: "#bfeccb" }[k.king] || "#fff", sc = w / vb[2];   // 2026-11-11 影王は くらい 緑の きりの 上なので 明るい 緑
   return '<g transform="translate(' + (x - w / 2 - vb[0] * sc).toFixed(2) + ' ' + (y - vb[3] * sc / 2 - vb[1] * sc).toFixed(2) + ') scale(' + sc.toFixed(4) + ')">' + s.replace(/(fill|stroke)="#[0-9a-fA-F]{3,8}"/g, '$1="' + c + '"').replace(/^<svg[^>]*>/, "").replace(/<\/svg>\s*$/, "") + '</g>';
 }
 // anim：お祝いの とき、7つが じゅんに あらわれる（うごきを へらす 設定では さいしょから 出ている）
@@ -5478,6 +5497,13 @@ function kmonSVG(key, kings, anim) {
     o += '</g>';
     L.forEach((k, i) => { if (has[i]) o += fade(i, '<path d="M' + X(i) + ' 100 q-3 5 0 8 q3 -3 0 -8Z" fill="#b06ef0"/>'); });
     o += '<path d="M10 12 H290" stroke="#c9a33a" stroke-width="5" stroke-linecap="round"/><circle cx="10" cy="12" r="5" fill="#c9a33a"/><circle cx="290" cy="12" r="5" fill="#c9a33a"/>';
+  } else if (key === "kage") {   // 2026-11-11 ハデスの きり：見つけた 王の ところだけ きりが はれて、すがたが うかぶ（見つけて ほしい 王さまたち）
+    o += '<defs><linearGradient id="' + id + 'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c3a2a"/><stop offset="1" stop-color="#0a1810"/></linearGradient></defs><rect width="300" height="112" rx="12" fill="url(#' + id + 'g)"/>';
+    L.forEach((k, i) => { const x = X(i), puff = '<g fill="#cfeedd"><circle cx="' + (x - 9) + '" cy="60" r="11"/><circle cx="' + (x + 8) + '" cy="58" r="12"/><circle cx="' + x + '" cy="48" r="11"/><circle cx="' + x + '" cy="68" r="10"/></g>';
+      o += has[i] ? fade(i, '<circle cx="' + x + '" cy="58" r="17" fill="#6adf8a" opacity=".18"/>' + kmonSil(k, x, 58, 28, id + "t") + '<path d="M' + (x - 7) + ' 30 l2 -6 l3 4 l2 -5 l2 5 l3 -4 l2 6Z" fill="#ffd23a"/>')
+        : '<g opacity=".32">' + puff + '</g>'; });
+    o += '<path d="M8 96 Q80 88 150 96 T292 96" stroke="#9ff0b8" stroke-width="2" fill="none" opacity=".25"/>';
+    if (all) o += '<rect width="300" height="112" rx="12" fill="#e8fff0" opacity="0"><animate attributeName="opacity" values="0;.14;0" dur="6s" repeatCount="indefinite"/></rect>';
   } else if (key === "jin") {   // ヘルメスの はね：王を 1ぴき つるたびに、はねが 1まい 白く かがやく
     o += '<defs><linearGradient id="' + id + 'g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a86d0"/><stop offset="1" stop-color="#0a3466"/></linearGradient></defs><rect width="300" height="112" rx="12" fill="url(#' + id + 'g)"/>' +
       '<path d="M10 20 Q60 14 110 20 M180 92 Q230 86 290 92" stroke="#cfeeff" stroke-width="2" fill="none" opacity=".25" stroke-linecap="round"/>';
@@ -6264,7 +6290,7 @@ function tapHook(ts) {
 }
 function startReel(lv) {
   const d = dif(S.fish);
-  S.st = "reel"; S.t0 = performance.now(); S.u = Math.random() * 2; S.slow = 1; S.rs = rSpd(); S.lastT = performance.now();
+  S.st = "reel"; S.t0 = performance.now(); S.u = Math.random() * 2; S.slow = 1 + kSneak(); S.rs = rSpd(); S.lastT = performance.now();
   S.need = Math.max(3, d.pulls - kCut()); S.got = Math.min(lv, S.need - 1); S.miss = 0;
   $("rings").setAttribute("opacity", 0); setBob(0, 0, false);
   newZone();
