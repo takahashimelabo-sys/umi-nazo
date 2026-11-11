@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!doctype html>
 <html lang="ja">
 <head>
@@ -73,6 +74,12 @@ h2 { font-family: var(--display); font-weight: 900; font-size: 17px; margin: 0; 
 .spot:focus-visible, .act:focus-visible, .zukan button:focus-visible { outline: 3px solid var(--win); outline-offset: 2px; }
 
 .stage { position: relative; border-radius: 22px; overflow: hidden; border: 4px solid #ffffff; box-shadow: 0 4px 0 #e2cfa0; user-select: none; touch-action: manipulation; }
+/* 2026-11-05 iPhone：ながおしで 文字が えらばれたり メニューが 出たり しない（Safari は -webkit- が いる）。入力らんは そのまま。
+   入力らんの 文字は 16px いじょう（それより 小さいと iPhone が 画面を 大きく する） */
+body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, textarea, [contenteditable] { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
+input, textarea, select { font-size: max(16px, 1em); }
+.stage, .stage * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 .stage > svg { display: block; width: 100%; height: auto; }
 #scene { will-change: transform; }   /* 2026-10-29（2026-11-04 うつした）iPhone で 毎コマ 一部だけ かきなおすと 砂に 1点分の 横線が のこる。つり場の 絵を 1まいの 層に して、かきなおしの はばを ずらさない */
 .msg { position: absolute; left: 0; right: 0; top: 10px; text-align: center; font-family: var(--display); font-size: clamp(20px, 5.5vw, 30px); color: #fff; text-shadow: 0 2px 0 #0008, 0 0 12px #0006; pointer-events: none; padding: 0 12px; }
@@ -832,11 +839,29 @@ body.pscreen header.t-tsuri { display: flex !important; } body.pscreen header.t-
 .stp .stbt { grid-column: 1 / 3; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; border-top: 2px dashed #eadcb8; padding-top: 7px; }
 .stp .steq { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; min-width: 0; }
 .stp .steq div { display: grid; justify-items: center; gap: 1px; font-weight: 900; line-height: 1.2; text-align: center; color: #6a5a40; min-width: 0; }
-.stp .steq div svg { width: 26px; height: 26px; } .stp .steq div span { font-size: 8.5px; letter-spacing: -.8px; white-space: nowrap; overflow: hidden; max-width: 100%; } .stp .steq div small { font-size: 9px; color: #a08868; }
-.stp .stset { display: grid; grid-template-columns: repeat(4, 34px); gap: 5px 5px; }
+.stp .steq div svg { width: 26px; height: 26px; } .stp .steq div span { font-size: 8.5px; letter-spacing: -1.1px; white-space: nowrap; overflow: hidden; max-width: 100%; } .stp .steq div small { font-size: 9px; color: #a08868; }
+.stp .stset { display: grid; grid-template-columns: repeat(5, 30px); gap: 5px 3px; }
+.stp .stset button { width: 30px !important; height: 30px !important; } .stp .stset button svg { width: 18px !important; height: 18px !important; }
 .stp .stset button { all: unset; cursor: pointer; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; position: relative; background: #2f7a9a; color: #fff; }
 .stp .stset button.off { background: #ece4d2; color: #b0a088; }
 .stp .stset button.thm { background: #fff; box-shadow: inset 0 0 0 2px #e6d6ac; }
+.stage.relhold { touch-action: none; }
+.stp .stset button.rel { background: #fff4d8; color: #8a5a10; box-shadow: inset 0 0 0 2px #e8c878; }
+/* 2026-11-11 さわる／はなす を きりかえた ときの ふきだし（ボタンの すぐ 上に 出る） */
+.reltip { position: fixed; z-index: 60; width: 236px; display: grid; grid-template-columns: 34px 1fr; gap: 8px; align-items: start; background: #fffaf0; color: #5a4630; border: 2px solid #e8c878; border-radius: 14px; padding: 8px 10px; box-shadow: 0 6px 16px rgba(40,30,10,.22); font-size: 12.5px; line-height: 1.55; transition: opacity .2s; }
+.reltip.hide { opacity: 0; pointer-events: none; }
+.reltip::after { content: ""; position: absolute; left: var(--ax, 50%); bottom: -8px; width: 12px; height: 12px; margin-left: -6px; background: #fffaf0; border-right: 2px solid #e8c878; border-bottom: 2px solid #e8c878; transform: rotate(45deg); }
+.reltip .rti { width: 34px; height: 34px; border-radius: 10px; background: #fff4d8; color: #8a5a10; box-shadow: inset 0 0 0 2px #e8c878; display: grid; place-items: center; } .reltip .rti svg { width: 22px; height: 22px; }
+.reltip .rti.lite { background: #2f7a9a; color: #fff; box-shadow: none; } .reltip .rti.lite.off { background: #ece4d2; color: #b0a088; }
+.reltip b { display: block; font-size: 13.5px; color: #8a5a10; } .reltip small { display: block; margin-top: 2px; color: #a08868; font-size: 11px; }
+/* 2026-11-11 ガイドの「ボタン」の ページ */
+.gdtabs.four { display: grid; grid-template-columns: 1fr 1fr; }
+.gdbt { display: grid; grid-template-columns: 34px 1fr; gap: 6px 10px; align-items: start; margin-top: 4px; }
+.gdbt .gdi { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: #2f7a9a; color: #fff; } .gdbt .gdi svg { width: 18px; height: 18px; }
+.gdbt .gdi.rel { background: #fff4d8; color: #8a5a10; box-shadow: inset 0 0 0 2px #e8c878; }
+.gdbt .gdi.lite { background: #ece4d2; color: #8a7a60; }
+.gdbt .gdi.thm { background: #fffaf0; box-shadow: inset 0 0 0 2px #e8dcc0; }
+.gdbt p { margin: 0; font-size: 13px; line-height: 1.6; } .gdbt p b { color: #2f6a8a; } .gdbt p small { display: block; color: #8a7a60; font-size: 12px; }
 .stp .stset button:focus-visible { outline: 3px solid var(--win); }
 .stp .stset button svg { width: 20px; height: 20px; }
 .stp .stset button.off::after { content: ""; position: absolute; width: 24px; height: 2.5px; background: #b0a088; transform: rotate(-40deg); border-radius: 2px; }
@@ -851,7 +876,7 @@ body.pscreen header.t-tsuri { display: flex !important; } body.pscreen header.t-
 .pmove .mvsec { display: grid; gap: 6px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
 .pmove .mvsec b { font-family: var(--display); font-size: 14px; }
 .pmove p { margin: 0; font-weight: 500; font-size: 12px; line-height: 1.6; }
-.pmove textarea { font: 12px/1.4 ui-monospace, monospace; width: 100%; min-height: 70px; border: 2px solid var(--line); border-radius: 10px; padding: 6px 8px; background: #fff; color: var(--ink); word-break: break-all; }
+.pmove textarea { font: 16px/1.35 ui-monospace, monospace; width: 100%; min-height: 70px; border: 2px solid var(--line); border-radius: 10px; padding: 6px 8px; background: #fff; color: var(--ink); word-break: break-all; }
 .pmove .mvrow { display: flex; flex-wrap: wrap; gap: 6px; }
 .pmove button, .pmove label.mvfile { font: inherit; font-weight: 900; font-size: 13px; border: 0; border-radius: 999px; padding: 6px 14px; background: var(--leaf); color: #fff; cursor: pointer; box-shadow: 0 3px 0 #4e9a3a; }
 .pmove label.mvfile input { display: none; }
@@ -1321,11 +1346,12 @@ function jellySVG(s, opt = {}) {
   }
   if (a.special === "comb") {
     if (a.twin) [[122, -1], [178, 1]].forEach(([x, sd], j) => { const d = wav(x, 92, 54, 7, j * 2, 4); o += '<path d="' + d + '" stroke="' + K("#f4c8d4") + '" stroke-width="1.6" fill="none" opacity="' + OP(.9) + '"/>'; if (!sil) for (let k = 8; k < 54; k += 6) { const yy = 92 + k, xx = x + Math.sin(k / 16 + j * 2) * 7 * (.3 + k / 54); o += '<path d="M' + f(xx) + ' ' + yy + ' q' + (sd * 9) + ' 2 ' + (sd * 14) + ' 9" stroke="#f8d8e2" stroke-width=".8" fill="none" opacity=".8"/>'; } });
+    if (a.lobes) [-1, 1].forEach(sg => o += '<path d="M' + (150 + sg * 6) + ' 82 Q' + (150 + sg * 44) + ' 92 ' + (150 + sg * 50) + ' 138 Q' + (150 + sg * 30) + ' 146 ' + (150 + sg * 4) + ' 134 Q' + (150 + sg * 14) + ' 110 ' + (150 + sg * 6) + ' 82Z" fill="' + K("#e2eef6") + '" opacity="' + OP(.55) + '" stroke="' + K("#c8dcea") + '" stroke-width="1.4"/>' + (sil ? "" : '<path d="M' + (150 + sg * 10) + ' 92 Q' + (150 + sg * 36) + ' 100 ' + (150 + sg * 40) + ' 130" stroke="#ffffff" stroke-width="1.2" fill="none" opacity=".6"/>'));   // 2026-11-11 カブトクラゲは 大きな 2まいの「そで」（口の ひれ）
     const body = a.beroe ? "M150 18 Q198 22 198 82 Q198 116 182 124 Q166 118 150 120 Q134 118 118 124 Q102 116 102 82 Q102 22 150 18Z" : "M150 22 Q190 24 192 70 Q192 104 176 118 Q160 112 150 116 Q140 112 124 118 Q108 104 108 70 Q110 24 150 22Z";
     o += '<path d="' + body + '" fill="' + K(a.beroe ? "#f8dfe6" : "#eef6fb") + '" opacity="' + OP(.35) + '" stroke="' + K("#ffffff") + '" stroke-width="1"/>';
     if (sil) return o + '</svg>';
     const cols = ["#ff5a7a", "#ffb84a", "#fff06a", "#6aff9a", "#5ad8ff", "#8a7aff"];
-    [-34, -20, -7, 7, 20, 34].forEach((dx, r) => { for (let k = 0; k < 14; k++) { const y = 32 + k * 6, x = 150 + dx * Math.sin(Math.PI * (.15 + .7 * k / 13)); o += '<rect x="' + f(x - 2.5) + '" y="' + f(y) + '" width="5" height="2" fill="' + cols[(k + r) % 6] + '" opacity=".9"/>'; } });
+    [-34, -20, -7, 7, 20, 34].forEach((dx, r) => { for (let k = 0; k < (a.lobes ? 10 : 14); k++) { const y = 32 + k * 6, x = 150 + dx * Math.sin(Math.PI * (.15 + .7 * k / 13)); o += '<rect x="' + f(x - 2.5) + '" y="' + f(y) + '" width="5" height="2" fill="' + cols[(k + r) % 6] + '" opacity=".9"/>'; } });
     o += '<ellipse cx="150" cy="44" rx="8" ry="6" fill="#ffffff" opacity=".35"/><path d="M150 60 L150 104" stroke="#ffffff" stroke-width="2" opacity=".35"/>';
     return o + '</svg>';
   }
@@ -1585,7 +1611,7 @@ const SEA = [
   K_("nemuribuka", "ネムリブカ", "hide", 160, 2, "インド・太平洋の サンゴしょう", "魚、タコ", "昼は 岩の かげで じっと しているので「ねむり」ブカ", "背びれと おびれの 先が 白い サメ（ホワイトチップ）。",
     { top: "#7d8790", bot: "#dfe2e4", d: .12, snout: "round", tail: "hetero", d1: [28, 26], pect: [30, 22], eye: 3.5, tips: "#f5f7f8" }),
   K_("tenguhagi", "テングハギ", "fish", 50, 2, "インド・太平洋の サンゴしょう", "海そう", "大人の おでこに、てんぐの 鼻の ような 角が のびる", "しっぽの つけねに はものの ような トゲが ある。",
-    { f: "fish", top: "#6f8a96", bot: "#9fb5bd", fin: "#5a7280", h: .3, snout: "round", tail: "lunate", d: [.15, .75, 12], an: [.15, .6, 12], eye: 4, mouth: "small", horn: true, pat: [{ k: "spine", col: "#3a6fd6" }] }),
+    { f: "fish", top: "#6f8a96", bot: "#9fb5bd", fin: "#5a7280", h: .3, snout: "round", tail: "lunate", d: [.15, .75, 12], an: [.15, .6, 12], eye: 4, mouth: "small", hornBig: 22, pat: [{ k: "spine", col: "#3a6fd6" }] }),
   K_("soushihagi", "ソウシハギ", "fish", 70, 1, "世界中の あたたかい 海", "海そう、小さな 生きもの", "体に 毒（パリトキシン）を もつ ことが あり、食べては いけない", "青い 線や 点の もようの、平たく 細長い カワハギの なかま。",
     { f: "fish", top: "#b5a77a", bot: "#d9cfa8", fin: "#9a8a5a", h: .28, tm: .5, snout: "beak", tail: "round", d: [.12, .5, 10], an: [.12, .5, 10], eye: 3.5, mouth: "snout", pat: [{ k: "bluelines" }], spikeTop: true }),
     K_("nisegoishi", "ニセゴイシウツボ", "fish", 100, 2, "インド・太平洋の サンゴしょう", "魚、タコ", "岩の すきまから 顔を 出して、えものが 来るのを 待つ", "サンゴしょうに すむ ウツボの なかま。",
@@ -1614,7 +1640,7 @@ const SEA = [
   K_("aoriika", "アオリイカ", "mollusc", 45, 2, "日本の 沿岸の 藻場（もば）や 岩場", "小魚、エビ", "体の 色を いっしゅんで 変えて、合図を 送りあう", "大きな ひれが 体の ふちを ぐるっと かこむ イカ。",
     { f: "squid", col: "#c9a98a" }),
   K_("hirame", "ヒラメ", "fish", 80, 1, "日本の 沿岸の 砂地", "小魚、イカ", "赤ちゃんの ときは ふつうの 魚の 形。育つと 右目が 左側へ 移動する", "「左ヒラメに 右カレイ」。目が 体の 左側に ある。",
-    { f: "flat", col: "#8a7552", spot: "#4f412a" }),
+    { f: "flat", mirror: true, col: "#8a7552", spot: "#4f412a" }),
   K_("madai", "マダイ", "fish", 100, 1, "日本の 沿岸の 岩場", "エビ、カニ、貝、小魚", "目の 上の 青い もようは「アイシャドウ」と よばれる", "おめでたい 魚として、お祝いの 料理に 使われる。",
     { f: "fish", top: "#e8606a", bot: "#ffd2cf", fin: "#f07a80", h: .3, snout: "pointed", tail: "fork", d: [.18, .72, 18, 1], an: [.15, .38, 14], eye: 4.5, mouth: "small", pat: [{ k: "spots", col: "#5ab4ff", n: 22, r: 1.4, band: [-.85, -.2] }, { k: "shadow", col: "#3a8fe0" }] }),
   K_("utsubo", "ウツボ", "fish", 80, 1, "南日本の 沿岸の 岩場", "タコ、魚", "口を パクパク するのは おこっているのでは なく、息を するため", "するどい 歯を もつ。岩の すきまに かくれて えものを 待つ。",
@@ -1644,7 +1670,7 @@ const SEA = [
   K_("kobudai", "コブダイ", "fish", 90, 2, "日本海や 瀬戸内海（せとないかい）など 日本の 岩場", "貝、カニ、ウニ", "メスから オスに 変わり、オスは おでこが こぶの ように ふくらむ", "強い 歯で 貝を かみくだく。",
     { f: "fish", top: "#9a5a72", bot: "#e2c2c8", fin: "#8a4a62", h: .32, snout: "round", tail: "trunc", d: [.2, .78, 14, 1], an: [.15, .38, 12], eye: 3.5, mouth: "big", bump: true }),
   K_("kabuto", "カブトクラゲ", "jelly", 10, 2, "日本の 沿岸", "動物プランクトン", "光が 当たると、体の すじが にじ色に 光って 見える（自分で 光るのでは ない）", "じつは クラゲでは なく「クシクラゲ」の なかま。さす 毒は ない。",
-    { bg: "shore", special: "comb" }),
+    { bg: "shore", special: "comb", lobes: true }),
   K_("baynettle", "アトランティックベイネットル", "jelly", 25, 2, "北アメリカ 東海岸の わん（チェサピーク湾（わん）など）", "動物プランクトン、ほかの クラゲ", "英語の「ネットル」は イラクサ（ちくちく する草）。さされると ちくちく いたむ", "白っぽい かさに、長い しょくしゅと うで。",
     { bg: "shore", shape: "dome", col: "#f2eee6", op: .6, pat: "stripes", patCol: "#c9a98a", arms: { n: 4, len: 70, style: "frill", col: "#f0e2d6" }, tent: { n: 24, len: 100, col: "#e8d6c6" } }),
   // open ocean
@@ -1700,7 +1726,7 @@ const SEA = [
   K_("kachama", "カチャーマ", "fish", 100, 2, "南アメリカ・アマゾン川", "木の 実、果物", "森が 水に つかる 季節に、落ちて くる 木の 実を 食べる", "ピラニアの なかまの 大きな 魚。人の ような 歯を もつ。",
     { f: "fish", top: "#5a5a46", bot: "#2a2a24", fin: "#2a2a24", h: .38, snout: "blunt", tail: "trunc", d: [.4, .6, 18], an: [.1, .38, 14], eye: 4, mouth: "small", pat: [{ k: "grad2", col: "#b8a46a" }], adipose: true }),
   K_("ooyokokubi", "オオヨコクビガメ", "turtle", 80, 2, "南アメリカ・アマゾン川の 流域", "水草、果物、魚", "首を こうらに 引っこめず、横に まげて しまう", "南アメリカ 最大級の 真水の カメ。",
-    { f: "turtle", shell: "#3f3f3a", scute: "#2a2a26", skin: "#5a5a50", side: true }),
+    { f: "turtle", v: "pond", flat: true, shell: "#3f3f3a", scute: "#2a2a26", skin: "#5a5a50", side: true }),
   K_("redpiranha", "レッドピラニア", "fish", 30, 2, "南アメリカ・アマゾン川", "魚、虫、死んだ 生きもの", "こわい イメージ だが、じつは おくびょうで 群れで 身を 守る", "赤い おなかと、するどい 三角の 歯。",
     { f: "fish", top: "#7f8a8f", bot: "#d84a3a", fin: "#5a646a", h: .36, snout: "blunt", tail: "trunc", d: [.4, .58, 16], an: [.1, .35, 12], eye: 4.5, mouth: "teeth", pat: [{ k: "glitter" }], adipose: true })
 ];
@@ -1715,11 +1741,11 @@ const SEA2 = [
   K_("hokke", "ホッケ", "fish", 40, 1, "北日本〜オホーツク海", "動物プランクトン、小魚", "ひらいて ほした「ひもの」で おなじみ", "群れで くらし、秋に 岩場で 卵を うむ。",
     { f: "fish", top: "#6f7a5a", bot: "#e6e2cf", fin: "#8a8a5a", h: .2, snout: "pointed", tail: "fork", d: [.15, .75, 12], an: [.12, .45, 10], eye: 4.5, mouth: "small", pat: [{ k: "bars", col: "#4a5236", n: 5, w: .05, at: [.2, .35, .5, .65, .8] }] }),
   K_("hanasakigani", "ハナサキガニ", "crust", 15, 2, "北海道の 根室〜オホーツク海の 浅い 海", "貝、ゴカイ、海そう", "名前は 根室の「花咲（はなさき）」から。カニと よばれるが、じつは ヤドカリの なかま", "体じゅうに かたい トゲが ある。ゆでると まっかに なる。",
-    { f: "crab", v: "small", body: "#a24a30", spot: "#5a2418" }),
+    { f: "crab", king: true, legL: 54, legW: 8, v: "small", body: "#a24a30", spot: "#5a2418" }),
   K_("tarabagani", "タラバガニ", "crust", 100, 2, "北太平洋の 冷たい 海", "貝、ゴカイ、ヒトデ", "カニと よばれるが、じつは ヤドカリの なかま。歩く あしは 6本に 見える", "名前は、タラの とれる 漁場（たらば）で とれるから。",
-    { f: "crab", v: "spider", body: "#8a3a2a", spot: "#d8a080" }),
+    { f: "crab", king: true, v: "spider", body: "#8a3a2a", spot: "#d8a080" }),
   K_("kegani", "ケガニ", "crust", 12, 1, "北海道〜オホーツク海の 砂地", "貝、ゴカイ、小さな 魚", "こうらが みじかい 毛で おおわれているので ケガニ", "北海道の 冬の 味覚として 有名。",
-    { f: "crab", v: "small", body: "#9a5a3a", spot: "#5a3420" }),
+    { f: "crab", v: "small", hairy: true, shortClaw: true, body: "#9a5a3a", spot: "#5a3420" }),
   K_("madara", "マダラ", "fish", 100, 1, "北太平洋の 冷たい 海", "魚、イカ、カニ", "下あごに 1本の ひげが ある", "大きな 口で なんでも 食べる。冬の なべの 魚として おなじみ。",
     { f: "fish", top: "#8a7a5a", bot: "#ece6d6", fin: "#7a6a4a", h: .22, snout: "round", tail: "trunc", d: [.55, .7, 12], d2: [.32, .5, 10], an: [.12, .4, 10], eye: 4.5, mouth: "big", pat: [{ k: "spots", n: 30, r: 2, col: "#5a4a30", band: [-.9, .1] }], chinBarbels: true }),
   K_("shirozake", "シロザケ", "fish", 70, 1, "北太平洋。秋に 北日本の 川へ もどる", "小魚、エビ、プランクトン", "海で 大きく なったあと、自分が 生まれた 川に もどって 卵を うむ", "日本で ふつう「サケ」と いえば この 魚。",
@@ -1746,7 +1772,7 @@ const SEA2 = [
   K_("daiougusoku", "ダイオウグソクムシ", "crust", 40, 3, "大西洋や メキシコ湾（わん）の 深海（水深 200〜2000m）", "死んだ 魚や クジラ", "鳥羽水族館では、5年以上 なにも 食べずに 生きた 記録が ある", "ダンゴムシや ワラジムシの なかまで、世界最大級。",
     { f: "isopod", col: "#c8bfae", line: "#8a7f6a" }),
   K_("mendako", "メンダコ", "mollusc", 20, 4, "日本の 太平洋側などの 深海（水深 200〜1000m）", "小さな エビの なかま", "長く 飼うのが とても むずかしく、水族館でも ときどき しか 会えない", "頭の 上の 小さな ひれを 耳のように 動かして、ふわふわ 泳ぐ 深海の タコ。",
-    { f: "octopus", col: "#e86a4a", ears: true }),
+    { f: "octopus", v: "dumbo", col: "#e86a4a", ears: true }),
   K_("ryuguunotsukai", "リュウグウノツカイ", "fish", 500, 4, "世界中の あたたかい 海の 深い ところ", "オキアミなどの 動物プランクトン", "生きたまま 水族館に はこばれても、数時間〜1日ほどで 死んで しまう", "体長 数mにも なる、世界で いちばん 長い 硬骨魚（こうこつぎょ）。銀色の 体に 赤い ひれ。",
     { f: "fish", top: "#c9d2dc", bot: "#eef2f6", fin: "#e8402a", h: .08, tm: .9, snout: "blunt", tail: "point", d: [.02, .98, 9], eye: 4.5, mouth: "small", filament: .97, filLen: 50, pat: [{ k: "spots", n: 14, r: 1.6, col: "#5a6a7a" }] }),
   K_("houraieso", "ホウライエソ", "fish", 35, 4, "世界中の 深海（水深 500〜2500m）", "小魚", "長い きばで えものを とらえ、まるごと のみこむ", "おなかに ならんだ 光る 点を もつ 深海魚。",
@@ -1758,13 +1784,13 @@ const SEA2 = [
   K_("akamutsu", "アカムツ", "fish", 40, 2, "日本の 太平洋・日本海側の 深め（水深 100〜400m）", "エビ、小魚", "口の 中が 黒いので「ノドグロ」とも よばれる", "大きな 目と 赤い 体の 高級魚。",
     { f: "fish", top: "#f0503a", bot: "#f8a090", fin: "#f0503a", h: .26, snout: "round", tail: "fork", d: [.25, .72, 16, 1], an: [.12, .4, 12], eye: 6.5, mouth: "big" }),
   K_("nutaunagi", "ヌタウナギ", "fish", 60, 1, "日本の 沿岸〜深い 海の どろの 中", "死んだ 魚、ゴカイ", "ウナギとは ちがい、あごが ない めずらしい 魚", "おそわれると、大量の ねばねばを 出して 身を 守る。",
-    { f: "eel", col: "#c8907a", spot: "#a87060" }),
+    { f: "eel", v: "hag", col: "#c8907a", spot: "#a87060" }),
   K_("akazaebi", "アカザエビ", "crust", 20, 2, "日本の 太平洋側の 深め（水深 200〜400m）の どろの 海底", "小さな 生きもの", "ヨーロッパで「ラングスティーヌ」と よばれる エビの なかま", "細長い はさみを もつ、オレンジ色の エビ。",
-    { f: "lobster", body: "#f0a090", band: "#e8604a", leg: "#e8604a" }),
+    { f: "lobster", claw: "spiny", body: "#f0a090", band: "#e8604a", leg: "#e8604a" }),
   K_("benizuwai", "ベニズワイガニ", "crust", 90, 2, "日本海などの 深い 海（水深 500〜2700m）", "貝、ゴカイ、死んだ 魚", "ズワイガニより 深い ところに すむ", "ゆでる 前から 体が 赤い カニ。",
     { f: "crab", v: "spider", body: "#e8503a", spot: "#ffd8c8" }),
   K_("koumoridako", "コウモリダコ", "mollusc", 30, 4, "世界中の あたたかい 海の 深海（水深 600〜900m）", "マリンスノー（しずんでくる 小さな つぶ）", "タコでも イカでもない、とても めずらしい なかま。イカと タコに わかれる 前の すがたを 残すと 考えられている", "2本の 長い 糸で マリンスノーを 集めて 食べる。",
-    { f: "octopus", col: "#6a1a2a" }),
+    { f: "octopus", v: "vamp", col: "#6a1a2a" }),
   K_("tenganmuneeso", "テンガンムネエソ", "fish", 6, 2, "世界中の 深海（水深 200〜1000m）", "動物プランクトン", "おなかを 光らせて、下から 見たときの 体の かげを 消す", "銀色で うすっぺらい、手おのの ような 形。",
     { f: "fish", top: "#7a8a9a", bot: "#e6eef4", fin: "#c8d2dc", h: .4, tm: .4, snout: "blunt", tail: "fork", d: [.42, .55, 10], an: [.12, .35, 8], eye: 6, mouth: "up", pat: [{ k: "dots7" }, { k: "glitter" }] }),
   // ===== river =====
@@ -1775,7 +1801,7 @@ const SEA2 = [
   K_("ayu", "アユ", "fish", 20, 1, "日本の 川の 中流", "石に ついた 藻（も）", "1年で 一生を おえるので「年魚」とも よばれる", "石の 藻（も）を 守って ナワバリを つくる。それを 利用した「友づり」が 有名。",
     { f: "fish", top: "#7a8a6a", bot: "#eee8d6", fin: "#c8c070", h: .2, snout: "pointed", tail: "fork", d: [.5, .65, 16], an: [.12, .28, 10], eye: 4, mouth: "small", adipose: true, pat: [{ k: "patch", t: .7, y: 0, col: "#f2d23a" }] }),
   K_("nihonunagi", "ニホンウナギ", "fish", 60, 2, "日本の 川や 湖。生まれるのは はるか 南の 海", "小魚、エビ、虫", "日本から 南へ 2000km以上 はなれた、マリアナ諸島の 西の 海で 生まれる", "夜に 動く 細長い 魚。かば焼きで おなじみ。",
-    { f: "eel", col: "#4a5a3a", spot: "#4a5a3a" }),
+    { f: "eel", v: "true", fin: "#6a7a52", col: "#4a5a3a", spot: "#4a5a3a" }),
   K_("namazu", "ナマズ", "fish", 60, 1, "日本の 川や 池、田んぼの 水路", "小魚、カエル、虫", "むかしから「じしんを 知らせる 魚」という 言いつたえが ある", "大きな 口と 長い ひげ。夜に えさを さがす。",
     { f: "fish", top: "#4a4a3a", bot: "#c8c0a8", fin: "#4a4a3a", h: .18, tm: .75, snout: "blunt", tail: "round", d: [.68, .74, 8], an: [.04, .6, 10], eye: 3, mouth: "big", barbels: true, chinBarbels: true, pat: [{ k: "blotch", col: "#2a2a20" }] }),
   K_("koi", "コイ", "fish", 60, 1, "日本の 川の 中流〜下流、池や 湖", "貝、虫、水草", "口に 2対の ひげが ある。にている フナには ひげが ない", "色あざやかな「ニシキゴイ」は、コイを 改良した もの。",
@@ -1783,7 +1809,7 @@ const SEA2 = [
   K_("dojou", "ドジョウ", "fish", 10, 1, "日本の 田んぼや 小川の どろの 中", "虫、藻（も）", "水面で 空気を すい、腸で 呼吸することが できる", "口の まわりに 10本の ひげ。どろに もぐるのが とくい。",
     { f: "fish", top: "#8a7a5a", bot: "#d8ccaa", fin: "#8a7a5a", h: .12, tm: .8, snout: "round", tail: "round", d: [.42, .5, 8], an: [.15, .25, 6], eye: 2.5, mouth: "small", barbels: true, pat: [{ k: "spots", n: 30, r: 1.6, col: "#4a3a20" }] }),
   K_("denkiunagi", "デンキウナギ", "fish", 200, 3, "南アメリカ・アマゾン川", "魚", "800ボルトを こえる 電気を 出すことが ある。名前は ウナギでも、ウナギの なかまでは ない", "体の ほとんどが 電気を つくる「発電器官」。",
-    { f: "eel", col: "#4a4a3a", spot: "#c87a3a", mottle: true }),
+    { f: "eel", v: "true", analOnly: true, smallEye: true, belly: "#e8904a", col: "#4a4a3a", spot: "#c87a3a", mottle: true }),
   K_("corydoras", "コリドラス", "fish", 5, 1, "南アメリカの 川", "砂の 中の 小さな 生きもの", "ときどき 水面まで いって 空気を すい、腸で 呼吸する", "ひげで 砂を さぐりながら、底を ちょこちょこ 動く。",
     { f: "fish", top: "#9a8a6a", bot: "#e8dcc0", fin: "#c8b890", h: .32, snout: "blunt", tail: "fork", d: [.6, .75, 16], an: [.12, .3, 8], eye: 4, mouth: "small", barbels: true, adipose: true, pat: [{ k: "spots", n: 24, r: 2, col: "#3a2a1a" }] }),
   K_("redtail", "レッドテールキャットフィッシュ", "fish", 130, 2, "南アメリカ・アマゾン川", "魚、木の 実", "とても 大きく なる ナマズの なかま。1m以上に なる", "名前の とおり、おびれが 赤い。",
@@ -1797,7 +1823,7 @@ const SEA2 = [
   K_("medaka", "メダカ", "fish", 3, 1, "日本の 田んぼや 小川", "プランクトン、小さな 虫", "野生の メダカは へっていて、ぜつめつが 心配される 生きものに えらばれている", "目が 大きく、高い ところに あるので「目高（めだか）」。",
     { f: "fish", top: "#b8a880", bot: "#ece4cc", fin: "#c8b890", h: .2, snout: "round", tail: "trunc", d: [.15, .25, 8], an: [.1, .4, 10], eye: 5.5, mouth: "up" }),
   K_("ishigame", "ニホンイシガメ", "turtle", 20, 2, "本州・四国・九州の 川や 池", "虫、魚、水草", "日本に しか いない、日本だけの カメ", "こうらの うしろの ふちが ギザギザ している。",
-    { f: "turtle", shell: "#8a6a3a", scute: "#5a4422", skin: "#6a6040" }),
+    { f: "turtle", v: "pond", serr: true, ring: true, shell: "#8a6a3a", scute: "#5a4422", skin: "#6a6040" }),
   // ===== open =====
   K_("kuromaguro", "クロマグロ", "fish", 300, 3, "太平洋の あたたかい〜温帯の 外洋", "イワシ、サバ、イカ", "泳ぎつづけて 口から 水を とりこまないと、息が できない", "体長 3mにも なる。「本マグロ」とも よばれる。",
     { f: "fish", top: "#1a2a4a", bot: "#d8dee4", fin: "#2a3a5a", h: .26, tm: .5, snout: "pointed", tail: "lunate", d: [.6, .75, 16, 1], d2: [.4, .48, 14], an: [.38, .46, 12], eye: 4, mouth: "small", finlets: true }),
@@ -1820,13 +1846,13 @@ const SEA2 = [
   K_("akaumigame", "アカウミガメ", "turtle", 100, 2, "世界中の あたたかい 海。日本の すなはまで 産卵する", "貝、カニ、クラゲ", "北太平洋で 卵を うむのは、ほとんどが 日本の すなはま", "赤茶色の こうらと、大きな 頭。",
     { f: "turtle", shell: "#a85a2a", scute: "#6a3416", skin: "#c88a5a" }),
   K_("osagame", "オサガメ", "turtle", 180, 4, "世界中の 外洋。冷たい 海まで 旅をする", "クラゲ", "こうらが かたい 板ではなく、革のような 皮で できている。世界最大の カメ", "クラゲを 食べて、何千kmも 旅を する。",
-    { f: "turtle", shell: "#2a2a30", scute: "#8a8a96", skin: "#3a3a40" }),
+    { f: "turtle", v: "leather", shell: "#2a2a30", scute: "#8a8a96", skin: "#3a3a40" }),
   K_("gingameaji", "ギンガメアジ", "fish", 80, 1, "インド・太平洋の あたたかい 海", "小魚、エビ", "何百ぴきもの 大群で うずを まく「トルネード」が 有名", "銀色に かがやく 大きな アジの なかま。",
     { f: "fish", top: "#5a6a7a", bot: "#e6ecf0", fin: "#7a8a9a", h: .32, snout: "round", tail: "fork", d: [.15, .62, 14], an: [.12, .38, 12], eye: 5.5, mouth: "small", pat: [{ k: "scutes" }, { k: "glitter" }] }),
   K_("surumeika", "スルメイカ", "mollusc", 30, 1, "日本の まわりの 海", "小魚、オキアミ", "夜、明かりに 集まる 習性を 使って「イカつり漁」が 行われる", "ほした ものが「するめ」。",
-    { f: "squid", col: "#c87a5a" }),
+    { f: "squid", v: "arrow", w: 17, fl: .36, fw: 31, al: 46, tent: 66, ty: 26, col: "#c87a5a" }),
   K_("hotaruika", "ホタルイカ", "mollusc", 7, 2, "日本海などの 深い 海。春に 富山湾（とやまわん）の 浅い ところへ", "動物プランクトン", "春の 夜、富山湾（とやまわん）では 海が 青く 光って 見える", "体の 光る 点で、青白く 光る 小さな イカ。",
-    { f: "squid", col: "#6a4a7a", glow: "#7fd8ff" }),
+    { f: "squid", v: "arrow", w: 18, fl: .52, fw: 32, al: 44, cone: true, col: "#6a4a7a", glow: "#7fd8ff" }),
   // ===== shore =====
   K_("kasago", "カサゴ", "fish", 25, 1, "日本の 沿岸の 岩場", "小魚、エビ、カニ", "卵ではなく、おなかの 中で かえした 子どもを 産む", "岩かげで じっと 待ち、近づいた えものを 大きな 口で ひとのみ。",
     { f: "fish", top: "#a84a2a", bot: "#e8a080", fin: "#a84a2a", h: .28, tm: .65, snout: "blunt", tail: "round", d: [.2, .8, 16, 1], an: [.15, .38, 12], eye: 5, mouth: "big", pat: [{ k: "blotch", col: "#5a2010" }, { k: "spots", n: 14, r: 1.6, col: "#f2e0d0" }] }),
@@ -1857,15 +1883,15 @@ const SEA2 = [
   K_("hakofugu", "ハコフグ", "fish", 20, 1, "本州〜九州の 岩場", "ゴカイ、小さな 生きもの", "体の 表面から 毒を 出すことが ある", "かたい 骨の 板で できた、箱のような 体。",
     { f: "box", col: "#c8b46a", spot: "#3f6ab0" }),
   K_("maanago", "マアナゴ", "fish", 90, 1, "日本の 沿岸の 砂地や どろの 海底", "小魚、エビ、ゴカイ", "体の 横に ならぶ 白い 点は、はかりの めもりに にているので「はかり目」と よばれる", "昼は 砂に もぐり、夜に 出てくる。",
-    { f: "eel", col: "#8a7a5a", spot: "#f2ead8" }),
+    { f: "eel", v: "true", dotRow: "#f2ead8", col: "#8a7a5a", spot: "#f2ead8" }),
   K_("tatsunootoshigo", "タツノオトシゴ", "fish", 8, 2, "日本の 沿岸の 海そうの 林", "小さな エビの なかま", "オスの おなかの ふくろで 卵を 育て、子どもを 産むのは オス", "しっぽを 海そうに まきつけて、立ったまま 泳ぐ。",
     { f: "seahorse", col: "#c89a5a", spot: "#8a6030" }),
   K_("shirogisu", "シロギス", "fish", 25, 1, "日本の 沿岸の 砂地", "ゴカイ、小さな エビ", "おどろくと すばやく 砂に もぐる", "すきとおるような 白っぽい 体。天ぷらで おなじみ。",
     { f: "fish", top: "#d8ccaa", bot: "#f6f2e6", fin: "#e8dcc0", h: .16, snout: "pointed", tail: "fork", d: [.58, .72, 10], d2: [.2, .5, 8], an: [.15, .45, 8], eye: 4, mouth: "small", pat: [{ k: "glitter" }] }),
   K_("gazami", "ガザミ", "crust", 25, 1, "日本の いりえの 砂地", "貝、小魚", "いちばん うしろの あしが オールの 形で、海の 中を 泳げる", "「ワタリガニ」とも よばれる。",
-    { f: "crab", v: "small", body: "#5a6a7a", spot: "#f2f2f2" }),
+    { f: "crab", paddle: true, swim: true, dots: "#f2f2f2", v: "small", body: "#5a6a7a", spot: "#f2f2f2" }),
   K_("kurumaebi", "クルマエビ", "crust", 20, 1, "日本の いりえの 砂地", "ゴカイ、貝", "体を まるめると、しまもようが 車輪の ように 見える", "昼は 砂に もぐり、夜に 出てくる。",
-    { f: "shrimp", v: "coral", body: "#d8c8a8", band: "#5a4a3a" }),
+    { f: "shrimp", v: "coral", shortArm: true, body: "#d8c8a8", band: "#5a4a3a" }),
   K_("akaei", "アカエイ", "ray", 100, 1, "日本の 沿岸の 砂地", "貝、カニ、ゴカイ", "しっぽの トゲに 毒が ある。浅い 海で ふまないように 注意", "おなかが 赤みがかった 白なので アカエイ。",
     { f: "ray", v: "disc", top: "#8a6a4a", mark: "#8a6a4a" }),
   // ===== reef =====
@@ -1915,12 +1941,12 @@ SHARKS.push(...SEA2);
 const SEA4 = [
   // north
   K_("colossal", "ダイオウホウズキイカ", "mollusc", 1200, 4, "南極海の 深海（水深 2000mほど）", "魚、ほかの イカ", "動物の 中で 最大級の 目を もつ。直径 35cmの 記録も ある", "体重 450kgの 記録が ある、とても 重い 大きな イカ。",
-    { f: "squid", col: "#a8302a", bigEye: true }),
+    { f: "squid", v: "arrow", w: 25, fl: .5, fw: 40, fr: 1, al: 44, tent: 62, ty: 34, col: "#a8302a", bigEye: true }),
   K_("koriuo", "ジャノメコオリウオ", "fish", 50, 4, "南極の 冷たい 海", "魚、オキアミ", "血に 赤い 色の もと（ヘモグロビン）が なく、血が すきとおっている", "体液が こおらない しくみを もち、0℃より 冷たい 海でも くらせる。",
     { f: "fish", top: "#c8ccc4", bot: "#eef0ec", fin: "#9aa098", h: .16, tm: .7, snout: "beak", snoutLen: 16, tail: "trunc", d: [.55, .7, 22], d2: [.15, .5, 10], an: [.12, .45, 10], eye: 5, mouth: "big", pat: [{ k: "blotch", col: "#7a8078" }] }),
   // deep
   K_("daiouika", "ダイオウイカ", "mollusc", 1000, 4, "世界中の 深海（水深 300〜1000mほど）", "魚、ほかの イカ", "2012年に 小笠原（おがさわら）の 沖の 深海で、泳ぐ すがたが 世界で はじめて さつえいされた", "長い 2本の うでまで いれると、10mほどにも なる。",
-    { f: "squid", col: "#d8703a", bigEye: true }),
+    { f: "squid", v: "arrow", w: 15, fl: .28, fw: 19, fr: 1, al: 62, tent: 82, ty: 40, col: "#d8703a", bigEye: true }),
   K_("yokozunaiwashi", "ヨコヅナイワシ", "fish", 250, 4, "駿河湾（するがわん）などの 深海（水深 2000m以上）", "深海の 魚と 考えられている", "2021年に 新種として 発表された。駿河湾（するがわん）の 深海で いちばん 上に 立つ ハンター「よこづな」", "セキトリイワシの なかまで 最大。全長 2mを こえる ものも いる。",
     { f: "fish", top: "#1a2a3a", bot: "#3a4a5a", fin: "#1a2a3a", h: .2, snout: "pointed", tail: "fork", d: [.3, .45, 12], an: [.12, .3, 10], eye: 4, mouth: "big", pat: [{ k: "glitter" }] }),
   K_("shinkaikusauo", "シンカイクサウオ", "fish", 30, 4, "日本海溝（にほんかいこう）などの 超深海（ちょうしんかい）（水深 6000〜8000m）", "ヨコエビなどの 小さな 生きもの", "2008年、日本海溝（にほんかいこう）の 水深 約7700mで 群れが さつえいされた。当時、生きた 魚が さつえいされた いちばん 深い 記録", "超深海（ちょうしんかい）に すむ クサウオの なかま。",
@@ -2096,7 +2122,7 @@ const SEA3 = [
   K_("yumekasago", "ユメカサゴ", "fish", 30, 2, "日本の 太平洋側などの 深め の 海（水深 200〜500m）", "小魚、エビ", "深い 海に すむ、赤い カサゴの なかま", "大きな 目と 赤い 体。",
     F_({ top: "#e8402a", bot: "#f6806a", fin: "#e8402a", h: .3, tail: "trunc", d: [.2, .8, 16, 1], an: [.15, .38, 12], eye: 6.5, mouth: "big" })),
   K_("akagutsu", "アカグツ", "fish", 25, 2, "日本の 大陸棚（たいりくだな）〜大陸斜面（たいりくしゃめん）の 海底", "小さな 生きもの", "大人は 胸びれと 腹びれの 4本で、海底を 歩くように 進む", "平たい えんばんのような 赤い 体に、たくさんの トゲ。",
-    { f: "flat", col: "#d8603a", spot: "#a83a1a" }),
+    { f: "flat", v: "bat", col: "#d8603a", spot: "#a83a1a" }),
   K_("midorifusaankou", "ミドリフサアンコウ", "fish", 25, 2, "日本の 太平洋側の 深海", "小魚、エビ", "ひれを あしの ように つかって、海底を ゆっくり 歩く", "ふさふさした でっぱりを もつ、オレンジ色の アンコウの なかま。",
     F_({ top: "#e8903a", bot: "#f2b06a", fin: "#d8803a", h: .44, tm: .45, snout: "blunt", tail: "round", d: [.12, .4, 10], an: [.1, .32, 10], eye: 4.5, eyeCol: "#7ae07a", mouth: "big", lure: "#f2d0a0", pat: [{ k: "bumps" }] })),
   K_("kusauo", "クサウオ", "fish", 40, 2, "北海道〜九州の 沿岸〜やや 深い 海", "小さな エビ、小魚", "体は ぶよぶよ していて、うろこが ない", "大きな 頭と、細く なる しっぽの、おたまじゃくしのような 魚。",
@@ -2112,7 +2138,7 @@ const SEA3 = [
   K_("gisu", "ギス", "fish", 50, 1, "日本の 太平洋側の 深め の 海", "小さな エビ、ゴカイ", "身は かまぼこの 材料に つかわれる", "細長い 体に、とがった 口先。",
     F_({ top: "#8a9aa0", bot: "#eef0f2", fin: "#9aa8b0", h: .14, snout: "pointed", tail: "fork", d: [.15, .75, 8], an: [.08, .2, 8], eye: 5.5 })),
   K_("irakoanago", "イラコアナゴ", "fish", 120, 2, "日本の 太平洋側の 深海（水深 300〜1000m）", "小魚、エビ、死んだ 生きもの", "深い 海に すむ アナゴの なかまで、1mを こえる", "大きな 目の、黒っぽい アナゴ。",
-    { f: "eel", col: "#3a3a40", spot: "#3a3a40" }),
+    { f: "eel", v: "true", col: "#3a3a40", spot: "#3a3a40" }),
   K_("ooenkougani", "オオエンコウガニ", "crust", 40, 2, "日本の 太平洋側の 深海", "死んだ 魚、貝", "深い 海に すむ、大きな 赤い カニ", "がっしりした はさみを もつ。",
     { f: "crab", v: "small", body: "#c8402a", spot: "#7a2010" }),
   K_("tsubodai", "ツボダイ", "fish", 30, 2, "北太平洋の 深い 海山", "動物プランクトン", "海山の まわりに 群れで すむ", "高い 体に、大きな 背びれの トゲを もつ。",
@@ -2135,9 +2161,9 @@ const SEA3 = [
   K_("kajika", "カジカ", "fish", 15, 2, "本州〜九州の 川の きれいな 上流〜中流", "虫", "きれいな 水の 川にしか すめない", "大きな 頭の、石の すきまに かくれる 魚。",
     F_({ top: "#7a6a5a", bot: "#b8a890", fin: "#6a5a4a", h: .2, tm: .7, snout: "blunt", tail: "round", d: [.15, .75, 10], an: [.1, .45, 8], eye: 4.5, mouth: "big", pat: [{ k: "blotch", col: "#4a3a2a" }] })),
   K_("mokuzugani", "モクズガニ", "crust", 8, 1, "日本中の 川と 河口", "藻（も）、虫、死んだ 魚", "はさみに ふさふさの 毛が ある。中国の「上海ガニ」に 近い なかま", "秋に 川を くだり、海で 卵を うむ。",
-    { f: "crab", v: "small", body: "#6a5a3a", spot: "#3a2a1a" }),
+    { f: "crab", v: "small", mitten: "#2a2014", body: "#6a5a3a", spot: "#3a2a1a" }),
   K_("tenagaebi", "テナガエビ", "crust", 10, 1, "本州〜九州の 川の 下流や 湖", "虫、藻（も）、死んだ 生きもの", "オスの はさみの ついた あしは、体よりも 長く なる", "夏の 川で つりが 楽しめる エビ。",
-    { f: "shrimp", v: "coral", body: "#8a8a6a", band: "#5a5a3a" }),
+    { f: "shrimp", v: "plain", longArm: true, body: "#8a8a6a", band: "#5a5a3a" }),
   K_("itou", "イトウ", "fish", 100, 3, "北海道の 川や 湖（11の 水系）", "魚、カエル", "1mを こえる、日本 最大級の 真水に すむ 魚。「まぼろしの 魚」と よばれる", "数が へって、ぜつめつが 心配されている。",
     F_({ top: "#5a5a4a", bot: "#d8c8b0", fin: "#8a5a4a", tailCol: "#a85a4a", h: .18, snout: "pointed", tail: "trunc", d: [.5, .62, 14], an: [.15, .3, 10], mouth: "big", adipose: true, pat: [{ k: "spots", n: 30, r: 2, col: "#2a2a1a" }] })),
   K_("guppy", "グッピー", "fish", 4, 1, "南アメリカ北部の 川（世界中で 飼われる）", "小さな 虫、藻（も）", "卵ではなく、子どもを 産む", "オスは 大きく カラフルな おびれを もつ。",
@@ -2205,14 +2231,14 @@ const DEEP2 = [
     F_({ top: "#d8402a", bot: "#f08a6a", fin: "#e85a3a", h: .34, snout: "blunt", tail: "fork", d: [.2, .7, 16, 1], an: [.12, .35, 12], eye: 7, pat: [{ k: "scale" }, { k: "stripe", y: -.3, col: "#f6c0a8", w: 2, from: .1, to: .85 }] })),
   K_("zuwaigani", "ズワイガニ", "crust", 70, 1, "日本海などの 深い 砂や どろの 海底（水深 200〜600mを このむ）", "貝、ゴカイ、死んだ 魚", "オスは 福井で「越前（えちぜん）ガニ」、山陰（さんいん）などで「松葉ガニ」と よばれる。メスは オスの 半分ほどの 大きさ", "あしを 広げると 70cmにも なる、冬の 味覚の 代表。",
     { f: "crab", v: "spider", body: "#c87a4a", spot: "#f2e0c8" }),
-  K_("ookoshiori", "オオコシオリエビ", "crust", 20, 1, "日本の 深海", "死んだ 生きもの、小さな 生きもの", "エビに 見えるが、ヤドカリに 近い なかま。静岡では「クモエビ」とも よばれる", "長い はさみを ふくめると 20cmにも なる。",
-    { f: "lobster", body: "#e8803a", band: "#c85a2a", leg: "#e8803a" }),
+  K_("ookoshiori", "オオコシオリエビ", "crust", 20, 1, "日本の 深海", "死んだ 生きもの、小さな 生きもの", "エビに 見えるが、ヤドカリに 近い なかま。静岡では「クモエビ」とも よばれる", "長い はさみを ふくめると 20cmにも なる。しっぽを おなかの 下に おりたたんで いる。",
+    { f: "squat", v: "long", body: "#e8803a", band: "#b84a22", leg: "#ee8c44" }),
   K_("torazame", "トラザメ", "hide", 50, 1, "日本の 岸辺〜水深 320mの 岩場", "小魚、エビ、カニ", "卵は 黄色い 花びんのような からに 入り、四すみの まきひげで 海そうに からみつく", "茶色い 体に くらのような もよう。50cmほどの 小さな サメ。",
     { top: "#9a7a5a", bot: "#e6d4b8", d: .15, snout: "round", tail: "low", d1: [16, 14], d2: [14, 12], pect: [24, 16], eye: 3.5, pattern: "saddles" }),
   K_("beniteguri", "ベニテグリ", "fish", 20, 2, "日本の 太平洋側の 深め の 海底", "小さな エビ、ゴカイ", "メゴチ（ネズッポ）の なかまで、深い 海に すむ", "あざやかな 赤い 体と、旗のような 背びれ。",
     F_({ top: "#e8403a", bot: "#f6a08a", fin: "#f2c040", h: .14, tm: .7, snout: "pointed", tail: "round", d: [.5, .62, 26], d2: [.15, .45, 12], an: [.12, .42, 8], eye: 5, mouth: "small" })),
   K_("igaguri", "イガグリガニ", "crust", 15, 2, "日本の 太平洋側の 深海", "貝、ゴカイ", "カニと よばれるが、タラバガニと 同じ ヤドカリに 近い なかま", "体じゅう トゲだらけで、イガグリのよう。",
-    { f: "crab", v: "small", body: "#c87a5a", spot: "#7a3a2a" }),
+    { f: "crab", king: true, spiny: 2, legL: 56, legW: 6, v: "small", body: "#c87a5a", spot: "#7a3a2a" }),
   K_("oohomora", "オオホモラ", "crust", 18, 2, "日本〜ハワイ・インドネシアの 深海（水深 150〜250m）", "死んだ 生きもの、小さな 生きもの", "サンゴや 海綿を 背中に のせて、身を かくす", "長い あしの、赤っぽい 大きな カニ。",
     { f: "crab", v: "spider", body: "#d8603a", spot: "#f2c8a8" }),
   K_("chikamekintoki", "チカメキントキ", "fish", 40, 2, "南日本の やや 深い 岩場", "小魚、エビ", "名前の「チカメ」は、目が 大きいことから と いわれる", "大きな 目と、赤い 体、大きな 腹びれ。",
@@ -2220,11 +2246,11 @@ const DEEP2 = [
   K_("hikarikinme", "ヒカリキンメダイ", "fish", 30, 2, "西太平洋の 深い がけや ほら穴（水深 200〜400m）", "動物プランクトン", "目の 下の 光る 器官には 光る さいきんが すんでいて、器官を くるっと 回すことで 光を つけたり 消したり できる", "黒い 体に、青白く 光る 目の下。",
     F_({ top: "#1a1a24", bot: "#2a2a34", fin: "#1a1a24", h: .34, snout: "blunt", tail: "fork", d: [.2, .65, 12], an: [.12, .35, 10], eye: 5, mouth: "big", pat: [{ k: "patch", t: .88, y: .35, col: "#9ae8ff" }, { k: "stripe", y: -.85, col: "#f2f2f2", w: 1.5, from: .2, to: .6 }] })),
   K_("wanukefuuryuuuo", "ワヌケフウリュウウオ", "fish", 20, 2, "日本の 太平洋側の 深め の 海底", "小さな 生きもの", "アカグツと 同じ なかまで、ひれを あしの ように つかって 海底を 歩く", "平たい 体の、ふしぎな 形の 魚。",
-    { f: "flat", col: "#c8906a", spot: "#8a5a3a" }),
+    { f: "flat", v: "bat", tri: true, ring: true, col: "#c8906a", spot: "#8a5a3a" }),
   K_("nokogirizame", "ノコギリザメ", "fish", 150, 2, "日本近海の 水深 40m より 深い 砂や どろの 海底", "小魚、エビ", "ノコギリのような 長い 口先と、その 下の 2本の ひげで えものを さがす", "日本に すむ ノコギリザメは この 1種だけ。",
-    F_({ top: "#8a8070", bot: "#e8e2d4", fin: "#7a7060", h: .1, tm: .6, snout: "beak", snoutLen: 40, tail: "point", d: [.35, .45, 12], d2: [.15, .22, 10], an: [.1, .15, 6], eye: 4, chinBarbels: true })),
-  K_("goemonkoshiori", "ゴエモンコシオリエビ", "crust", 5, 3, "沖縄トラフの 熱水が ふきだす 場所（水深 700〜1600m）", "胸の 毛に すむ さいきん", "胸の 毛に さいきんを すまわせ、それを こそげとって 食べる。名前は かまゆでの 石川五右衛門に ちなむ", "白い 毛だらけの 小さな エビの ような 生きもの。目は 退化している。",
-    { f: "lobster", body: "#eee8dc", band: "#c8c0b0", leg: "#e6dfd0" }),
+    F_({ top: "#8a8070", bot: "#e8e2d4", fin: "#7a7060", h: .1, tm: .6, snout: "beak", snoutLen: 40, tail: "point", d: [.35, .45, 12], d2: [.15, .22, 10], an: [.1, .15, 6], eye: 4, saw: true })),
+  K_("goemonkoshiori", "ゴエモンコシオリエビ", "crust", 5, 3, "沖縄トラフの 熱水が ふきだす 場所（水深 700〜1600m）", "胸の 毛に すむ さいきん", "胸の 毛に さいきんを すまわせ、それを こそげとって 食べる。名前は かまゆでの 石川五右衛門に ちなむ", "エビの なかまだけど、しっぽを おなかの 下に おりたたむので、カニのような 形に 見える。体の 下と はさみは 白い 毛で ふさふさ。目は 退化している。",
+    { f: "squat", v: "hairy", body: "#eee8dc", band: "#c8c0b0", leg: "#e6dfd0", hair: "#ffffff" }),
   K_("satsumahaori", "サツマハオリムシ", "worm", 100, 3, "鹿児島湾（かごしまわん）の 海底の わき水（水深 80〜130m）など", "体の 中の さいきんが つくる 栄養", "口も 胃腸も なく、体の 中の さいきんが つくる 栄養で 生きている", "長い 管の 中に すみ、赤い えらを 出す。新江ノ島（しんえのしま）水族館で 見られる。",
     { f: "tubeworm", col: "#e8e2d0", plume: "#e8302a" }),
   K_("okinaebisu", "オキナエビス", "mollusc", 10, 3, "日本の 深い 海の 岩場（水深 150〜300mほど）", "海綿など", "5億年近く 前から つづく とても 古い なかまで「生きた 化石」。からの 切れこみから 水を 出す", "赤い もようの、ピラミッドのような 巻貝。",
@@ -2239,7 +2265,7 @@ TYPES.amph = { name: "両生類", ic: "両", col: "#9ad08a" };
 TYPES.kabuto = { name: "カブトガニの なかま", ic: "甲", col: "#c8a878" };
 const SET1 = [
   K_("amerikazarigani", "アメリカザリガニ", "crust", 10, 1, "日本中の 田んぼや 池、流れの ゆるい 川（もとは 北アメリカの 生きもの）", "虫、水草、落ち葉", "2023年から 特定外来生物に なった。飼うのは いいが、外に 放しては いけない", "赤くて 大きな はさみ。どろに あなを ほって くらす。",
-    { f: "lobster", body: "#c8302a", band: "#8a1a10", leg: "#c8302a" }),
+    { f: "lobster", claw: "big", body: "#c8302a", band: "#8a1a10", leg: "#c8302a" }),
   K_("nijimasu", "ニジマス", "fish", 60, 1, "日本中の 川や 湖、つりぼり（もとは 北アメリカの 魚）", "虫、小魚", "1877年に カリフォルニアから 日本に 運ばれてきた。海に くだって 大きく なる ものも いる", "名前は、卵を うむ ころの オスの にじ色の かがやきから。体の 横に 赤むらさきの 帯。",
     F_({ top: "#5a7a6a", bot: "#eee8e0", fin: "#8a9a8a", h: .22, snout: "pointed", tail: "trunc", d: [.5, .62, 14], an: [.15, .3, 10], mouth: "big", adipose: true, pat: [{ k: "stripe", y: .05, col: "#d8607a", w: 6, from: .08, to: .9 }, { k: "spots", n: 40, r: 1.6, col: "#2a3a2a" }] })),
   K_("honyadokari", "ホンヤドカリ", "crust", 3, 1, "北海道〜九州の 岩場の 潮だまり", "藻（も）、死んだ 生きもの", "小さな 巻貝の からを 借りて くらす", "いそあそびで いちばん 会いやすい ヤドカリの ひとつ。",
@@ -2287,19 +2313,19 @@ const NORTH2 = [
   K_("manamako", "マナマコ", "uninamako", 25, 1, "日本中の 岩場や 砂の 海底", "砂や どろに まじった 栄養", "敵に おそわれると 内臓を はきだして にげる ことが ある。内臓は また 生えてくる", "色に よって 赤ナマコ・青ナマコなどと よばれる。",
     { f: "cucumber", col: "#5a5a3a", spot: "#3a3a22" }),
   K_("yariika", "ヤリイカ", "mollusc", 40, 1, "北海道〜九州の 沿岸", "小魚、エビ", "細長い 体が、やりの 先の ような 形", "冬から 春に 岸の 近くへ やってきて 卵を うむ。",
-    { f: "squid", col: "#d8a888" }),
+    { f: "squid", v: "arrow", w: 12, fl: .6, fw: 24, al: 30, cone: true, tent: 44, ty: 16, col: "#d8a888" }),
   K_("akagarei", "アカガレイ", "fish", 40, 2, "日本海〜北海道の やや 深い 砂や どろの 海底", "ゴカイ、エビ", "うら側が うっすら 赤く 見えるのが 名前の 由来", "日本海側では 冬の につけの 定番。",
     { f: "flat", col: "#a8805a", spot: "#7a5a3a" }),
   K_("kitanohokke", "キタノホッケ", "fish", 45, 2, "北海道より 北の 冷たい 海（アリューシャン列島など）", "動物プランクトン、小魚", "お店で 売っている「しまほっけ」の 干物は、この 魚", "ホッケより 黒い しま模様が はっきりしている。",
     F_({ top: "#6a6a4a", bot: "#e8e4cc", fin: "#7a7a5a", h: .22, snout: "pointed", tail: "fork", d: [.15, .75, 12], an: [.12, .45, 10], eye: 4.5, mouth: "small", pat: [{ k: "bars", col: "#2a2a1a", n: 5, w: .07 }] })),
   K_("meganekasube", "メガネカスベ", "ray", 100, 2, "北海道〜東北の 海底", "カニ、エビ、小魚", "北海道では「カスベ」と よばれ、につけで よく 食べられる", "ひれの 上に、メガネの ような 目玉もようが 一対 ある。",
-    { f: "ray", v: "disc", top: "#8a7a5a", mark: "#3a2e20" }),
+    { f: "ray", v: "rhomb", top: "#8a7a5a", mark: "#3a2e20" }),
   K_("aburatsunozame", "アブラツノザメ", "speed", 100, 2, "北太平洋などの 冷たい 海", "小魚、イカ", "背びれの 前に、1本ずつ するどい とげが ある", "とても 長生き。お母さんの おなかの 中で 2年 ちかく 赤ちゃんが 育つ。",
     { top: "#5a6a72", bot: "#e8ecee", d: .14, snout: "conical", tail: "hetero", d1: [20, 18], d2: [18, 16], pect: [24, 18], eye: 5, pattern: "blotchbelly", spines: true }),
   K_("yanagidako", "ヤナギダコ", "mollusc", 60, 2, "東北〜北海道の やや 深い 海", "カニ、エビ、貝", "北海道で ミズダコと ならんで よく とれる タコ", "ミズダコより ずっと 小さい タコ。",
     { f: "octopus", col: "#b87a5a" }),
   K_("aburagani", "アブラガニ", "crust", 80, 2, "オホーツク海〜北太平洋の 海底", "貝、ゴカイ", "タラバガニに そっくり。こうらの まんなかの とげの 数で 見分ける", "タラバガニと 同じく、カニでは なく ヤドカリの なかま。",
-    { f: "crab", v: "spider", body: "#7a3a4a", spot: "#d8a8b0" }),
+    { f: "crab", king: true, v: "spider", body: "#7a3a4a", spot: "#d8a8b0" }),
   K_("maboya", "マボヤ", "uninamako", 15, 2, "北海道〜東北の 岩場（ようしょくも さかん）", "海水の 中の プランクトン", "でこぼこの 赤い 体から「海の パイナップル」と よばれる", "赤ちゃんの ころは オタマジャクシの ような 形で 泳ぎ、大人に なると 岩に くっついて 動かない。",
     { f: "squirt", col: "#e05a3a" }),
   K_("togekajika", "トゲカジカ", "fish", 50, 2, "北海道〜東北の 海底", "カニ、エビ、小魚", "北海道では「ナベコワシ」とも よばれる。おいしくて なべを つつきすぎて こわすから、と いわれる", "大きな 頭と 口に、ほおの するどい とげ。",
@@ -2330,31 +2356,31 @@ const RIVER2 = [
   K_("kingyo", "キンギョ", "fish", 20, 1, "家の 水そうや 池（もとは 中国で 生まれた）", "えさ、藻（も）、小さな 虫", "夏祭りの「金魚すくい」で おなじみ", "フナの なかまを、人が 長い 時間を かけて 改良して 生まれた 魚。",
     F_({ top: "#e8501a", bot: "#ffb070", fin: "#f06a2a", h: .4, tm: .5, snout: "round", tail: "lyre", d: [.3, .6, 16], an: [.15, .3, 10], eye: 5, mouth: "small", pat: [{ k: "scale" }] })),
   K_("sujiebi", "スジエビ", "crust", 5, 1, "日本の 川や 池、湖", "藻（も）、小さな 虫、死んだ 生きもの", "すきとおった 体に、黒い すじの もよう。つりの えさにも 使われる", "川あそびの あみで よく すくえる エビ。",
-    { f: "shrimp", v: "coral", body: "#d8d8c8", band: "#3a3a3a" }),
+    { f: "shrimp", v: "coral", shortArm: true, body: "#d8d8c8", band: "#3a3a3a" }),
   K_("aburahaya", "アブラハヤ", "fish", 12, 1, "日本の 川の 上流〜中流", "虫、藻（も）", "川の 上流〜中流で 群れで くらす、身近な 川魚", "川あそびの あみや 川つりで よく 出会える。",
     F_({ top: "#6a6a4a", bot: "#d8d0b0", fin: "#7a7a5a", h: .2, snout: "round", tail: "fork", d: [.42, .58, 10], an: [.18, .32, 8], pat: [{ k: "stripe", y: 0, col: "#3a3a2a", w: 3, from: .1, to: .95 }] })),
   K_("akamimigame", "ミシシッピアカミミガメ", "turtle", 28, 1, "日本中の 池や 川（もとは アメリカの カメ）", "水草、虫、小魚", "子どもの ころは「ミドリガメ」として 売られていた。2023年から 外に 放すのは 禁止（飼うのは いい）", "目の うしろの 赤い もようが 名前の 由来。",
-    { f: "turtle", shell: "#4a6a3a", scute: "#2a4a2a", skin: "#5a7a4a", ear: "#e8402a" }),
+    { f: "turtle", v: "pond", stripe: "#e8d860", shell: "#4a6a3a", scute: "#2a4a2a", skin: "#5a7a4a", ear: "#e8402a" }),
   K_("kusagame", "クサガメ", "turtle", 30, 1, "本州〜九州の 池や 川", "水草、虫、小魚、貝", "つかまると くさい においを 出すのが 名前の 由来", "こうらに 3本の 出っぱった すじ（キール）が ある。",
-    { f: "turtle", shell: "#5a4a32", scute: "#3a2e1e", skin: "#6a6a52" }),
+    { f: "turtle", v: "pond", keel: true, shell: "#5a4a32", scute: "#3a2e1e", skin: "#6a6a52" }),
   K_("kamuruchi", "カムルチー", "fish", 80, 2, "日本の 池や ぬま、流れの ゆるい 川（もとは アジア大陸の 魚）", "小魚、カエル", "「ライギョ」とも よばれる。水面で 空気を すって 呼吸できる", "へびの ような もようで、水の 少ない ぬまでも 生きのびる。",
     F_({ top: "#4a4a32", bot: "#c8c0a0", fin: "#4a4a32", h: .16, tm: .7, snout: "blunt", tail: "round", d: [.08, .9, 10], an: [.08, .55, 10], mouth: "big", pat: [{ k: "blotch", col: "#1a1a10" }] })),
   K_("suppon", "スッポン", "turtle", 35, 2, "本州〜九州の 川や ぬま（ようしょくも さかん）", "魚、エビ、貝", "かみついたら かみなりが 鳴るまで はなさない、と いわれる", "こうらが やわらかく、とがった 鼻先を 水面に 出して 息を する。",
-    { f: "turtle", shell: "#7a7a5a", scute: "#7a7a5a", skin: "#8a8a6a", side: true }),
+    { f: "turtle", v: "pond", soft: true, shell: "#7a7a5a", scute: "#7a7a5a", skin: "#8a8a6a", side: true }),
   K_("teppouuo", "テッポウウオ", "fish", 25, 2, "東南アジアなどの マングローブの 水辺", "虫、小魚", "口から 水を いきおいよく ふき出して、葉っぱの 上の 虫を うち落とす", "海水と 川の 水が まじる 場所に すむ。",
     F_({ top: "#c8c8b0", bot: "#f4f4ec", fin: "#e8d870", h: .32, snout: "pointed", tail: "trunc", d: [.25, .45, 12], an: [.15, .45, 12], eye: 6, mouth: "up", pat: [{ k: "spot1", t: .3, y: -.6, col: "#1a1a1a" }, { k: "spot1", t: .55, y: -.65, col: "#1a1a1a" }, { k: "spot1", t: .78, y: -.6, col: "#1a1a1a" }] })),
   K_("haigyo", "プロトプテルス", "fish", 100, 2, "アフリカの 川や ぬま", "魚、貝、エビ", "「ハイギョ（肺魚）」の なかま。肺を もち、空気を すって 呼吸する", "水が かれると、どろの 中に まゆを つくって 何か月も ねむって まつ。",
-    { f: "eel", col: "#6a6a5a", spot: "#3a3a2a" }),
+    { f: "eel", v: "lung", smallEye: true, col: "#6a6a5a", spot: "#3a3a2a" }),
   K_("mutsugorou", "ムツゴロウ", "fish", 18, 2, "九州の 有明海などの 干潟", "どろの 表面の 藻（も）", "どろの 上を 胸びれで はったり、ぴょんと とびはねたり する", "皮ふが ぬれていれば、皮ふで 呼吸できる ハゼの なかま。かわきそうに なると どろあびを する。",
     F_({ top: "#5a5a4a", bot: "#a8a890", fin: "#5a6a7a", h: .2, tm: .7, snout: "blunt", tail: "round", d: [.12, .4, 22], d2: [.5, .85, 10], an: [.12, .5, 6], eye: 6, mouth: "big", pat: [{ k: "spots", n: 30, r: 1.8, col: "#8ab8e0" }] })),
   K_("kawayatsume", "カワヤツメ", "fish", 50, 2, "北海道〜本州の 川と 海を 行き来する", "大きな 魚の 体液（大人に なると）", "目と、ならんだ 7つの えらあなが、目が 8つ あるように 見えるのが 名前の 由来", "あごが ない。きゅうばんの ような 口で 魚に くっつく、とても 古い なかまの 魚。",
-    { f: "eel", col: "#5a5a4a", spot: "#e8e0c8" }),
+    { f: "eel", v: "lamprey", col: "#5a5a4a", spot: "#e8e0c8" }),
   K_("polypterus", "ポリプテルス・エンドリケリー", "fish", 70, 2, "アフリカの 川や ぬま", "小魚、エビ、虫", "背中に、小さな 旗の ような ひれが いくつも ならぶ", "肺を もち、空気も すえる。大昔の 魚の すがたを のこすと いわれる。",
-    F_({ top: "#6a6a52", bot: "#d8d0b0", fin: "#6a6a52", h: .14, tm: .7, snout: "blunt", tail: "round", d: [.3, .9, 10], an: [.05, .35, 10], eye: 4, mouth: "big", pat: [{ k: "bars", col: "#2a2a1a", n: 8, w: .05 }] })),
-  K_("nihonzarigani", "ニホンザリガニ", "crust", 6, 3, "北海道と 東北北部の、つめたい わき水の 小川", "落ち葉、死んだ 生きもの", "日本に もとから すむ ただ一種の ザリガニ。数が へって、ぜつめつの おそれが ある", "アメリカザリガニより 小さく、色は 茶色っぽい。",
-    { f: "lobster", body: "#8a6a4a", band: "#5a4028", leg: "#8a6a4a" }),
+    F_({ top: "#6a6a52", bot: "#d8d0b0", fin: "#6a6a52", h: .14, tm: .7, snout: "blunt", tail: "round", flags: 10, an: [.05, .35, 10], eye: 4, mouth: "big", pat: [{ k: "bars", col: "#2a2a1a", n: 8, w: .05 }] })),
+  K_("nihonzarigani", "ニホンザリガニ", "crust", 6, 3, "北海道と 東北北部の、つめたい わき水の 小川", "落ち葉、死んだ 生きもの", "日本に もとから すむ ただ一種の ザリガニ。数が へって、ぜつめつの おそれが ある", "アメリカザリガニより 小さく、色は こい 茶色。はさみは 丸くて 大きく、体は ずんぐり して いる。",
+    { f: "lobster", claw: "round", body: "#6e553c", band: "#4a3624", leg: "#6e553c" }),
   K_("itoyo", "イトヨ", "fish", 8, 3, "北海道〜本州北部の 川や わき水", "小さな 虫、エビの なかま", "オスが 水草で 巣を つくり、卵と 子どもを 守る", "背中に 3本の とげが ある トゲウオの なかま。",
-    F_({ top: "#5a7a6a", bot: "#e8e8d8", fin: "#7a8a7a", h: .24, snout: "pointed", tail: "trunc", d: [.55, .7, 10], an: [.15, .3, 8], eye: 5, mouth: "small", pat: [{ k: "spine", col: "#4a5a4a" }] }))
+    F_({ top: "#5a7a6a", bot: "#e8e8d8", fin: "#7a8a7a", h: .17, snout: "pointed", tail: "trunc", d: [.2, .42, 8], spk: [[.72, 14], [.61, 13], [.46, 5]], pSpine: .62, plates: true, an: [.15, .3, 8], eye: 5, mouth: "small", pat: [{ k: "spine", col: "#4a5a4a" }] }))
 ];
 SHARKS.push(...RIVER2);
 const R4ADD = [
@@ -2374,9 +2400,9 @@ const R4ADD = [
 SHARKS.push(...R4ADD);
 const R3ADD = [
   K_("umitengu", "ウミテング", "fish", 10, 3, "本州中部より 南の 浅い 砂地", "小さな エビの なかま", "体が かたい 板で おおわれ、胸びれを つばさの ように 広げて 海底を 歩く", "名前は、とがった 口先を てんぐの 鼻に たとえた もの。",
-    F_({ top: "#a8906a", bot: "#e8dcc0", fin: "#c8a878", h: .3, tm: .6, snout: "beak", snoutLen: 22, tail: "round", d: [.6, .7, 8], an: [.6, .7, 8], eye: 5, mouth: "snout", pat: [{ k: "spots", n: 16, r: 2, col: "#6a5030" }] })),
+    { f: "seamoth", col: "#a8906a", fin: "#c8b088", edge: "#a8c8e8", spot: "#6a5030" }),
   K_("nishikifuuraiuo", "ニシキフウライウオ", "fish", 10, 3, "インド・太平洋の サンゴしょう", "小さな エビの なかま", "タツノオトシゴの なかま。メスが 腹びれで 卵を だいて 守る", "ウミシダや ヤギ（サンゴの なかま）に まぎれて、さかさまに ただよう。",
-    { f: "seahorse", col: "#e8b83a", spot: "#d83a4a", bumps: true }),
+    { f: "seahorse", v: "ghost", col: "#e8b83a", spot: "#d83a4a", bumps: true }),
   K_("kurotogarizame", "クロトガリザメ", "speed", 330, 3, "世界中の あたたかい 外洋", "マグロ、イカ", "なめらかな はだから、英語では「シルキーシャーク（絹の サメ）」", "外洋で マグロなどの 群れに ついて まわる。",
     { top: "#4a5260", bot: "#e8eaee", d: .18, snout: "round", tail: "hetero", d1: [28, 24], pect: [40, 26], eye: 4.5 }),
   K_("sakebikunin", "サケビクニン", "fish", 30, 3, "北海道の 深い 海", "エビ、小魚", "ぷよぷよした ピンク色の 体で、ゆらゆら 泳ぐ", "クサウオの なかま。体の 大部分が やわらかい ゼラチン質。",
@@ -2448,6 +2474,9 @@ const SEA_ART = {
     if (a.longVentral) o += '<path d="M' + f(X(.62)) + ' ' + f(yB(.62)) + ' Q' + f(X(.55)) + ' ' + f(yB(.6) + 40) + ' ' + f(X(.45)) + ' ' + f(yB(.6) + 62) + '" stroke="' + fin + '" stroke-width="2" fill="none"/>';
     // body
     o += '<path d="' + body + '" fill="' + bot + '"/>';
+      /* 2026-11-11 写真・事典で たしかめた 目じるし（hornBig＝テングハギの 太い 角、whip＝ギンザメの 糸の ような しっぽ） */
+      if (a.hornBig) o += '<path d="M' + f(X(.88)) + ' ' + f(yT(.88) + 10) + ' Q' + f(X(.96)) + ' ' + f(yT(.96) - 2) + ' ' + f(X(.99) + a.hornBig) + ' ' + f(yT(.97) - 2) + ' Q' + f(X(.98)) + ' ' + f(yT(.97) + 8) + ' ' + f(X(.95)) + ' ' + f(yT(.95) + 14) + 'Z" fill="' + top + '"/>';
+      if (a.whip) o += '<path d="M' + f(X(0) - 30) + ' ' + f(cy - 2.5) + ' Q' + f(X(0) - 30 - a.whip * .5) + ' ' + f(cy - 1) + ' ' + f(X(0) - 30 - a.whip) + ' ' + f(cy + 6) + ' Q' + f(X(0) - 30 - a.whip * .5) + ' ' + f(cy + 2) + ' ' + f(X(0) - 30) + ' ' + f(cy + 2.5) + 'Z" fill="' + fin + '"/>';
     if (sil) { if (a.horn) o += '<path d="M' + f(X(.9)) + ' ' + f(yT(.9)) + ' L' + f(X(.99) + 10) + ' ' + f(yT(.9) - 10) + ' L' + f(X(.86)) + ' ' + f(yT(.86) + 4) + 'Z" fill="' + top + '"/>'; return o; }
     o += '<g clip-path="url(#' + id + 'c)">';
     let cs = []; for (let i = 0; i <= 60; i++) cs.push(f(X(i / 60)) + " " + f(yT(i / 60) - 2)); for (let i = 60; i >= 0; i--) cs.push(f(X(i / 60)) + " " + f(cy + half(i / 60) * .1));
@@ -2491,6 +2520,14 @@ const SEA_ART = {
     // snout extras
     if (a.snout === "beak") o += '<path d="M' + f(X(.97)) + ' ' + f(cy - 3) + ' L' + f(X(1) + (a.snoutLen || 18)) + ' ' + f(cy - 1) + ' L' + f(X(.97)) + ' ' + f(cy + 3) + 'Z" fill="' + top + '"/>';
     if (a.horn) o += '<path d="M' + f(X(.88)) + ' ' + f(yT(.88) + 2) + ' L' + f(X(.99) + 12) + ' ' + f(yT(.92) - 6) + ' L' + f(X(.84)) + ' ' + f(yT(.84) + 6) + 'Z" fill="' + shade(a.top, -.1) + '"/>';
+      /* 2026-11-11 目じるし：spk＝背中の とげ [t, 長さ]（イトヨの 3本・ギンザメの 毒の とげ）、fd1＝前の 高い 背びれ、pSpine＝腹の とげ、
+         flags＝背中に ならぶ 小さな 旗の ひれ（ポリプテルス）、saw＝ノコギリの 歯と 途中の 2本の ひげ（ノコギリザメ）、plates＝体の 横の 板（イトヨ） */
+      if (a.fd1) { const [t, h] = a.fd1; o += '<path d="M' + f(X(t)) + ' ' + f(yT(t) + 1) + ' L' + f(X(t) - 4) + ' ' + f(yT(t) - h) + ' Q' + f(X(t) - h * .5) + ' ' + f(yT(t) - h * .6) + ' ' + f(X(t - .1)) + ' ' + f(yT(t - .1) + 1) + 'Z" fill="' + fin + '"/>'; }
+      if (a.spk) a.spk.forEach(([t, L]) => o += '<path d="M' + f(X(t) - 2) + ' ' + f(yT(t) + 1) + ' L' + f(X(t) + L * .12) + ' ' + f(yT(t) - L) + ' L' + f(X(t) + 2.5) + ' ' + f(yT(t) + 1) + 'Z" fill="' + shade(a.top, -.35) + '"/>');
+      if (a.pSpine) o += '<path d="M' + f(X(a.pSpine)) + ' ' + f(yB(a.pSpine) - 1) + ' L' + f(X(a.pSpine) - 14) + ' ' + f(yB(a.pSpine) + 8) + '" stroke="' + shade(a.top, -.35) + '" stroke-width="2.4" stroke-linecap="round"/>';
+      if (a.plates) for (let t = .5; t < .78; t += .045) o += '<path d="M' + f(X(t)) + ' ' + f(cy - half(t) * .55) + ' L' + f(X(t) - 3) + ' ' + f(cy + half(t) * .2) + '" stroke="' + shade(a.top, .25) + '" stroke-width="1.6" opacity=".8"/>';
+      if (a.flags) for (let i = 0; i < a.flags; i++) { const t = .2 + i * (.6 / (a.flags - 1)), x = X(t), y = yT(t); o += '<path d="M' + f(x) + ' ' + f(y + 1) + ' L' + f(x + 1) + ' ' + f(y - 11) + '" stroke="' + shade(a.top, -.3) + '" stroke-width="1.6"/><path d="M' + f(x + 1) + ' ' + f(y - 11) + ' L' + f(x - 8) + ' ' + f(y - 4) + ' L' + f(x) + ' ' + f(y) + 'Z" fill="' + fin + '"/>'; }
+      if (a.saw) { const x0 = X(.97), x1 = X(1) + (a.snoutLen || 18); for (let x = x0 + 4; x < x1 - 2; x += 5) o += '<path d="M' + f(x) + ' ' + f(cy - 2.4) + ' l2 -4 l2 4Z M' + f(x) + ' ' + f(cy + 2.4) + ' l2 4 l2 -4Z" fill="' + shade(a.top, .2) + '"/>'; const bx = x0 + (x1 - x0) * .55; o += '<path d="M' + f(bx) + ' ' + f(cy + 2) + ' q-3 9 -8 12 M' + f(bx + 3) + ' ' + f(cy + 2) + ' q-2 9 -6 13" stroke="' + shade(a.top, -.2) + '" stroke-width="1.8" fill="none" stroke-linecap="round"/>'; }
     if (a.spikeTop) o += '<path d="M' + f(X(.8)) + ' ' + f(yT(.8)) + ' L' + f(X(.78)) + ' ' + f(yT(.8) - 16) + '" stroke="' + shade(a.top, -.3) + '" stroke-width="3" stroke-linecap="round"/>';
     if (a.sucker) { o += '<ellipse cx="' + f(X(.82)) + '" cy="' + f(yT(.82) + 1) + '" rx="22" ry="4" fill="#2a2a26"/>'; for (let i = 0; i < 9; i++) o += '<path d="M' + f(X(.82) - 18 + i * 4.5) + ' ' + f(yT(.82) - 2) + ' v6" stroke="#9a9a92" stroke-width="1"/>'; }
     if (a.tassel) for (let i = 0; i < 6; i++) o += '<path d="M' + f(X(.86 + i * .015)) + ' ' + f(yT(.86 + i * .015)) + ' q' + (i % 2 ? 4 : -4) + ' -8 0 -14" stroke="' + shade(a.top, .15) + '" stroke-width="3" fill="none" stroke-linecap="round"/>';
@@ -2509,18 +2546,53 @@ const SEA_ART = {
   },
   eel(a, id, sil) {
     const K = c => sil ? "#061019" : c, f = n => n.toFixed(1);
+    /* 2026-11-11 体の 太さを 直した：しっぽ（左）が 細く、頭の うしろが いちばん 太い（前は しっぽ側が 太く 頭が 細かった） */
+    const EW = t => t < .9 ? 2 + 10.5 * Math.sin(Math.PI / 2 * Math.min(1, t / .72)) : 12.5 - (t - .9) * 45;
     let up = "", dn = "";
-    for (let i = 0; i <= 50; i++) { const t = i / 50, x = 20 + t * 250, w = 4 + Math.sin(Math.PI * Math.min(1, t * 1.6)) * 12 * (t > .8 ? 1.15 : 1), yc = 80 + Math.sin(t * 6) * 14 * (1 - t * .7); up += (i ? " L" : "M") + f(x) + " " + f(yc - w); dn = " L" + f(x) + " " + f(yc + w) + dn; }
+    for (let i = 0; i <= 50; i++) { const t = i / 50, x = 20 + t * 250, w = EW(t), yc = 80 + Math.sin(t * 6) * 14 * (1 - t * .7); up += (i ? " L" : "M") + f(x) + " " + f(yc - w); dn = " L" + f(x) + " " + f(yc + w) + dn; }
     const body = up + dn + "Z";
     let o = '<defs><clipPath id="' + id + 'c"><path d="' + body + '"/></clipPath></defs>';
+    /* 2026-11-11 細長い 魚を なかまごとに 描き分ける（v）。写真で たしかめた：
+       lamprey＝あごの ない まるい きゅうばんの 口と 7つの えらあな（ヤツメウナギ）、hag＝目が 見えず ひげと えらあな（ヌタウナギ）、
+       true＝むなびれ が あり 口を とじた ウナギ・アナゴ（デンキウナギは 腹の 長い ひれ）、lung＝むちの ような 細い ひれ（ハイギョ） */
+    const YC = t => 80 + Math.sin(t * 6) * 14 * (1 - t * .7), WD = EW;
+    const edge = (t0, t1, sg) => { let p = ""; for (let t = t0; t <= t1 + 1e-6; t += .02) p += (p ? " L" : "M") + f(20 + t * 250) + " " + f(YC(t) + sg * WD(t)); return p; };
+    const finCol = K(a.fin || shade(a.col, .18));
+    if (a.v === "true" && !a.analOnly) o += '<path d="' + edge(.02, .66, -1) + '" stroke="' + finCol + '" stroke-width="10" fill="none" stroke-linecap="round"/>';
+    if (a.v === "true") o += '<path d="' + edge(.02, a.analOnly ? .82 : .58, 1) + '" stroke="' + finCol + '" stroke-width="' + (a.analOnly ? 14 : 10) + '" fill="none" stroke-linecap="round"/>';
+    if (a.v === "lamprey") o += '<path d="' + edge(.03, .28, -1) + '" stroke="' + finCol + '" stroke-width="10" fill="none" stroke-linecap="round"/><path d="' + edge(.31, .44, -1) + '" stroke="' + finCol + '" stroke-width="8" fill="none" stroke-linecap="round"/><path d="' + edge(.02, .12, 1) + '" stroke="' + finCol + '" stroke-width="8" fill="none" stroke-linecap="round"/>';
+    if (a.v === "hag") o += '<path d="' + edge(.02, .2, -1) + '" stroke="' + finCol + '" stroke-width="8" fill="none" stroke-linecap="round"/><path d="' + edge(.02, .3, 1) + '" stroke="' + finCol + '" stroke-width="8" fill="none" stroke-linecap="round"/>';
+    if (a.v === "lung") [[.86, 1], [.58, 1]].forEach(([t, sg]) => { const x = 20 + t * 250, y = YC(t) + sg * WD(t) * .8; o += '<path d="M' + f(x) + ' ' + f(y) + ' Q' + f(x - 14) + ' ' + f(y + 18) + ' ' + f(x - 34) + ' ' + f(y + 22) + '" stroke="' + K(shade(a.col, .1)) + '" stroke-width="2" fill="none" stroke-linecap="round"/>'; });
     o += '<path d="' + body + '" fill="' + K(a.col) + '" stroke="' + K(shade(a.col, -.2)) + '" stroke-width="5" stroke-linejoin="round"/>';
     if (sil) return o;
     o += '<g clip-path="url(#' + id + 'c)">';
-    for (let i = 0; i < 70; i++) { const x = 20 + (i * 53) % 250, y = 60 + (i * 29) % 44; o += a.mottle ? '<ellipse cx="' + x + '" cy="' + y + '" rx="5" ry="3" fill="' + a.spot + '" opacity=".6"/>' : '<circle cx="' + x + '" cy="' + y + '" r="2.4" fill="' + a.spot + '"/>'; }
+    if (a.belly) o += '<path d="' + edge(.55, 1, 1) + ' L290 140 L150 140Z" fill="' + a.belly + '" opacity=".9"/><path d="M' + f(20 + .55 * 250) + ' ' + f(YC(.55)) + edge(.55, 1, .25).slice(edge(.55, 1, .25).indexOf(" L")) + ' L290 140 L' + f(20 + .55 * 250) + ' 140Z" fill="' + a.belly + '" opacity=".75"/>';
+    if (a.dotRow) for (let t = .1; t < .92; t += .045) o += '<circle cx="' + f(20 + t * 250) + '" cy="' + f(YC(t) + 1) + '" r="1.7" fill="' + a.dotRow + '"/>';
+    if (a.v !== "lamprey" && a.v !== "hag" && !a.dotRow && !a.belly) for (let i = 0; i < 70; i++) { const x = 20 + (i * 53) % 250, y = 60 + (i * 29) % 44; o += a.mottle ? '<ellipse cx="' + x + '" cy="' + y + '" rx="5" ry="3" fill="' + a.spot + '" opacity=".6"/>' : '<circle cx="' + x + '" cy="' + y + '" r="2.4" fill="' + a.spot + '"/>'; }
     if (a.bands) for (let i = 0; i < 16; i++) { const x = 30 + i * 15.5; o += '<rect x="' + x + '" y="40" width="7" height="80" fill="' + a.bands + '"/>'; }
     o += '</g>';
     const hx = 266, hy = 80 + Math.sin(6) * 14 * .3;
     if (a.snake) { o += '<ellipse cx="22" cy="' + f(80 + Math.sin(0) * 14) + '" rx="10" ry="6" fill="' + a.bands + '"/>'; o += '<ellipse cx="' + (hx - 8) + '" cy="' + f(hy) + '" rx="16" ry="9" fill="' + shade(a.col, -.35) + '"/><circle cx="' + (hx - 6) + '" cy="' + f(hy - 3) + '" r="2.6" fill="#111"/><path d="M' + (hx + 6) + ' ' + f(hy + 2) + ' l8 -1 m-8 1 l8 3" stroke="#d8406a" stroke-width="1.4" fill="none"/>'; return o; }
+    if (a.v === "lamprey") {
+      for (let i = 0; i < 7; i++) o += '<circle cx="' + f(hx - 30 - i * 5.2) + '" cy="' + f(hy - 1 + i * .5) + '" r="1.7" fill="' + shade(a.col, -.45) + '"/>';
+      o += '<circle cx="' + (hx - 17) + '" cy="' + f(hy - 6) + '" r="3.2" fill="#f2e6a0"/><circle cx="' + (hx - 17) + '" cy="' + f(hy - 6) + '" r="1.7" fill="#111"/>';
+      o += '<ellipse cx="' + (hx + 3) + '" cy="' + f(hy + 1) + '" rx="5" ry="10" fill="' + shade(a.col, .15) + '"/><ellipse cx="' + (hx + 4) + '" cy="' + f(hy + 1) + '" rx="3" ry="7" fill="#c88a7a"/>';
+      for (let i = 0; i < 5; i++) o += '<circle cx="' + (hx + 4.5) + '" cy="' + f(hy - 4.5 + i * 2.3) + '" r=".9" fill="#f2ead8"/>';
+      return o;
+    }
+    if (a.v === "hag") {
+      for (let i = 0; i < 6; i++) o += '<circle cx="' + f(hx - 40 - i * 5) + '" cy="' + f(hy + 4 + i * .4) + '" r="1.5" fill="' + shade(a.col, -.35) + '"/>';
+      o += '<ellipse cx="' + (hx - 14) + '" cy="' + f(hy - 5) + '" rx="3" ry="2.2" fill="' + shade(a.col, .25) + '"/>';
+      [[-5, -14], [-3, -8], [3, 8], [5, 14]].forEach(([dy, ey]) => o += '<path d="M' + (hx + 2) + ' ' + f(hy + dy * .6) + ' L' + (hx + 12) + ' ' + f(hy + ey * .7) + '" stroke="' + shade(a.col, -.15) + '" stroke-width="1.6" stroke-linecap="round"/>');
+      return o;
+    }
+    if (a.v === "true" || a.v === "lung") {
+      if (a.v === "true") { const px = hx - 30, py = hy + 2; o += '<path d="M' + px + ' ' + f(py) + ' Q' + (px - 10) + ' ' + f(py + 12) + ' ' + (px - 2) + ' ' + f(py + 13) + ' Q' + (px + 4) + ' ' + f(py + 8) + ' ' + (px + 3) + ' ' + f(py) + 'Z" fill="' + finCol + '"/>'; }
+      const er = a.smallEye ? 2 : 3;
+      o += '<circle cx="' + (hx - 12) + '" cy="' + f(hy - 5) + '" r="' + er + '" fill="' + (a.smallEye ? "#2a2a20" : "#f2e6a0") + '"/><circle cx="' + (hx - 12) + '" cy="' + f(hy - 5) + '" r="' + (er * .55) + '" fill="#111"/>';
+      o += '<path d="M' + (hx + 3) + ' ' + f(hy + 1) + ' Q' + (hx - 8) + ' ' + f(hy + 4) + ' ' + (hx - 16) + ' ' + f(hy + 3) + '" stroke="' + shade(a.col, -.45) + '" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+      return o;
+    }
     if (a.head) o += '<ellipse cx="' + (hx - 14) + '" cy="' + f(hy) + '" rx="18" ry="12" fill="' + a.head + '"/><path d="M' + (hx + 2) + ' ' + f(hy - 6) + ' q10 -10 14 -2 q-6 2 -10 6Z" fill="' + a.head + '"/>';
     o += '<circle cx="' + (hx - 12) + '" cy="' + f(hy - 6) + '" r="3.4" fill="#f2e6a0"/><circle cx="' + (hx - 12) + '" cy="' + f(hy - 6) + '" r="1.8" fill="#111"/>';
     o += '<path d="M' + (hx + 2) + ' ' + f(hy - 2) + ' L' + (hx - 24) + ' ' + f(hy + 4) + ' L' + (hx + 4) + ' ' + f(hy + 8) + 'Z" fill="#3a1a12"/>';
@@ -2542,6 +2614,16 @@ const SEA_ART = {
   },
   ray(a, id, sil) {
     const K = c => sil ? "#061019" : c; let o = "";
+    /* 2026-11-11 メガネカスベ（v:"rhomb"）：ひし形の 体と 長く とがった 鼻先、左右の ひれに 1つずつ 黒っぽい 丸い もよう、しっぽの 先に 小さな 背びれ 2つ */
+    if (a.v === "rhomb") {
+      o += '<path d="M92 75 L8 76" stroke="' + K(a.top) + '" stroke-width="5" stroke-linecap="round"/><path d="M40 73 l-6 -7 l-2 8Z M26 74 l-6 -6 l-2 7Z" fill="' + K(a.top) + '"/>';
+      o += '<path d="M276 75 Q232 66 200 22 Q190 12 180 22 Q140 52 90 70 L84 75 L90 80 Q140 98 180 128 Q190 138 200 128 Q232 84 276 75Z" fill="' + K(a.top) + '"/>';
+      if (sil) return o;
+      for (let i = 0; i < 30; i++) { const x = 110 + (i * 53) % 130, y = 44 + (i * 29) % 64; if (Math.abs(y - 75) > (x < 190 ? (x - 90) * .52 : (276 - x) * .62) - 4) continue; o += '<circle cx="' + x + '" cy="' + y + '" r="1.8" fill="' + a.mark + '" opacity=".55"/>'; }
+      [-1, 1].forEach(sg => o += '<circle cx="168" cy="' + (75 + sg * 30) + '" r="11" fill="' + a.mark + '" opacity=".85"/><circle cx="168" cy="' + (75 + sg * 30) + '" r="5" fill="' + shade(a.top, .15) + '"/>');
+      o += '<circle cx="214" cy="68" r="3" fill="#111"/><circle cx="214" cy="82" r="3" fill="#111"/>';
+      return o;
+    }
     if (a.v === "disc") { o += '<path d="M60 75 L4 77" stroke="' + K(a.top) + '" stroke-width="4" stroke-linecap="round"/><path d="M78 72 l-8 -6 l2 8Z" fill="' + K("#eee") + '"/><ellipse cx="160" cy="75" rx="96" ry="62" fill="' + K(a.top) + '"/>'; if (!sil) { for (let i = 0; i < 26; i++) o += '<circle cx="' + (90 + (i * 53) % 140) + '" cy="' + (30 + (i * 29) % 90) + '" r="2" fill="' + a.mark + '" opacity=".8"/>'; o += '<circle cx="222" cy="64" r="3" fill="#111"/><circle cx="222" cy="86" r="3" fill="#111"/>'; } return o; }
     const wing = a.v === "cownose" ? "M246 75 Q246 60 232 58 Q200 52 150 10 Q140 4 136 14 Q128 50 104 68 L88 75 L104 82 Q128 100 136 136 Q140 146 150 140 Q200 98 232 92 Q246 90 246 75Z"
       : "M240 75 Q236 62 222 60 Q190 54 140 6 Q130 0 126 10 Q118 50 96 68 L84 75 L96 82 Q118 100 126 140 Q130 150 140 144 Q190 96 222 90 Q236 88 240 75Z";
@@ -2558,14 +2640,41 @@ const SEA_ART = {
   crab(a, id, sil) {
     const K = c => sil ? "#061019" : c, cx = 150, cy = 80; let o = "";
     const spider = a.v === "spider", legL = spider ? 120 : 34, bw = spider ? 30 : 34, bh = spider ? 26 : 26;
+    /* 2026-11-11 写真で たしかめた カニの 描き分け：
+       king＝タラバガニの なかま（ヤドカリに 近い）。見える 歩く あしは 左右3本ずつ、右の はさみが 大きい、体中に とげ（spiny:2 で 長い とげ）
+       paddle＝ガザミの なかま。いちばん うしろの あしが オールの 形。swim＝こうらが 横長の 六角形で 左右に 大きな とげ */
+    const spk = (x1, y1, x2, y2, n, L) => { if (sil) return ""; let p = ""; const dx = x2 - x1, dy = y2 - y1, d = Math.hypot(dx, dy) || 1, nx = -dy / d, ny = dx / d; for (let k = 1; k <= n; k++) { const t = k / (n + 1), x = x1 + dx * t, y = y1 + dy * t; [-1, 1].forEach(sg => p += '<path d="M' + (x - dx / d * 1.6).toFixed(1) + ' ' + (y - dy / d * 1.6).toFixed(1) + ' L' + (x + sg * nx * L).toFixed(1) + ' ' + (y + sg * ny * L).toFixed(1) + ' L' + (x + dx / d * 1.6).toFixed(1) + ' ' + (y + dy / d * 1.6).toFixed(1) + 'Z" fill="' + shade(a.body, a.spiny > 1 ? .12 : -.18) + '"/>'); } return p; };
+    if (a.king) {
+      const L = a.spiny > 1 ? 7 : 4.5, lw = a.legW || 7, ll = a.legL || 70;
+      for (let s = -1; s <= 1; s += 2) for (let i = 0; i < 3; i++) {
+        const x1 = cx + s * 24, y1 = cy - 4 + i * 11, kx = x1 + s * ll * (.5 - i * .05), ky = y1 - 18 + i * 10, ex = x1 + s * ll * (.82 - i * .1), ey = Math.min(146, y1 + 40 + i * 6);
+        o += '<path d="M' + x1 + ' ' + y1 + ' L' + kx.toFixed(1) + ' ' + ky.toFixed(1) + ' L' + ex.toFixed(1) + ' ' + ey.toFixed(1) + '" stroke="' + K(a.body) + '" stroke-width="' + lw + '" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+        o += spk(x1, y1, kx, ky, 4, L) + spk(kx, ky, ex, ey, 4, L);
+      }
+      [-1, 1].forEach(s => { const big = s > 0 ? 1.35 : 1, x1 = cx + s * 14, y1 = cy - 26, x2 = cx + s * 30, y2 = cy - 48, cxp = cx + s * (22 + 8 * big), cyp = cy - 58;
+        o += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' + K(a.body) + '" stroke-width="' + (lw * big) + '" stroke-linecap="round"/>' + spk(x1, y1, x2, y2, 2, L * .8);
+        o += '<ellipse cx="' + cxp + '" cy="' + cyp + '" rx="' + (9 * big) + '" ry="' + (6 * big) + '" fill="' + K(shade(a.body, -.08)) + '" transform="rotate(' + (s * -30) + ' ' + cxp + ' ' + cyp + ')"/>'; });
+      if (!sil) for (let k = 0; k < 26; k++) { const t = k / 26 * Math.PI * 2, x = cx + Math.cos(t) * 33, y = cy - 8 + Math.sin(t) * 30; o += '<path d="M' + (cx + Math.cos(t - .08) * 30).toFixed(1) + ' ' + (cy - 8 + Math.sin(t - .08) * 27).toFixed(1) + ' L' + (cx + Math.cos(t) * (33 + L)).toFixed(1) + ' ' + (cy - 8 + Math.sin(t) * (30 + L)).toFixed(1) + ' L' + (cx + Math.cos(t + .08) * 30).toFixed(1) + ' ' + (cy - 8 + Math.sin(t + .08) * 27).toFixed(1) + 'Z" fill="' + shade(a.body, a.spiny > 1 ? .12 : -.15) + '"/>'; }
+      o += '<path d="M' + (cx - 32) + ' ' + (cy - 6) + ' Q' + (cx - 34) + ' ' + (cy - 40) + ' ' + cx + ' ' + (cy - 40) + ' Q' + (cx + 34) + ' ' + (cy - 40) + ' ' + (cx + 32) + ' ' + (cy - 6) + ' Q' + (cx + 26) + ' ' + (cy + 22) + ' ' + cx + ' ' + (cy + 24) + ' Q' + (cx - 26) + ' ' + (cy + 22) + ' ' + (cx - 32) + ' ' + (cy - 6) + 'Z" fill="' + K(a.body) + '"/>';
+      if (sil) return o;
+      for (let k = 0; k < 22; k++) { const r1 = Math.abs(Math.sin(k * 12.99) * 437.5) % 1, r2 = Math.abs(Math.sin(k * 78.23) * 437.5) % 1, x = cx - 22 + r1 * 44, y = cy - 32 + r2 * 46; o += '<circle cx="' + x + '" cy="' + y + '" r="' + (a.spiny > 1 ? 2.2 : 1.8) + '" fill="' + (a.spot || shade(a.body, -.3)) + '"/>'; }
+      o += '<circle cx="' + (cx - 5) + '" cy="' + (cy - 42) + '" r="2.4" fill="#111"/><circle cx="' + (cx + 5) + '" cy="' + (cy - 42) + '" r="2.4" fill="#111"/>';
+      return o;
+    }
     for (let s = -1; s <= 1; s += 2) for (let i = 0; i < 4; i++) {
+      if (a.paddle && i === 3) { const x1 = cx + s * 26, y1 = cy + 14, ex = cx + s * 54, ey = cy + 34; o += '<path d="M' + x1 + ' ' + y1 + ' L' + ex + ' ' + ey + '" stroke="' + K(a.body) + '" stroke-width="5" stroke-linecap="round"/><ellipse cx="' + (ex + s * 6) + '" cy="' + (ey + 4) + '" rx="10" ry="6" fill="' + K(shade(a.body, .1)) + '" transform="rotate(' + (s * 30) + ' ' + (ex + s * 6) + ' ' + (ey + 4) + ')"/>'; continue; }
       const ang = (-.9 + i * .45), x1 = cx + s * bw * .8, y1 = cy + (i - 1.5) * 8, kx = x1 + s * Math.cos(ang) * legL * .5, ky = y1 + Math.sin(ang) * legL * .25 - (spider ? 10 : 6), ex = x1 + s * Math.cos(ang) * legL, ey = Math.min(146, y1 + legL * .35 + i * 4);
       o += '<path d="M' + x1 + ' ' + y1 + ' L' + kx.toFixed(1) + ' ' + ky.toFixed(1) + ' L' + ex.toFixed(1) + ' ' + ey.toFixed(1) + '" stroke="' + K(a.body) + '" stroke-width="' + (spider ? 4 : 5) + '" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
       if (spider && !sil) for (let k = 1; k < 6; k++) o += '<circle cx="' + (x1 + (ex - x1) * k / 6).toFixed(1) + '" cy="' + (y1 + (ey - y1) * k / 6 - (k < 3 ? 6 : 3)).toFixed(1) + '" r="1.4" fill="' + a.spot + '"/>';
     }
-    [-1, 1].forEach(s => { const x1 = cx + s * bw * .6, y1 = cy - bh * .6, x2 = cx + s * (bw + (spider ? 40 : 22)), y2 = cy - bh - (spider ? 20 : 14); o += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' + K(a.body) + '" stroke-width="' + (spider ? 4 : 6) + '" stroke-linecap="round"/><ellipse cx="' + x2 + '" cy="' + y2 + '" rx="' + (spider ? 6 : 11) + '" ry="' + (spider ? 4 : 7) + '" fill="' + K(shade(a.body, -.1)) + '" transform="rotate(' + (s * 20) + ' ' + x2 + ' ' + y2 + ')"/>'; });
-    o += spider ? '<path d="M' + (cx - bw) + ' ' + (cy - 2) + ' Q' + cx + ' ' + (cy - bh * 2) + ' ' + (cx + bw) + ' ' + (cy - 2) + ' Q' + cx + ' ' + (cy + bh * .8) + ' ' + (cx - bw) + ' ' + (cy - 2) + 'Z" fill="' + K(a.body) + '"/>' : '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + bw + '" ry="' + bh + '" fill="' + K(a.body) + '"/>';
+    /* 2026-11-11 ケガニ（hairy）：体と あしに 短い 毛、はさみは 短い。モクズガニ（mitten）：はさみに こい 毛の ふさ */
+    if (a.hairy && !sil) for (let k = 0; k < 40; k++) { const t = k / 40 * Math.PI * 2, x = cx + Math.cos(t) * bw, y = cy + Math.sin(t) * bh; o += '<path d="M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' l' + (Math.cos(t) * 4).toFixed(1) + ' ' + (Math.sin(t) * 4).toFixed(1) + '" stroke="' + shade(a.body, .2) + '" stroke-width="1.4" stroke-linecap="round"/>'; }
+    [-1, 1].forEach(s => { const x1 = cx + s * bw * .6, y1 = cy - bh * .6, x2 = cx + s * (bw + (spider ? 40 : a.shortClaw ? 8 : 22)), y2 = cy - bh - (spider ? 20 : a.shortClaw ? 6 : 14); if (a.mitten) o += '<ellipse cx="' + x2 + '" cy="' + (y2 + 3) + '" rx="15" ry="11" fill="' + K(a.mitten) + '"/>' + (sil ? "" : [0, 1, 2, 3, 4, 5, 6, 7].map(k => '<path d="M' + (x2 - 12 + k * 3.4) + ' ' + (y2 + 10) + ' l' + (k % 2 ? 1 : -1) + ' 6" stroke="' + a.mitten + '" stroke-width="1.6" stroke-linecap="round"/>').join("")); o += '<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' + K(a.body) + '" stroke-width="' + (spider ? 4 : 6) + '" stroke-linecap="round"/><ellipse cx="' + x2 + '" cy="' + y2 + '" rx="' + (spider ? 6 : 11) + '" ry="' + (spider ? 4 : 7) + '" fill="' + K(shade(a.body, -.1)) + '" transform="rotate(' + (s * 20) + ' ' + x2 + ' ' + y2 + ')"/>'; });
+    if (a.swim) o += '<path d="M' + (cx - 58) + ' ' + (cy - 12) + ' L' + (cx - 30) + ' ' + (cy - 16) + ' Q' + (cx - 26) + ' ' + (cy - 30) + ' ' + cx + ' ' + (cy - 30) + ' Q' + (cx + 26) + ' ' + (cy - 30) + ' ' + (cx + 30) + ' ' + (cy - 16) + ' L' + (cx + 58) + ' ' + (cy - 12) + ' L' + (cx + 30) + ' ' + (cy - 4) + ' Q' + (cx + 22) + ' ' + (cy + 22) + ' ' + cx + ' ' + (cy + 22) + ' Q' + (cx - 22) + ' ' + (cy + 22) + ' ' + (cx - 30) + ' ' + (cy - 4) + 'Z" fill="' + K(a.body) + '"/>';
+    else o += spider ? '<path d="M' + (cx - bw) + ' ' + (cy - 2) + ' Q' + cx + ' ' + (cy - bh * 2) + ' ' + (cx + bw) + ' ' + (cy - 2) + ' Q' + cx + ' ' + (cy + bh * .8) + ' ' + (cx - bw) + ' ' + (cy - 2) + 'Z" fill="' + K(a.body) + '"/>' : '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + bw + '" ry="' + bh + '" fill="' + K(a.body) + '"/>';
     if (sil) return o;
+    if (a.hairy) for (let k = 0; k < 70; k++) { const r1 = Math.abs(Math.sin(k * 12.99) * 437.5) % 1, r2 = Math.abs(Math.sin(k * 78.23) * 437.5) % 1, x = cx - bw * .85 + r1 * bw * 1.7, y = cy - bh * .8 + r2 * bh * 1.6; if (((x - cx) / bw) ** 2 + ((y - cy) / bh) ** 2 < .8) o += '<path d="M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' l' + (r1 > .5 ? 1.6 : -1.6) + ' 2.6" stroke="' + shade(a.body, .25) + '" stroke-width="1" stroke-linecap="round" opacity=".8"/>'; }
+    if (a.dots) for (let k = 0; k < 18; k++) o += '<circle cx="' + (cx - 24 + (Math.abs(Math.sin(k * 12.99) * 437.5) % 1) * 48).toFixed(1) + '" cy="' + (cy - 24 + (Math.abs(Math.sin(k * 78.23) * 437.5) % 1) * 40).toFixed(1) + '" r="1.8" fill="' + a.dots + '" opacity=".85"/>';
     if (a.net) for (let i = 0; i < 14; i++) o += '<path d="M' + (cx - 26 + (i % 5) * 11 + (i % 10 > 4 ? 5 : 0)) + ' ' + (cy - 16 + Math.floor(i / 5) * 9) + ' l5 -4 l5 4 l-5 4Z" fill="none" stroke="' + a.net + '" stroke-width="1.4" opacity=".8"/>';
     o += '<ellipse cx="' + (cx - 8) + '" cy="' + (cy - 10) + '" rx="' + bw * .5 + '" ry="' + bh * .3 + '" fill="#fff" opacity=".18"/>';
     if (spider) for (let i = 0; i < 10; i++) o += '<circle cx="' + (cx - 20 + (i * 13) % 40) + '" cy="' + (cy - 30 + (i * 7) % 26) + '" r="1.6" fill="' + shade(a.body, -.3) + '"/>';
@@ -2579,7 +2688,12 @@ const SEA_ART = {
     seg.slice().reverse().forEach(([x, y, r], i) => { o += '<ellipse cx="' + x + '" cy="' + y + '" rx="' + (r + 4) + '" ry="' + r + '" fill="' + K(a.body) + '"/>'; if (!sil && a.v === "coral" && i % 2) o += '<ellipse cx="' + x + '" cy="' + y + '" rx="' + (r + 4) + '" ry="' + r + '" fill="' + a.band + '"/>'; });
     for (let i = 0; i < 5; i++) o += '<path d="M' + (200 - i * 14) + ' 94 l-4 18" stroke="' + K(a.body) + '" stroke-width="2" stroke-linecap="round"/>';
     if (a.v === "harlequin") o += '<ellipse cx="236" cy="96" rx="22" ry="11" fill="' + K(a.body) + '" transform="rotate(20 236 96)"/><ellipse cx="248" cy="62" rx="22" ry="11" fill="' + K(a.body) + '" transform="rotate(-20 248 62)"/>';
-    else { const cl = a.v === "coral" ? 70 : 28; o += '<path d="M214 86 L' + (214 + cl) + ' ' + (98 + cl * .1) + '" stroke="' + K(a.body) + '" stroke-width="5" stroke-linecap="round"/><path d="M214 74 L' + (214 + cl) + ' ' + (58 - cl * .1) + '" stroke="' + K(a.body) + '" stroke-width="5" stroke-linecap="round"/>'; if (!sil && a.v === "coral") for (let k = 1; k < 6; k++) o += '<circle cx="' + (214 + k * 12) + '" cy="' + (88 + k * 1.6) + '" r="3" fill="' + a.band + '"/><circle cx="' + (214 + k * 12) + '" cy="' + (72 - k * 1.6) + '" r="3" fill="' + a.band + '"/>'; }
+    /* 2026-11-11 うでの 長さを 種ごとに：オトヒメエビ（coral）は 長い しま模様の うで、テナガエビ（longArm）は 長く 細い うでの 先に 小さな はさみ。
+       クルマエビ・スジエビ・ホッカイエビ（shortArm）は 体の しまは そのままで、うでは 短い */
+    else { const coralArm = a.v === "coral" && !a.shortArm, cl = a.longArm ? 64 : coralArm ? 70 : 28, aw = a.longArm ? 3 : 5, sp = a.longArm ? .45 : .1;
+      [[86, 98 + cl * sp], [74, 58 - cl * sp]].forEach(([y0, y1]) => { o += '<path d="M214 ' + y0 + ' L' + (214 + cl) + ' ' + y1 + '" stroke="' + K(a.body) + '" stroke-width="' + aw + '" stroke-linecap="round"/>';
+        if (a.longArm || a.shortArm) o += '<path d="M' + (214 + cl - 2) + ' ' + y1 + ' l9 -3 M' + (214 + cl - 2) + ' ' + y1 + ' l9 3" stroke="' + K(shade(a.body, -.15)) + '" stroke-width="' + (aw - .5) + '" stroke-linecap="round"/>'; });
+      if (!sil && coralArm) for (let k = 1; k < 6; k++) o += '<circle cx="' + (214 + k * 12) + '" cy="' + (88 + k * 1.6) + '" r="3" fill="' + a.band + '"/><circle cx="' + (214 + k * 12) + '" cy="' + (72 - k * 1.6) + '" r="3" fill="' + a.band + '"/>'; }
     o += '<path d="M222 76 Q270 40 296 50 M222 78 Q272 70 298 80" stroke="' + K(a.v === "fire" ? "#ffffff" : a.body) + '" stroke-width="1.4" fill="none"/>';
     if (sil) return o;
     if (a.spot) for (let i = 0; i < 16; i++) o += '<circle cx="' + (110 + (i * 37) % 110) + '" cy="' + (70 + (i * 13) % 22) + '" r="' + (a.v === "harlequin" ? 4 : 1.8) + '" fill="' + a.spot + '"/>';
@@ -2587,21 +2701,107 @@ const SEA_ART = {
     o += '<circle cx="220" cy="72" r="3.4" fill="#111"/>';
     return o;
   },
+  // 2026-11-06 コシオリエビ型：横から 見た 形。こうらは 丸く、しっぽ（はら）は 体の 下へ おりたたむ。前へ 長い はさみ。
+  //   a.v="hairy"（ゴエモン：体の 下と はさみが 白い 毛で ふさふさ、目は ごく 小さい）／"long"（オオコシオリ：細長い はさみに トゲ、目は 大きい）
+  squat(a, id, sil) {
+    const K = c => sil ? "#061019" : c, hairy = a.v === "hairy", cx = 150, cy = 86; let o = "";
+    const legC = K(a.leg || a.body), far = K(shade(a.leg || a.body, -.18));
+    // おくの はさみ（すこし 上・こい 色）
+    const claw = (y0, col, up) => { const mx = 232, my = y0 - (up ? 18 : 4), tx = hairy ? 270 : 288, ty = my - (up ? 6 : 2);
+      let c = '<path d="M' + (cx + 34) + ' ' + y0 + ' L' + mx + ' ' + my + '" stroke="' + col + '" stroke-width="' + (hairy ? 7 : 5) + '" stroke-linecap="round"/>' +
+        '<ellipse cx="' + ((mx + tx) / 2) + '" cy="' + ((my + ty) / 2) + '" rx="' + ((tx - mx) / 2 + 2) + '" ry="' + (hairy ? 7 : 4.5) + '" fill="' + col + '" transform="rotate(' + (up ? -8 : -3) + ' ' + ((mx + tx) / 2) + ' ' + ((my + ty) / 2) + ')"/>' +
+        '<path d="M' + (tx - 2) + ' ' + (ty - 1) + ' l' + (hairy ? 9 : 12) + ' -3 M' + (tx - 2) + ' ' + (ty + 2) + ' l' + (hairy ? 8 : 11) + ' 4" stroke="' + col + '" stroke-width="' + (hairy ? 3.4 : 2.6) + '" stroke-linecap="round"/>';
+      return c; };
+    o += claw(cy - 8, far, true);
+    // 歩く 足（3対 見える。5番目は 小さく かくれる）
+    const LEGS = [[24, 20, 38], [6, 4, 12], [-12, -12, -10], [-28, -30, -34]];   // [つけね, ひざ, 先] の x（cx から）
+    LEGS.forEach(([b0, k0, e0], i) => { const x1 = cx + b0, y1 = cy + 12, kx = cx + k0 + 10, ky = cy - 4, ex = cx + e0, ey = 131;
+      o += '<path d="M' + x1 + ' ' + y1 + ' Q' + kx + ' ' + ky + ' ' + ((kx + ex) / 2 + 4) + ' ' + (cy + 18) + ' L' + ex + ' ' + ey + '" stroke="' + (i % 2 ? far : legC) + '" stroke-width="' + (hairy ? 5 : 4.4) + '" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'; });
+    // おりたたんだ しっぽ（体の 下・うしろに まるく）
+    o += '<path d="M' + (cx - 40) + ' ' + (cy + 4) + ' Q' + (cx - 52) + ' ' + (cy + 26) + ' ' + (cx - 26) + ' ' + (cy + 30) + ' Q' + (cx - 10) + ' ' + (cy + 30) + ' ' + (cx - 8) + ' ' + (cy + 20) + 'Z" fill="' + K(shade(a.body, -.08)) + '"/>';
+    // こうら（ドーム）
+    o += '<path d="M' + (cx - 44) + ' ' + (cy + 10) + ' Q' + (cx - 46) + ' ' + (cy - 30) + ' ' + cx + ' ' + (cy - 32) + ' Q' + (cx + 40) + ' ' + (cy - 30) + ' ' + (cx + 44) + ' ' + (cy - 2) + ' L' + (cx + 40) + ' ' + (cy + 12) + ' Q' + cx + ' ' + (cy + 20) + ' ' + (cx - 44) + ' ' + (cy + 10) + 'Z" fill="' + K(a.body) + '"/>';
+    // つの（ロストラム）と 触角
+    o += '<path d="M' + (cx + 40) + ' ' + (cy - 14) + ' l16 -2 l-14 8Z" fill="' + K(a.body) + '"/>';
+    o += '<path d="M' + (cx + 46) + ' ' + (cy - 12) + ' Q' + (cx + 90) + ' ' + (cy - 46) + ' ' + (cx + (hairy ? 104 : 140)) + ' ' + (cy - (hairy ? 44 : 60)) + '" stroke="' + K(a.leg || a.body) + '" stroke-width="1.4" fill="none"/>';
+    // 手前の はさみ
+    o += claw(cy + 2, legC, false);
+    if (sil) return o;
+    // こうらの みぞ・つや
+    o += '<path d="M' + (cx - 30) + ' ' + (cy - 4) + ' Q' + cx + ' ' + (cy - 14) + ' ' + (cx + 30) + ' ' + (cy - 6) + '" stroke="' + a.band + '" stroke-width="2" fill="none" opacity=".8"/><path d="M' + (cx - 16) + ' ' + (cy - 22) + ' Q' + (cx + 6) + ' ' + (cy - 28) + ' ' + (cx + 24) + ' ' + (cy - 22) + '" stroke="#fff" stroke-width="5" fill="none" opacity=".22" stroke-linecap="round"/>';
+    for (let i = 0; i < 3; i++) o += '<path d="M' + (cx - 44 + i * 6) + ' ' + (cy + 10 + i * 6) + ' q8 4 18 2" stroke="' + a.band + '" stroke-width="1.6" fill="none" opacity=".7"/>';   // しっぽの ふし
+    if (hairy) {   // 白い 毛（さいきんの 畑）：体の 下の ふち・はさみ・足
+      const H = a.hair || "#ffffff"; let h = "";
+      o += '<path d="M' + (cx - 46) + ' ' + (cy + 10) + ' Q' + cx + ' ' + (cy + 34) + ' ' + (cx + 42) + ' ' + (cy + 10) + '" stroke="' + H + '" stroke-width="9" fill="none" opacity=".35" stroke-linecap="round"/>';   // 体の 下の ふさふさの 帯
+      for (let i = 0; i < 30; i++) { const t = i / 29, x = cx - 44 + t * 86, y = cy + 10 + Math.sin(t * Math.PI) * 10, L = 8 + (i * 7) % 5; h += 'M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' l' + (i % 3 - 1.5).toFixed(1) + ' ' + L; }
+      for (let i = 0; i < 22; i++) { const x = cx + 38 + i * 4.8, y = cy + 2 + (x > 232 ? 6 : 1), L = 5 + i % 3; h += 'M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' l-1.6 ' + L; if (x > 232) h += 'M' + x.toFixed(1) + ' ' + (y - 12).toFixed(1) + ' l-1.4 -' + (L - 2); }
+      for (let i = 0; i < 12; i++) { const x = cx + 50 + i * 6.6, y = cy - 8 - (x > 232 ? 18 : 3); h += 'M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' l-1.2 -5'; }   // おくの はさみ
+      LEGS.forEach(([b0, k0, e0]) => { for (let k = 1; k < 4; k++) { const t = k / 4, x = (cx + (k0 + 10 + e0) / 2 + 4) * (1 - t) + (cx + e0) * t, y = (cy + 18) * (1 - t) + 131 * t; h += 'M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' l-4 1.5 M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' l4 1.5'; } });
+      o += '<path d="' + h + '" stroke="' + H + '" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".9"/>';
+      o += '<circle cx="' + (cx + 34) + '" cy="' + (cy - 16) + '" r="1.8" fill="' + shade(a.body, -.4) + '"/>';   // 目は ごく 小さい（退化）
+    } else {
+      for (let i = 0; i < 8; i++) o += '<path d="M' + (194 + i * 12) + ' ' + (cy + (i < 4 ? -2 : -6)) + ' l2 -4" stroke="' + a.band + '" stroke-width="1.8" stroke-linecap="round"/>';   // はさみの トゲ
+      for (let i = 0; i < 4; i++) o += '<path d="M' + (cx - 20 + i * 12) + ' ' + (cy - 26 + (i === 0 || i === 3 ? 4 : 0)) + ' l2 -4" stroke="' + a.band + '" stroke-width="1.8" stroke-linecap="round"/>';   // こうらの トゲ
+      o += '<circle cx="' + (cx + 32) + '" cy="' + (cy - 18) + '" r="5" fill="' + shade(a.body, .25) + '"/><circle cx="' + (cx + 33) + '" cy="' + (cy - 18) + '" r="3.6" fill="#111"/><circle cx="' + (cx + 34.2) + '" cy="' + (cy - 19.4) + '" r="1.2" fill="#fff"/>';
+    }
+    return o;
+  },
   lobster(a, id, sil) {
     const K = c => sil ? "#061019" : c; let o = "";
-    o += '<path d="M230 70 Q280 20 300 14 M230 76 Q284 60 300 66" stroke="' + K(a.leg) + '" stroke-width="5" fill="none" stroke-linecap="round"/>';
+    // 2026-11-06 はさみ：a.claw = "big"（アメリカザリガニ：赤く 大きく いぼいぼ）／"round"（ニホンザリガニ：丸く 大きい）／"spiny"（アカザエビ：細長く みぞと トゲ）。なし＝イセエビ・ニシキエビ（はさみは ない）
+    const claw = (x0, y0, len, ang, col, front) => { const kind = a.claw, W = kind === "big" ? 12 : kind === "round" ? 13 : 5.5, P = kind === "spiny" ? 46 : kind === "round" ? 30 : 36;
+      const r = ang * Math.PI / 180, ex = x0 + Math.cos(r) * len, ey = y0 + Math.sin(r) * len;
+      let c = '<path d="M' + x0 + ' ' + y0 + ' L' + ex.toFixed(1) + ' ' + ey.toFixed(1) + '" stroke="' + col + '" stroke-width="' + (kind === "spiny" ? 4.5 : 7) + '" stroke-linecap="round"/>';
+      c += '<g transform="translate(' + ex.toFixed(1) + ' ' + ey.toFixed(1) + ') rotate(' + ang + ')"><ellipse cx="' + (P * .42) + '" cy="0" rx="' + (P * .46) + '" ry="' + W + '" fill="' + col + '"/>' +
+        '<path d="M' + (P * .7) + ' ' + (-W * .45) + ' Q' + (P * 1.15) + ' ' + (-W * .75) + ' ' + (P * 1.32) + ' ' + (-W * .1) + '" stroke="' + col + '" stroke-width="' + (W * .62) + '" fill="none" stroke-linecap="round"/>' +
+        '<path d="M' + (P * .7) + ' ' + (W * .45) + ' Q' + (P * 1.1) + ' ' + (W * .7) + ' ' + (P * 1.26) + ' ' + (W * .2) + '" stroke="' + col + '" stroke-width="' + (W * .55) + '" fill="none" stroke-linecap="round"/>';
+      if (!sil && front) {
+        if (kind === "big") for (let i = 0; i < 9; i++) c += '<circle cx="' + (6 + (i * 7) % 26) + '" cy="' + (-6 + (i * 5) % 12) + '" r="1.5" fill="' + a.band + '" opacity=".8"/>';
+        if (kind === "spiny") { for (let i = 0; i < 6; i++) c += '<path d="M' + (4 + i * 7) + ' ' + (-W) + ' l2 -4 M' + (6 + i * 7) + ' ' + W + ' l2 4" stroke="' + a.band + '" stroke-width="1.6" stroke-linecap="round"/>'; c += '<path d="M2 0 H' + (P * .85) + '" stroke="' + a.band + '" stroke-width="1.4" opacity=".8"/>'; }
+        c += '<ellipse cx="' + (P * .3) + '" cy="' + (-W * .4) + '" rx="' + (P * .22) + '" ry="' + (W * .25) + '" fill="#fff" opacity=".2"/>';
+      }
+      return c + '</g>'; };
+    const L1 = a.claw === "spiny" ? 46 : a.claw === "round" ? 18 : 24;
+    const fit = x => !a.claw ? x : '<g transform="' + (a.claw === "spiny" ? 'translate(-30 0) translate(150 80) scale(.86) translate(-150 -80)' : 'translate(-26 0)') + '">' + x + '</g>';   // はさみが 画面から 出ないように
+    if (a.claw) o += claw(222, 76, L1, -16, K(shade(a.leg, -.2)), false);
+    o += '<path d="M230 70 Q280 20 300 14 M230 76 Q284 60 300 66" stroke="' + K(a.leg) + '" stroke-width="' + (a.claw ? 2 : 5) + '" fill="none" stroke-linecap="round"/>';
     for (let i = 0; i < 5; i++) o += '<path d="M' + (200 - i * 16) + ' 92 l' + (-6 - i) + ' 26" stroke="' + K(a.leg) + '" stroke-width="3" stroke-linecap="round"/>';
     o += '<ellipse cx="200" cy="78" rx="40" ry="20" fill="' + K(a.body) + '"/>';
     for (let i = 0; i < 5; i++) o += '<ellipse cx="' + (152 - i * 20) + '" cy="' + (80 + i * 2) + '" rx="14" ry="' + (15 - i) + '" fill="' + K(a.body) + '"/>';
     o += '<path d="M64 88 l-30 -14 l6 18 l-6 18Z" fill="' + K(a.body) + '"/>';
-    if (sil) return o;
+    if (sil) return fit(a.claw ? o + claw(220, 88, L1, 10, K(a.leg), false) : o);
     for (let i = 0; i < 5; i++) o += '<path d="M' + (152 - i * 20) + ' ' + (68 + i * 2) + ' v24" stroke="' + a.band + '" stroke-width="3" opacity=".9"/>';
     for (let i = 0; i < 12; i++) o += '<circle cx="' + (172 + (i * 13) % 56) + '" cy="' + (66 + (i * 7) % 24) + '" r="2" fill="' + a.band + '" opacity=".8"/>';
     o += '<circle cx="232" cy="68" r="3.2" fill="#111"/>';
-    return o;
+    if (a.claw) o += claw(220, 88, L1, 10, a.leg, true);
+    return fit(o);
   },
   octopus(a, id, sil) {
     const K = c => sil ? "#061019" : c, c = K(a.col); let o = "";
+    /* 2026-11-11 写真で たしかめた：dumbo＝メンダコ（ひらたい ドーム、小さな 耳の ひれ、うでの 間の まくが スカートに なり、ふちで うでの 先が くるっと まく）
+       vamp＝コウモリダコ（よこから：うしろに どうと 耳の ひれ、大きな 目、うでの 間の 黒い まくが マントの ように 広がり、うでの 先に 白い とげ） */
+    if (a.v === "dumbo") {
+      o += '<path d="M56 124 Q60 96 92 84 Q110 50 150 48 Q190 50 208 84 Q240 96 244 124 Q226 132 210 124 Q196 134 180 126 Q166 136 150 127 Q134 136 120 126 Q104 134 90 124 Q74 132 56 124Z" fill="' + c + '"/>';
+      [[-1, 64], [1, 236]].forEach(([sg, x]) => o += '<path d="M' + x + ' 122 q' + (sg * 6) + ' -6 ' + (sg * 2) + ' -10" stroke="' + c + '" stroke-width="4" fill="none" stroke-linecap="round"/>');
+      o += '<ellipse cx="120" cy="56" rx="9" ry="13" fill="' + K(shade(a.col, -.08)) + '" transform="rotate(-25 120 56)"/><ellipse cx="180" cy="56" rx="9" ry="13" fill="' + K(shade(a.col, -.08)) + '" transform="rotate(25 180 56)"/>';
+      if (sil) return o;
+      o += '<ellipse cx="146" cy="64" rx="26" ry="8" fill="#fff" opacity=".2"/>';
+      for (let i = 0; i < 12; i++) o += '<circle cx="' + (100 + (i * 37) % 100) + '" cy="' + (78 + (i * 13) % 34) + '" r="1.8" fill="' + shade(a.col, -.25) + '" opacity=".6"/>';
+      [128, 172].forEach(x => o += '<circle cx="' + x + '" cy="82" r="5" fill="#2a1a18"/><circle cx="' + (x + 1.5) + '" cy="80.5" r="1.6" fill="#fff"/>');
+      return o;
+    }
+    if (a.v === "vamp") {
+      o += '<path d="M150 68 Q190 36 262 22 Q252 40 270 50 Q254 62 276 78 Q252 90 270 104 Q250 112 262 130 Q192 118 150 88Z" fill="' + K(shade(a.col, -.12)) + '"/>';
+      for (let k = 0; k < 6; k++) { const t = k / 5, x = 262 + Math.sin(t * Math.PI) * 12, y = 22 + t * 108; o += '<path d="M150 78 Q' + (200 + t * 10) + ' ' + (40 + t * 76) + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + '" stroke="' + c + '" stroke-width="3" fill="none" stroke-linecap="round"/>'; }
+      o += '<path d="M48 78 Q50 52 96 50 Q140 50 156 70 Q160 80 152 92 Q130 104 92 102 Q50 100 48 78Z" fill="' + c + '"/>';
+      o += '<ellipse cx="64" cy="54" rx="14" ry="8" fill="' + c + '" transform="rotate(-30 64 54)"/><ellipse cx="64" cy="100" rx="14" ry="8" fill="' + c + '" transform="rotate(30 64 100)"/>';
+      if (sil) return o;
+      for (let k = 0; k < 6; k++) { const t = k / 5; for (let j = 1; j < 5; j++) { const u = .45 + j * .12, x = 150 + (262 + Math.sin(t * Math.PI) * 12 - 150) * u, y = 78 + (22 + t * 108 - 78) * u; o += '<path d="M' + x.toFixed(1) + ' ' + y.toFixed(1) + ' l4 -3" stroke="#e8e0e8" stroke-width="1.4" stroke-linecap="round"/>'; } }
+      o += '<path d="M180 70 Q230 50 290 46 M180 86 Q230 104 290 110" stroke="#c8b8c0" stroke-width="1" fill="none" opacity=".8"/>';
+      o += '<ellipse cx="96" cy="66" rx="24" ry="7" fill="#fff" opacity=".12"/>';
+      o += '<circle cx="146" cy="74" r="9" fill="#8ab8e8"/><circle cx="146" cy="74" r="5.2" fill="#c82a2a"/><circle cx="148" cy="72" r="1.8" fill="#fff"/>';
+      return o;
+    }
     for (let i = 0; i < 8; i++) { const sx = 118 + i * 9, d = "M" + sx + " 82 C" + (sx - 20 + i * 4) + " 110 " + (sx - 40 + i * 9) + " 120 " + (sx - 30 + i * 10) + " 140 C" + (sx - 26 + i * 10) + " 132 " + (sx - 10 + i * 3) + " 124 " + (sx + 6) + " 84"; o += '<path d="' + d + '" fill="' + c + '"/>'; if (!sil) for (let k = 0; k < 4; k++) o += '<circle cx="' + (sx - 8 - k * 5 + i * 2) + '" cy="' + (100 + k * 9) + '" r="1.6" fill="#f2d2c4"/>'; }
     if (a.cape && !sil) o += '<path d="M112 86 Q60 120 70 146 L210 146 Q216 116 200 84Z" fill="' + a.cape + '" opacity=".7"/>';
     o += '<path d="M110 84 Q100 30 160 18 Q214 22 204 72 Q196 92 150 92 Q118 92 110 84Z" fill="' + c + '"/>';
@@ -2616,6 +2816,26 @@ const SEA_ART = {
   },
   squid(a, id, sil) {
     const K = c => sil ? "#061019" : c; let o = "";
+    /* 2026-11-11 ツツイカ型（v:"arrow"）：細長い どうの 先に ひれ。スルメイカ・ヤリイカ・ダイオウイカ・ホタルイカ・ダイオウホウズキイカ・ヒメイカ。
+       写真で たしかめた 形：w＝どうの 太さ、fl＝ひれの 長さ（どうに 対する わりあい）、fw＝ひれの はば、fo＝ひれが 先から どれだけ はなれるか、al＝うでの 長さ、tent＝長い 2本の うで */
+    if (a.v === "arrow") {
+      const w = a.w || 17, L = (a.fl || .34) * 170, fw = a.fw || 30, fo = a.fo || 0, al = a.al || 50, x0 = 40 + fo, fr = a.fr ? .95 : .7;
+      const fin = sg => 'Q' + (x0 + L * .15) + ' ' + (76 + sg * fw) + ' ' + (x0 + L * .45) + ' ' + (76 + sg * fw) + ' Q' + (x0 + L * .85) + ' ' + (76 + sg * fw * fr) + ' ' + (x0 + L) + ' ' + (76 + sg * w * .5);
+      for (let i = 0; i < 8; i++) { const t = i / 7 - .5; o += '<path d="M212 ' + (76 + t * w * 1.3) + ' Q' + (212 + al * .55) + ' ' + (76 + t * w * 2.6) + ' ' + (212 + al + (i % 2) * 4) + ' ' + (76 + t * (w * 2.2 + al * .5)) + '" stroke="' + K(a.col) + '" stroke-width="3.2" fill="none" stroke-linecap="round"/>'; }
+      if (a.tent) [-1, 1].forEach(sg => { const ex = Math.min(294, 212 + a.tent), ey = 76 + sg * (a.ty || 30); o += '<path d="M212 ' + (76 + sg * 3) + ' Q' + (212 + (ex - 212) * .5) + ' ' + (76 + sg * 4) + ' ' + ex + ' ' + ey + '" stroke="' + K(a.col) + '" stroke-width="1.8" fill="none" stroke-linecap="round"/><ellipse cx="' + (ex - 3) + '" cy="' + (ey - sg * 2) + '" rx="7" ry="2.6" fill="' + K(a.col) + '" transform="rotate(' + (sg * 22) + ' ' + (ex - 3) + ' ' + (ey - sg * 2) + ')"/>'; });
+      o += '<path d="M' + (x0 - 3) + ' 76 ' + fin(-1) + ' L' + (x0 + L) + ' ' + (76 + w * .5) + ' ' + 'Q' + (x0 + L * .85) + ' ' + (76 + fw * fr) + ' ' + (x0 + L * .45) + ' ' + (76 + fw) + ' Q' + (x0 + L * .15) + ' ' + (76 + fw) + ' ' + (x0 - 3) + ' 76Z" fill="' + K(shade(a.col, .12)) + '" opacity="' + (sil ? 1 : .88) + '"/>';
+      o += '<ellipse cx="209" cy="76" rx="10" ry="' + (w * .82) + '" fill="' + K(shade(a.col, -.06)) + '"/>';
+      o += a.sp ? '<path d="M' + (x0 - 2) + ' 76 Q' + (x0 + 50) + ' ' + (76 - w * 1.5) + ' 204 ' + (76 - w * .7) + ' Q210 76 204 ' + (76 + w * .7) + ' Q' + (x0 + 50) + ' ' + (76 + w * 1.5) + ' ' + (x0 - 2) + ' 76Z" fill="' + K(a.col) + '"/>' : a.cone ? '<path d="M38 76 Q120 ' + (76 - w * .8) + ' 204 ' + (76 - w) + ' Q210 76 204 ' + (76 + w) + ' Q120 ' + (76 + w * .8) + ' 38 76Z" fill="' + K(a.col) + '"/>'
+        : '<path d="M38 76 Q62 ' + (76 - w * .95) + ' 100 ' + (76 - w) + ' L204 ' + (76 - w) + ' Q210 76 204 ' + (76 + w) + ' L100 ' + (76 + w) + ' Q62 ' + (76 + w * .95) + ' 38 76Z" fill="' + K(a.col) + '"/>';
+      if (sil) return o;
+      const xs = a.sp ? x0 + 24 : 60; o += '<path d="M' + xs + ' 76 L196 76" stroke="' + shade(a.col, -.2) + '" stroke-width="' + (w * .5) + '" opacity=".28" stroke-linecap="round"/>';
+      for (let i = 0; i < 34; i++) { const px = xs + 10 + (i * 37) % (194 - xs - 10), py = 76 + (((i * 13) % 20) / 10 - 1) * w * .62 * (a.cone ? (px - 38) / 166 : 1); o += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="1.3" fill="#7a3a2a" opacity=".5"/>'; }
+      if (a.glow) { for (let i = 0; i < 16; i++) { const px = 74 + (i * 37) % 122, py = 76 + (((i * 13) % 20) / 10 - 1) * w * .6 * (px - 38) / 166; o += '<circle cx="' + px + '" cy="' + py.toFixed(1) + '" r="2.2" fill="' + a.glow + '" opacity=".9"/>'; }
+        [-1, 1].forEach(sg => { for (let k = 0; k < 3; k++) o += '<circle cx="' + (212 + al - k * 5) + '" cy="' + (76 + sg * (w * 1.1 + al * .25) - sg * k * 2.2).toFixed(1) + '" r="2.4" fill="' + a.glow + '"/>'; }); }
+      const ex = 207, ey = 76 - w * .45, er = a.bigEye ? Math.min(11, w * .62) : 4.6;
+      o += a.bigEye ? '<circle cx="' + ex + '" cy="' + ey + '" r="' + er + '" fill="#f2e8c8"/><circle cx="' + ex + '" cy="' + ey + '" r="' + (er * .66) + '" fill="#1a2a3a"/><circle cx="' + (ex + 2) + '" cy="' + (ey - 2) + '" r="' + (er * .22) + '" fill="#fff"/>' : '<circle cx="' + ex + '" cy="' + ey + '" r="' + er + '" fill="#e8f0f0"/><circle cx="' + ex + '" cy="' + ey + '" r="' + (er * .6) + '" fill="#111"/>';
+      return o;
+    }
     for (let i = 0; i < 8; i++) o += '<path d="M214 ' + (70 + i * 2) + ' Q' + (246 + i * 3) + ' ' + (62 + i * 4) + ' ' + (268 + i * 2) + ' ' + (56 + i * 6) + '" stroke="' + K(a.col) + '" stroke-width="' + (i === 3 || i === 4 ? 2 : 4) + '" fill="none" stroke-linecap="round"/>';
     o += '<path d="M40 76 Q60 30 130 34 Q200 40 214 76 Q200 112 130 118 Q60 122 40 76Z" fill="' + K(shade(a.col, .1)) + '" opacity="' + (sil ? 1 : .85) + '"/>';
     o += '<path d="M60 76 Q90 50 210 66 L210 86 Q90 102 60 76Z" fill="' + K(a.col) + '"/>';
@@ -2627,6 +2847,60 @@ const SEA_ART = {
   },
   turtle(a, id, sil) {
     const K = c => sil ? "#061019" : c; let o = "";
+    /* 2026-11-11 川や池の カメ（v:"pond"）：ひれ足ではなく、つめの ある 足。写真で たしかめた 目じるしを オプションで 足す
+       keel＝こうらの 3本の すじ（クサガメ）、serr＝うしろの ふちの ギザギザ（イシガメ・カミツキガメ）、ring＝こうらの 年輪（イシガメ）、
+       ear＝目の うしろの 赤（アカミミガメ）、stripe＝頭と 足の 黄色い すじ、soft＝やわらかい こうらと 長い 鼻（スッポン）、snap＝大きな 頭と ギザギザの 長い しっぽ（カミツキガメ）、flat＝ひらたく 広い こうら（オオヨコクビガメ） */
+    if (a.v === "pond") {
+      const sk = K(a.skin), rx = a.soft ? 54 : a.flat ? 60 : 56, ry = a.soft ? 46 : a.flat ? 46 : 41;
+      const leg = (x, y, dx, dy) => { let p = '<path d="M' + x + ' ' + y + ' L' + (x + dx) + ' ' + (y + dy) + '" stroke="' + sk + '" stroke-width="12" stroke-linecap="round"/>';
+        if (!sil) for (let k = -1; k <= 1; k++) { const ex = x + dx * 1.18 + k * 3.2 * Math.sign(dy), ey = y + dy * 1.18 - k * 3.2 * Math.sign(dx); p += '<path d="M' + (x + dx) + ' ' + (y + dy) + ' L' + ex.toFixed(1) + ' ' + ey.toFixed(1) + '" stroke="' + (a.claw || "#2a2418") + '" stroke-width="1.8" stroke-linecap="round"/>'; }
+        if (a.stripe && !sil) p += '<path d="M' + (x + dx * .2) + ' ' + (y + dy * .2) + ' L' + (x + dx * .85) + ' ' + (y + dy * .85) + '" stroke="' + a.stripe + '" stroke-width="1.6" stroke-linecap="round"/>'; return p; };
+      // しっぽ
+      if (a.snap) { o += '<path d="M96 70 L34 74 L34 76 L96 80Z" fill="' + sk + '"/>'; if (!sil) for (let x = 44; x < 94; x += 8) o += '<path d="M' + x + ' 74 l4 -5 l4 5Z" fill="' + K(shade(a.skin, -.25)) + '"/>'; }
+      else o += '<path d="M' + (148 - rx + 4) + ' 70 L' + (148 - rx - 14) + ' 75 L' + (148 - rx + 4) + ' 80Z" fill="' + sk + '"/>';
+      o += leg(118, 75 - ry * .72, -14, -20) + leg(118, 75 + ry * .72, -14, 20) + leg(178, 75 - ry * .72, 14, -22) + leg(178, 75 + ry * .72, 14, 22);
+      // 首と 頭
+      const hx = a.soft ? 236 : a.snap ? 222 : 220, hr = a.snap ? [20, 16] : a.soft ? [13, 9] : [15, 11];
+      o += '<path d="M' + (148 + rx - 10) + ' ' + (75 - (a.snap ? 13 : 8)) + ' L' + (hx - 6) + ' ' + (75 - hr[1] * .7) + ' L' + (hx - 6) + ' ' + (75 + hr[1] * .7) + ' L' + (148 + rx - 10) + ' ' + (75 + (a.snap ? 13 : 8)) + 'Z" fill="' + sk + '"/>';
+      o += '<ellipse cx="' + hx + '" cy="75" rx="' + hr[0] + '" ry="' + hr[1] + '" fill="' + sk + '"/>';
+      if (a.soft) o += '<path d="M' + (hx + 10) + ' 72 L' + (hx + 24) + ' 73.5 L' + (hx + 24) + ' 76.5 L' + (hx + 10) + ' 78Z" fill="' + sk + '"/>';
+      if (a.snap) o += '<path d="M' + (hx + 16) + ' 68 Q' + (hx + 24) + ' 75 ' + (hx + 16) + ' 82Z" fill="' + K(shade(a.skin, -.3)) + '"/>';
+      // こうら
+      if (a.soft) { o += '<ellipse cx="146" cy="75" rx="' + rx + '" ry="' + ry + '" fill="' + K(shade(a.shell, .14)) + '"/><ellipse cx="148" cy="75" rx="' + (rx - 9) + '" ry="' + (ry - 9) + '" fill="' + K(a.shell) + '"/>'; }
+      else {
+        let sp = ''; if (a.serr) { for (let t = 2.3; t <= 3.98; t += .14) { const c = Math.cos(t), si = Math.sin(t); sp += (sp ? ' L' : 'M') + (148 + c * rx).toFixed(1) + ' ' + (75 + si * ry).toFixed(1) + ' L' + (148 + c * (rx + 6)).toFixed(1) + ' ' + (75 + si * (ry + 6)).toFixed(1); } o += '<path d="' + sp + ' L' + (148 + Math.cos(3.98) * rx).toFixed(1) + ' ' + (75 + Math.sin(3.98) * ry).toFixed(1) + ' L148 75Z" fill="' + K(a.shell) + '"/>'; }
+        o += '<ellipse cx="148" cy="75" rx="' + rx + '" ry="' + ry + '" fill="' + K(a.shell) + '"/>';
+      }
+      if (sil) return o;
+      const sc = a.scute;
+      if (a.soft) { for (let i = 0; i < 26; i++) o += '<circle cx="' + (112 + (i * 29) % 74) + '" cy="' + (52 + (i * 17) % 46) + '" r="1.6" fill="' + shade(a.shell, -.18) + '" opacity=".6"/>'; o += '<ellipse cx="136" cy="60" rx="24" ry="9" fill="#fff" opacity=".12"/>'; }
+      else {
+        o += '<ellipse cx="148" cy="75" rx="' + (rx - 9) + '" ry="' + (ry - 9) + '" fill="none" stroke="' + sc + '" stroke-width="1.8"/>';
+        const vx = [108, 128, 148, 168, 188], hw = 9.5, hh = 10;
+        vx.forEach(x => { o += '<path d="M' + (x - hw) + ' ' + (75 - hh) + ' L' + (x + hw) + ' ' + (75 - hh) + ' L' + (x + hw + 3) + ' 75 L' + (x + hw) + ' ' + (75 + hh) + ' L' + (x - hw) + ' ' + (75 + hh) + ' L' + (x - hw - 3) + ' 75Z" fill="none" stroke="' + sc + '" stroke-width="1.8"/>';
+          if (a.ring) o += '<path d="M' + (x - hw + 4) + ' ' + (75 - hh + 4) + ' L' + (x + hw - 4) + ' ' + (75 - hh + 4) + ' L' + (x + hw - 2) + ' 75 L' + (x + hw - 4) + ' ' + (75 + hh - 4) + ' L' + (x - hw + 4) + ' ' + (75 + hh - 4) + ' L' + (x - hw + 2) + ' 75Z" fill="none" stroke="' + sc + '" stroke-width="1" opacity=".7"/>'; });
+        [118, 138, 158, 178].forEach(x => [-1, 1].forEach(sg => { const ey = 75 + sg * (ry - 9) * Math.sqrt(Math.max(0, 1 - ((x - 148) / (rx - 9)) ** 2)); o += '<path d="M' + x + ' ' + (75 + sg * hh) + ' L' + x + ' ' + ey.toFixed(1) + '" stroke="' + sc + '" stroke-width="1.8"/>';
+          if (a.ring) o += '<path d="M' + (x - 6) + ' ' + (75 + sg * (hh + 5)) + ' Q' + (x - 10) + ' ' + (75 + sg * (hh + 14)) + ' ' + (x - 6) + ' ' + (75 + sg * (hh + 20)) + '" stroke="' + sc + '" stroke-width="1" fill="none" opacity=".6"/>'; }));
+        if (a.keel) [0, -1, 1].forEach(k => { const x1 = 102 + Math.abs(k) * 8, x2 = 194 - Math.abs(k) * 8, y = 75 + k * 19; o += '<path d="M' + x1 + ' ' + y + ' L' + x2 + ' ' + y + '" stroke="' + shade(a.shell, -.4) + '" stroke-width="' + (k ? 3.4 : 4.4) + '" stroke-linecap="round"/><path d="M' + (x1 + 3) + ' ' + (y - 1.6) + ' L' + (x2 - 3) + ' ' + (y - 1.6) + '" stroke="' + shade(a.shell, .35) + '" stroke-width="1.2" stroke-linecap="round" opacity=".8"/>'; });
+        o += '<ellipse cx="136" cy="58" rx="26" ry="9" fill="#fff" opacity=".12"/>';
+      }
+      if (a.stripe) [-1, 1].forEach(sg => o += '<path d="M' + (148 + rx - 6) + ' ' + (75 + sg * 6) + ' L' + (hx + 6) + ' ' + (75 + sg * 4) + '" stroke="' + a.stripe + '" stroke-width="1.6" stroke-linecap="round"/>');
+      if (a.ear) [-1, 1].forEach(sg => o += '<ellipse cx="' + (hx - 4) + '" cy="' + (75 + sg * (hr[1] - 2.5)) + '" rx="6" ry="2.6" fill="' + a.ear + '"/>');
+      const ex = hx + hr[0] * (a.soft ? .25 : .38); [-1, 1].forEach(sg => o += '<circle cx="' + ex.toFixed(1) + '" cy="' + (75 + sg * hr[1] * .55).toFixed(1) + '" r="' + (a.snap ? 2.4 : 2.1) + '" fill="#111"/>');
+      return o;
+    }
+    /* 2026-11-11 オサガメ（v:"leather"）：板の ない 皮の こうら、うしろが とがった しずく形、たての すじ7本、白い 点 */
+    if (a.v === "leather") {
+      o += '<path d="M184 52 Q236 6 262 16 Q248 42 196 66Z M184 98 Q236 144 262 134 Q248 108 196 84Z" fill="' + K(a.skin) + '"/><path d="M98 60 Q78 46 70 52 Q80 64 102 68Z M98 90 Q78 104 70 98 Q80 86 102 82Z" fill="' + K(a.skin) + '"/>';
+      o += '<ellipse cx="226" cy="75" rx="20" ry="15" fill="' + K(a.skin) + '"/>';
+      o += '<path d="M70 75 Q110 34 170 34 Q206 36 212 75 Q206 114 170 116 Q110 116 70 75Z" fill="' + K(a.shell) + '"/>';
+      if (sil) return o;
+      for (let k = -3; k <= 3; k++) o += '<path d="M' + (78 + Math.abs(k) * 6) + ' ' + (75 + k * 2.5) + ' Q140 ' + (75 + k * 12) + ' ' + (206 - Math.abs(k) * 6) + ' ' + (75 + k * 8) + '" stroke="' + a.scute + '" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".9"/>';
+      for (let i = 0; i < 30; i++) o += '<circle cx="' + (96 + (i * 31) % 104) + '" cy="' + (50 + (i * 19) % 50) + '" r="1.5" fill="#e8e8f0" opacity=".55"/>';
+      for (let i = 0; i < 10; i++) o += '<circle cx="' + (214 + (i * 7) % 22) + '" cy="' + (66 + (i * 11) % 18) + '" r="1.4" fill="#e8e8f0" opacity=".6"/>';
+      o += '<circle cx="236" cy="68" r="2.6" fill="#111"/>';
+      return o;
+    }
     o += '<path d="M184 52 Q230 20 250 30 Q240 48 196 66Z M184 98 Q230 130 250 120 Q240 102 196 84Z" fill="' + K(a.skin) + '"/><path d="M96 60 Q70 40 60 50 Q70 64 100 68Z M96 90 Q70 110 60 100 Q70 86 100 82Z" fill="' + K(a.skin) + '"/>';
     o += a.side ? '<path d="M200 75 Q226 52 244 66 Q248 76 240 82 Q222 92 200 80Z" fill="' + K(a.skin) + '"/>' : '<ellipse cx="226" cy="75" rx="22" ry="15" fill="' + K(a.skin) + '"/>';
     if (a.ear && !sil) o += '<ellipse cx="' + (a.side ? 226 : 222) + '" cy="' + (a.side ? 70 : 66) + '" rx="7" ry="3.2" fill="' + a.ear + '"/>';
@@ -2669,6 +2943,29 @@ const SEA_ART = {
   },
   flat(a, id, sil) {
     const K = c => sil ? "#061019" : c; let o = "";
+    /* 2026-11-11 ヒラメ（mirror）：目の ある 面を 上に すると 頭が 左（左ヒラメに 右カレイ）。口が 大きく、するどい 歯 */
+    if (a.mirror) { const b = Object.assign({}, a, { mirror: false }); let q = SEA_ART.flat(b, id, sil);
+      if (!sil) q += '<path d="M248 72 Q238 92 214 90" stroke="#3a2f1a" stroke-width="2.4" fill="none" stroke-linecap="round"/>' + [0, 1, 2, 3, 4].map(k => '<path d="M' + (240 - k * 5) + ' ' + (84 + k * 1.2) + ' l2 3 l2 -3Z" fill="#f2ead8"/>').join("");
+      return '<g transform="translate(300 0) scale(-1 1)">' + q + '</g>'; }
+    /* 2026-11-11 アンコウの なかまの「歩く 円ばん」（v:"bat"）。上から 見た すがた：平たい 円ばん（tri＝三角形と 鼻先の 角）、
+       うしろの 両わきに うでの ような 胸びれ、細い しっぽ。体中に 小さな とげ（写真で たしかめた。アカグツ・フウリュウウオ属） */
+    if (a.v === "bat") {
+      const dk = K(shade(a.col, -.18));
+      o += '<path d="M118 75 L44 70 L44 80Z" fill="' + K(a.col) + '"/><path d="M50 75 L28 62 L32 75 L28 88Z" fill="' + dk + '"/>';
+      [-1, 1].forEach(sg => { o += '<path d="M150 ' + (75 + sg * 34) + ' Q144 ' + (75 + sg * 58) + ' 124 ' + (75 + sg * 68) + ' L110 ' + (75 + sg * 64) + ' Q122 ' + (75 + sg * 52) + ' 132 ' + (75 + sg * 30) + 'Z" fill="' + dk + '"/>';
+        if (!sil) for (let k = 0; k < 4; k++) o += '<path d="M' + (138 - k * 4) + ' ' + (75 + sg * (46 + k * 3)) + ' L' + (126 - k * 4) + ' ' + (75 + sg * (63 + k * 1)) + '" stroke="' + shade(a.col, -.35) + '" stroke-width="1" opacity=".7"/>';
+        o += '<path d="M150 ' + (75 + sg * 14) + ' Q146 ' + (75 + sg * 30) + ' 138 ' + (75 + sg * 34) + '" stroke="' + dk + '" stroke-width="5" fill="none" stroke-linecap="round"/>'; });
+      const disc = a.tri ? 'M118 75 Q122 30 168 32 Q200 40 226 66 L246 70 L246 80 L226 84 Q200 110 168 118 Q122 120 118 75Z' : 'M120 75 Q120 26 176 26 Q232 26 232 75 Q232 124 176 124 Q120 124 120 75Z';
+      if (!sil && !a.tri) for (let i = 0; i < 40; i++) { const t = i / 40 * Math.PI * 2, x = 176 + Math.cos(t) * 56, y = 75 + Math.sin(t) * 49; o += '<path d="M' + (176 + Math.cos(t - .06) * 54).toFixed(1) + ' ' + (75 + Math.sin(t - .06) * 47).toFixed(1) + ' L' + (176 + Math.cos(t) * 62).toFixed(1) + ' ' + (75 + Math.sin(t) * 55).toFixed(1) + ' L' + (176 + Math.cos(t + .06) * 54).toFixed(1) + ' ' + (75 + Math.sin(t + .06) * 47).toFixed(1) + 'Z" fill="' + shade(a.col, -.1) + '"/>'; }
+      o += '<path d="' + disc + '" fill="' + K(a.col) + '"/>';
+      if (sil) return o;
+      o += '<defs><clipPath id="' + id + 'b"><path d="' + disc + '"/></clipPath></defs><g clip-path="url(#' + id + 'b)">';
+      for (let i = 0; i < 46; i++) { const x = 130 + (i * 37) % 96, y = 34 + (i * 23) % 84; o += a.ring ? '<circle cx="' + x + '" cy="' + y + '" r="3.2" fill="none" stroke="' + a.spot + '" stroke-width="1.3"/>' : '<circle cx="' + x + '" cy="' + y + '" r="1.6" fill="' + a.spot + '"/>'; }
+      o += '</g>';
+      const ex = a.tri ? 206 : 208; [-1, 1].forEach(sg => o += '<circle cx="' + ex + '" cy="' + (75 + sg * 11) + '" r="4.2" fill="#e8e0c8"/><circle cx="' + ex + '" cy="' + (75 + sg * 11) + '" r="2.4" fill="#111"/>');
+      o += '<path d="M' + (a.tri ? 224 : 226) + ' 68 Q' + (a.tri ? 232 : 234) + ' 75 ' + (a.tri ? 224 : 226) + ' 82" stroke="#3a2f1a" stroke-width="2" fill="none"/>';
+      return o;
+    }
     o += '<path d="M46 75 l-24 -14 l4 14 l-4 14Z" fill="' + K(a.col) + '"/><ellipse cx="150" cy="75" rx="108" ry="50" fill="' + K(shade(a.col, -.15)) + '"/><ellipse cx="150" cy="75" rx="96" ry="40" fill="' + K(a.col) + '"/>';
     if (sil) return o;
     for (let i = 0; i < 30; i++) o += '<circle cx="' + (70 + (i * 41) % 160) + '" cy="' + (45 + (i * 17) % 60) + '" r="' + (2 + (i % 3)) + '" fill="' + a.spot + '" opacity=".6"/>';
@@ -2725,6 +3022,19 @@ Object.assign(SEA_ART, {
   },
   seahorse(a, id, sil) {
     const K = c => sil ? "#061019" : c; let o = "";
+    /* 2026-11-11 写真で たしかめた：ニシキフウライウオ（v:"ghost"）は 頭を 下に して たてに ただよう。まっすぐ 細い 体、下に のびる つつの 口、
+       扇の ような 背びれ・腹びれ・尾びれ、体中に 白い とげ状の かざり */
+    if (a.v === "ghost") {
+      const fan = (x, y, r1, r2, rot) => '<path d="M' + x + ' ' + y + ' L' + (x + r1) + ' ' + (y - r2) + ' Q' + (x + r1 * 1.3) + ' ' + y + ' ' + (x + r1) + ' ' + (y + r2) + 'Z" fill="' + K(a.col) + '" opacity="' + (sil ? 1 : .85) + '" transform="rotate(' + rot + ' ' + x + ' ' + y + ')"/>';
+      o += fan(150, 24, 0, 0, 0) + '<path d="M150 22 L130 4 Q150 0 170 4Z" fill="' + K(a.col) + '"/>';
+      o += fan(152, 46, 30, 16, -20) + fan(148, 62, -30, 14, 20) + fan(152, 72, 34, 18, 10) + fan(148, 74, -34, 18, -10);
+      o += '<path d="M144 20 Q140 60 144 98 L156 98 Q160 60 156 20Z" fill="' + K(a.col) + '"/><path d="M144 98 Q150 112 147 120 L153 120 Q150 112 156 98Z" fill="' + K(a.col) + '"/><path d="M148 118 L147 146 L153 146 L152 118Z" fill="' + K(shade(a.col, -.1)) + '"/>';
+      if (sil) return o;
+      for (let i = 0; i < 9; i++) o += '<path d="M144 ' + (26 + i * 9) + ' q6 3 12 0" stroke="' + a.spot + '" stroke-width="2" fill="none"/>';
+      for (let i = 0; i < 26; i++) { const y = 10 + i * 5, sg = i % 2 ? 1 : -1, x = 150 + sg * (6 + (i * 7) % 26) * (y > 40 && y < 90 ? 1 : .3); o += '<path d="M' + x.toFixed(1) + ' ' + y + ' l' + (sg * 4) + ' -3" stroke="#f2f2f2" stroke-width="1.3" stroke-linecap="round"/>'; }
+      o += '<circle cx="146" cy="104" r="2.6" fill="#111"/><circle cx="146.6" cy="103.4" r=".9" fill="#fff"/>';
+      return o;
+    }
     const body = "M150 20 Q172 18 176 32 L200 36 Q204 42 198 46 L178 46 Q186 58 178 74 Q170 96 176 110 Q182 128 164 134 Q146 138 146 124 Q148 114 158 116 Q164 120 160 126 Q168 124 164 110 Q156 90 156 74 Q140 70 140 52 Q138 30 150 20Z";
     if (a.leafy) [[140, 40, -40], [136, 66, -30], [178, 60, 30], [184, 86, 40], [150, 96, -50], [172, 112, 50], [150, 130, -60], [186, 128, 60], [198, 42, 20]].forEach(([x, y, r]) => o += '<path d="M' + x + ' ' + y + ' q-14 -10 -22 -2 q8 2 6 8 q-10 2 -12 10 q10 -2 16 0 q-2 8 4 12 q4 -12 8 -28Z" fill="' + K(a.leafy) + '" transform="rotate(' + r + ' ' + x + ' ' + y + ') translate(' + x + ' ' + y + ') scale(1.6) translate(' + (-x) + ' ' + (-y) + ')"/>');
     o += '<path d="M150 30 Q128 44 136 64 Q140 50 150 40Z" fill="' + K(shade(a.col, .15)) + '" opacity=".8"/><path d="' + body + '" fill="' + K(a.col) + '"/>';
@@ -2733,6 +3043,26 @@ Object.assign(SEA_ART, {
     for (let i = 0; i < 6; i++) o += '<circle cx="' + (150 + (i * 7) % 20) + '" cy="' + (30 + i * 6) + '" r="1.6" fill="' + a.spot + '"/>';
     if (a.bumps) for (let i = 0; i < 14; i++) o += '<circle cx="' + (146 + (i * 11) % 34) + '" cy="' + (28 + i * 7) + '" r="3.4" fill="' + a.spot + '"/>';
     o += '<path d="M150 20 l-4 -10 l8 6 l4 -8 l2 10Z" fill="' + shade(a.col, -.15) + '"/><circle cx="168" cy="32" r="3" fill="#111"/><circle cx="169" cy="31" r="1" fill="#fff"/>';
+    return o;
+  }
+});
+
+/* 2026-11-11 ウミテング（上から）：ひらたい 体、つばさの ように 水平に 広がる 大きな 胸びれ（青白い ふち）、
+   かたい 板の わが ならぶ しっぽ、とがった 鼻先。写真と 事典で たしかめた */
+Object.assign(SEA_ART, {
+  seamoth(a, id, sil) {
+    const K = c => sil ? "#061019" : c; let o = "";
+    [-1, 1].forEach(sg => { o += '<path d="M150 ' + (75 + sg * 12) + ' Q140 ' + (75 + sg * 66) + ' 196 ' + (75 + sg * 64) + ' Q214 ' + (75 + sg * 50) + ' 196 ' + (75 + sg * 14) + 'Z" fill="' + K(a.fin) + '"/>';
+      if (!sil) { o += '<path d="M146 ' + (75 + sg * 50) + ' Q160 ' + (75 + sg * 66) + ' 196 ' + (75 + sg * 64) + ' Q210 ' + (75 + sg * 54) + ' 206 ' + (75 + sg * 44) + '" stroke="' + a.edge + '" stroke-width="5" fill="none" stroke-linecap="round"/>';
+        for (let k = 0; k < 6; k++) o += '<path d="M' + (160 + k * 6) + ' ' + (75 + sg * 14) + ' L' + (150 + k * 10) + ' ' + (75 + sg * (56 - Math.abs(k - 2.5) * 2)) + '" stroke="' + shade(a.fin, -.2) + '" stroke-width="1.2"/>'; } });
+    o += '<path d="M240 75 L262 70 L266 75 L262 80Z" fill="' + K(shade(a.col, -.1)) + '"/>';
+    o += '<path d="M120 75 Q130 58 170 56 Q216 58 242 75 Q216 92 170 94 Q130 92 120 75Z" fill="' + K(a.col) + '"/>';
+    for (let i = 0; i < 8; i++) { const x = 118 - i * 10, w = 12 - i * 1.1; o += '<rect x="' + (x - 9) + '" y="' + (75 - w).toFixed(1) + '" width="10" height="' + (w * 2).toFixed(1) + '" rx="3" fill="' + K(i % 2 ? shade(a.col, -.08) : a.col) + '"/>'; }
+    o += '<path d="M42 75 l-12 -8 l0 16Z" fill="' + K(a.col) + '"/>';
+    if (sil) return o;
+    for (let i = 0; i < 14; i++) o += '<circle cx="' + (134 + (i * 37) % 90) + '" cy="' + (64 + (i * 13) % 22) + '" r="1.8" fill="' + a.spot + '"/>';
+    o += '<path d="M150 64 Q190 60 226 70 M150 86 Q190 90 226 80" stroke="' + shade(a.col, -.2) + '" stroke-width="1.2" fill="none"/>';
+    [-1, 1].forEach(sg => o += '<circle cx="222" cy="' + (75 + sg * 8) + '" r="3.6" fill="#e8e0c8"/><circle cx="222.5" cy="' + (75 + sg * 8) + '" r="2" fill="#111"/>');
     return o;
   }
 });
@@ -2992,10 +3322,12 @@ Object.assign(SEA_ART, {
   slipper(a, id, sil) { // セミエビ（平たい 板の ひげ）
     const K = c => sil ? "#061019" : c; let o = "";
     for (let i = 0; i < 4; i++) o += '<path d="M' + (196 - i * 18) + ' 96 l' + (-4 - i) + ' 22 M' + (196 - i * 18) + ' 56 l' + (-4 - i) + ' -22" stroke="' + K(a.band) + '" stroke-width="3" stroke-linecap="round"/>';
-    o += '<path d="M232 60 Q262 40 282 52 Q286 66 262 70Z M232 90 Q262 110 282 98 Q286 84 262 80Z" fill="' + K(a.body) + '"/>';
+    // 2026-11-11 写真で たしかめた：体の 前に 半円の 板（第2しょっかく）が 2まい ならび、その 間から 細い ひげ（第1しょっかく）が のびる。はさみは ない
+    o += '<path d="M236 74 L284 74 M236 78 L282 82" stroke="' + K(a.band) + '" stroke-width="2.4" stroke-linecap="round"/>';
+    o += '<path d="M230 74 L230 48 Q262 46 266 62 Q264 74 230 74Z M230 76 L230 102 Q262 104 266 88 Q264 76 230 76Z" fill="' + K(shade(a.body, .06)) + '" stroke="' + K(shade(a.body, -.2)) + '" stroke-width="2"/>';
     o += '<ellipse cx="196" cy="75" rx="44" ry="30" fill="' + K(a.body) + '"/>';
     for (let i = 0; i < 4; i++) o += '<ellipse cx="' + (142 - i * 20) + '" cy="75" rx="15" ry="' + (24 - i * 2) + '" fill="' + K(a.body) + '"/>';
-    o += '<path d="M66 75 l-34 -22 q8 22 0 44Z" fill="' + K(a.body) + '"/>';
+    o += '<path d="M66 75 l-34 -22 q8 22 0 44Z" fill="' + K(a.tailCol || a.body) + '"/>';
     if (sil) return o;
     for (let i = 0; i < 4; i++) o += '<path d="M' + (142 - i * 20) + ' ' + (53 + i * 2) + ' v' + (44 - i * 4) + '" stroke="' + a.band + '" stroke-width="2.5" opacity=".7"/>';
     for (let i = 0; i < 16; i++) o += '<circle cx="' + (166 + (i * 13) % 60) + '" cy="' + (56 + (i * 11) % 38) + '" r="2.2" fill="' + shade(a.body, -.25) + '"/>';
@@ -3044,7 +3376,7 @@ const ADD19 = [
   K_("sakatazame", "サカタザメ", "ray", 100, 3, "新潟県・茨城県から 九州の、水深 20〜230mの 砂や どろの 海底", "魚、イカ・タコ、エビ", "サメと いう 名前だけど、えらの 穴が おなか側に ある エイの なかま", "砂を うすく かぶって かくれ、前を 通った えものを まるのみに する。",
     { f: "guitar", top: "#a8946a", spot: "#e8dcc0" }),
   K_("semiebi", "セミエビ", "crust", 25, 3, "房総半島（ぼうそうはんとう）より 南の 岩場や サンゴしょう", "くわしくは ずかんで しらべてみよう", "せなかの 形が、セミに にているのが 名前の 由来", "イセエビの なかま。長い ひげの かわりに、平たい 板のような ひげを もつ。",
-    { f: "slipper", body: "#a8603a", band: "#6a3a20" }),
+    { f: "slipper", tailCol: "#c89a5a", body: "#a8603a", band: "#6a3a20" }),
   K_("hanaokoze", "ハナオコゼ", "fish", 15, 3, "北海道〜九州の 沖を ただよう 流れ藻（も）", "小魚", "手のような 胸びれで 流れ藻（も）に つかまって くらす", "体が 海そう（ホンダワラ）に そっくり。名前に オコゼと つくが、オコゼの なかまでは なく、毒も ない。",
     F_({ top: "#a8883a", bot: "#e8d08a", fin: "#a8883a", h: .5, tm: .45, snout: "blunt", tail: "round", d: [.15, .45, 10], an: [.12, .35, 8], eye: 3.5, mouth: "big", pat: [{ k: "blotch", col: "#5a4a1a" }] })),
   K_("yamatomeribe", "ヤマトメリベ", "mollusc", 70, 4, "本州〜九州の 沿岸。ふだんは 水中を ただよう", "小さな エビの なかま（甲殻類・こうかくるい）", "頭の 大きな フードを あみのように かぶせて、えものを つかまえる", "せなかの とっきは かんたんに とれるが、また 生えてくる。2024年の 研究で、にた 種とは べつの 種だと たしかめられた。",
@@ -3053,14 +3385,14 @@ const ADD19 = [
   K_("namedango", "ナメダンゴ", "fish", 8, 3, "オホーツク海や 千島列島などの、水深 100mより 深い 海。春に 浅い 海へ 卵を うみに くる", "くわしくは ずかんで しらべてみよう", "まんまるの 体で、北の 海の ダイバーに 人気", "おなかの 強い きゅうばんで 岩や 貝がらに くっつく。卵が かえるまで オスが 守る。",
     F_({ top: "#e86a3a", bot: "#f8b080", fin: "#e86a3a", h: .62, tm: .5, snout: "blunt", tail: "round", d: [.3, .5, 6], an: [.25, .4, 5], eye: 5, mouth: "small", pat: [{ k: "bumps" }] })),
   K_("ibaraganimodoki", "イバラガニモドキ", "crust", 15, 3, "オホーツク海や ベーリング海、日本の 太平洋側の 水深 270〜850mの 深い 海", "くわしくは ずかんで しらべてみよう", "イバラガニに にているので「モドキ」", "タラバガニの なかまで、カニより ヤドカリに 近い。子どもの うちは、こうらが 横より たてに 長い。",
-    { f: "crab", v: "spider", body: "#d8902a", spot: "#7a4a10" }),
+    { f: "crab", king: true, spiny: 2, legL: 76, legW: 5, v: "spider", body: "#d8902a", spot: "#7a4a10" }),
   K_("bouzuginpo", "ボウズギンポ", "fish", 88, 4, "北海道から ベーリング海、カリフォルニアまでの 北太平洋。水深 500mくらいまで", "くわしくは ずかんで しらべてみよう", "子どもの ころは クラゲの 下に かくれて くらす", "大人に なると 海底の 近くで くらす。学名は、お酒に よった 神さま シレノスに ちなむと いわれる。",
     F_({ top: "#6a7a6a", bot: "#c8ccbc", fin: "#5a6a5a", h: .24, tm: .55, snout: "blunt", tail: "round", d: [.1, .9, 30], an: [.45, .85, 14], eye: 4.5, mouth: "small", pat: [{ k: "spots", n: 24, r: 2, col: "#3a4a3a" }] })),
   K_("tanakagenge", "タナカゲンゲ", "fish", 100, 4, "北海道の オホーツク海や、北海道〜東北の 日本海側の 水深 150mくらいの 海", "エビ・カニ、イカ、タコ", "大きな 口と するどい 歯。顔が 人に にていると いわれる", "1mを こえる ものも いる、大きな ゲンゲの なかま。なべで 食べられる。",
     F_({ top: "#6a4a5a", bot: "#b89aa8", fin: "#5a3a4a", h: .18, tm: .65, snout: "blunt", tail: "round", d: [.15, .95, 10], an: [.45, .95, 10], eye: 4, mouth: "big", pat: [{ k: "blotch", col: "#3a2a32" }] })),
   // 川と森
   K_("oounagi", "オオウナギ", "fish", 200, 4, "千葉県〜沖縄県。マングローブや 流れの ゆるい 川、町の 水路にも", "カニ・エビ、小魚、カエル", "カニを よく 食べるので「カニクイウナギ」とも よばれる", "体に まだら模様が あり、ニホンウナギより ずっと 太い。2mに なる ものも いると される。",
-    { f: "eel", col: "#8a7a3a", spot: "#3a3014" }),
+    { f: "eel", v: "true", col: "#8a7a3a", spot: "#3a3014" }),
   K_("jau", "ジャウー", "fish", 140, 4, "南アメリカの アマゾン川や オリノコ川の、大きな 支流の どろの 底", "魚", "夜に 魚を おそう、大きな ナマズ", "130cm・50kgくらいの ものも よく とれると いわれる。",
     F_({ top: "#8a7a3a", bot: "#e8dcb0", fin: "#7a6a2a", h: .2, tm: .7, snout: "blunt", tail: "fork", d: [.15, .3, 16], an: [.08, .3, 10], eye: 3, mouth: "big", barbels: true, chinBarbels: true, pat: [{ k: "spots", n: 30, r: 2.2, col: "#3a3010" }] })),
   K_("tarairon", "タライロン", "fish", 100, 4, "南アメリカの アマゾン川の 支流や、ギアナ地方の 川", "魚、水に 落ちた 小さな 生きもの", "夕方から 夜に 動きだす、大きな 肉食魚", "40kgに なった 記録も ある。身は おいしいと される。",
@@ -3076,11 +3408,11 @@ const ADD19 = [
     F_({ top: "#c86aa8", bot: "#f2c8e0", fin: "#b85a98", h: .42, tm: .5, snout: "blunt", tail: "round", d: [.15, .78, 16, 1], an: [.12, .35, 10], eye: 5, mouth: "big", wings: true, wingCol: "#e8a0c8", pat: [{ k: "blotch", col: "#7a2a5a" }] })),
   // 深海
   K_("ginzame", "ギンザメ", "fish", 100, 3, "北海道より 南の 太平洋や 東シナ海の、深い 海（水深 90〜540mくらい）", "小さな カニ、エビ、魚、イカ", "サメや エイの 遠い しんせき。えらの 穴が 片側に 1つだけ", "大きな 胸びれを はばたくように ゆっくり 泳ぐ。背びれの 前に 強い とげが ある。",
-    F_({ top: "#9aa4b0", bot: "#e8ecf0", fin: "#8a94a0", h: .22, tm: .55, snout: "blunt", tail: "round", d: [.1, .3, 18], an: [.3, .8, 6], eye: 7.5, mouth: "small", wings: true, wingCol: "#b8c4d0" })),
+    F_({ top: "#9aa4b0", bot: "#e8ecf0", fin: "#8a94a0", h: .22, tm: .55, snout: "blunt", tail: "point", d: [.12, .6, 7], fd1: [.72, 22], spk: [[.73, 26]], whip: 48, an: [.3, .8, 6], eye: 7.5, mouth: "small", wings: true, wingCol: "#b8c4d0" })),
   K_("torinoashi", "トリノアシ", "uninamako", 60, 3, "駿河湾（するがわん）など、深い 海の 海底（水深 130〜200mで 見つかった 記録が ある）", "くわしくは ずかんで しらべてみよう", "「生きた 化石」とも よばれる ウミユリの なかま", "長い 柄（え）で 海底に くっつき、羽の ような うでを 広げる。ウミユリの 化石は、5億年 前の カンブリア紀の 地層からも 見つかる。",
     { f: "crinoid", col: "#e8c87a", col2: "#b8905a" }),
   K_("ibaragani", "イバラガニ", "crust", 15, 3, "相模湾（さがみわん）から 土佐湾（とさわん）にかけての 海底（日本だけに すむ）", "くわしくは ずかんで しらべてみよう", "あしを のばすと 1mにも なる、とげだらけの カニ", "タラバガニの なかまで、ヤドカリに 近い。タラバガニより とげが 長く、数が 少ない。",
-    { f: "crab", v: "spider", body: "#c84a3a", spot: "#f2c0a0" })
+    { f: "crab", king: true, spiny: 2, legL: 84, legW: 5, v: "spider", body: "#c84a3a", spot: "#f2c0a0" })
 ];
 SHARKS.push(...ADD19);
 /* ---------- 2026-10 クジラ・イルカ（横から 見た すがた。頭は 右） ---------- */
@@ -3210,7 +3542,7 @@ const ADD23 = [
   K_("hirasuzuki", "ヒラスズキ", "fish", 90, 3, "房総半島（ぼうそうはんとう）より 南の、外海に 面した いそ", "小魚", "波が くだけて 白く あわだつ「サラシ」の 中で えものを ねらう", "スズキに にているが、体の 高さが 高く、しっぽの つけねが 太い。目も 大きい。",
     { f: "fish", top: "#5a6a7a", bot: "#eef1f3", fin: "#6a7a88", h: .28, snout: "pointed", tail: "fork", d: [.45, .7, 18, 1], d2: [.2, .4, 12], an: [.15, .32, 12], eye: 5.5, mouth: "big", pat: [{ k: "lateral" }] }),
   K_("himeika", "ヒメイカ", "mollusc", 2, 3, "日本の 沿岸の 浅い アマモ場（海草の しげみ）", "くわしくは ずかんで しらべてみよう", "体の 長さ 1〜2cm。世界で いちばん 小さい イカの なかまと いわれる", "どうに 吸着器（くっつく ところ）が あり、アマモに くっついて かくれている。",
-    { f: "squid", col: "#d8a888" }),
+    { f: "squid", v: "arrow", w: 24, fl: .2, fw: 27, fo: 44, fr: 1, al: 26, sp: true, col: "#d8a888" }),
   K_("mahata", "マハタ", "fish", 180, 3, "北海道〜九州の 岩場（ふつうは 水深 300mより 浅い ところ）", "魚、エビ・カニ、イカ・タコ", "はじめは みんな メスで、大きく なると オスに かわる", "体に こい 茶色の 太い しまもようが ある。最大で 1.8mにも なり、1mを こえる 大きな ものは 深い 海へ うつる。",
     { f: "fish", top: "#7a6a52", bot: "#b8a88a", fin: "#5a4c3a", h: .3, snout: "blunt", tail: "round", d: [.25, .78, 14, 1], an: [.15, .35, 14], eye: 4, mouth: "big", pat: [{ k: "bars", at: [.25, .42, .58, .74], w: .07, col: "#4a3a28" }] }),
   K_("taimai", "タイマイ", "turtle", 90, 3, "世界中の あたたかい 海の サンゴしょう。日本では 八重山諸島で 少し 卵を うむ", "海綿、貝、カニ、海そう", "ピンセットのように するどく まがった くちばしで、サンゴの すきまの えものを つまむ", "こうらは「べっこう」と よばれ、むかしは かざりものに 使われて 数が へった。いまは 国際的な 約束（ワシントン条約）で 守られている。",
@@ -3220,11 +3552,11 @@ const ADD23 = [
   K_("maonaga", "マオナガ", "speed", 575, 3, "世界中の あたたかい〜冷たい 海。温帯の 海に 多い", "群れで 泳ぐ 魚、イカ、タコ", "体と ほぼ 同じ 長さの おびれで 小魚を たたいて、気絶させて 食べると 考えられている", "オナガザメの なかまで いちばん 大きく、5.7m以上に なる。沿岸から 外洋まで 広く 泳ぎまわる。",
     { top: "#5a6a8a", bot: "#eef2f6", d: .2, snout: "conical", tail: "thresher", d1: [30, 28], pect: [34, 30], eye: 5.5 }),
   K_("kamitsukigame", "カミツキガメ", "turtle", 50, 3, "北アメリカ〜南アメリカ。日本では 千葉県の 印旛沼（いんばぬま）の まわりに すみついた", "魚、エビ・カニ、貝、虫、水草など", "あごが 強く、さわろうと すると かみつく。見つけても 手を 出さないで", "こうらの 長さ 約50cmに なる。日本では 特定外来生物で、生きたまま 持ち帰る ことは できない（その場で はなすのは よい）。",
-    { f: "turtle", shell: "#4a3e2a", scute: "#2a2418", skin: "#6a5a40", side: true }),
+    { f: "turtle", v: "pond", snap: true, serr: true, shell: "#4a3e2a", scute: "#2a2418", skin: "#6a5a40", side: true }),
   K_("nokogirigazami", "ノコギリガザミ", "crust", 30, 3, "東南アジア〜千葉県の、川の 水と 海の 水が まざる ところ（汽水域）", "くわしくは ずかんで しらべてみよう", "はさむ 力が とても 強く、浜名湖（はまなこ）では「ドウマンガニ」と よばれる", "こうらの はば 約30cmの 大きな カニ。「まぼろしの カニ」とも いわれる。",
-    { f: "crab", body: "#4a5a3a" }),
+    { f: "crab", paddle: true, body: "#4a5a3a" }),
   K_("hokkaiebi", "ホッカイエビ", "crust", 12, 3, "北海道の 浅い 海の アマモ場（野付湾（のつけわん）など）", "くわしくは ずかんで しらべてみよう", "野付湾（のつけわん）では、アマモを きずつけないように、エンジンを 使わず ほで 走る「打瀬舟（うたせぶね）」で 漁を する", "緑がかった 茶色の 体に 3本の 白い しま。ゆでると あざやかな 赤に なる。「北海しまえび」とも よばれる。",
-    { f: "shrimp", v: "coral", body: "#6a7a4a", band: "#eef2e0" }),
+    { f: "shrimp", v: "coral", shortArm: true, body: "#6a7a4a", band: "#eef2e0" }),
   K_("akame", "アカメ", "fish", 100, 4, "静岡〜鹿児島の 太平洋側。とくに 高知県と 宮崎県の、川の 水と 海の 水が まざる ところ", "くわしくは ずかんで しらべてみよう", "日本に しか いない 魚。数が とても 少なく、ぜつめつが 心配されている", "最大 1m以上・30kgを こえる 大きな 魚。赤く 見える 目が 名前の 由来と いわれる。",
     F_({ top: "#6a7a6c", bot: "#dcded2", fin: "#56665a", h: .3, snout: "pointed", tail: "round", d: [.42, .72, 16, 1], d2: [.25, .4, 12], an: [.15, .3, 12], eye: 5.5, eyeCol: "#ff3a3a", mouth: "big" })),
   K_("ushimanbou", "ウシマンボウ", "fish", 330, 4, "日本の 近くの 海でも 見つかる（千葉県の 鴨川（かもがわ）や 宮城県の 沖など）", "くわしくは ずかんで しらべてみよう", "1996年に 鴨川（かもがわ）沖で とれた 2300kgの 1ぴきは、重さを はかった 中で 世界一 重い 硬骨魚（こうこつぎょ）と されていた（その後 2744kgの 記録も 見つかった）", "マンボウに にているが、頭と 下あごが こぶのように もりあがり、うしろの かじびれが まるい。「ウシ」は もりあがった 頭から。",
@@ -3878,7 +4210,7 @@ function maybeKing(f) {
 }
 
 /* 暴王の 絵：いかりの 熱気が 立ちのぼり、目が 赤く 光る。足もとの 海底に 赤い ひびが 走り、ようがんの しぶきを 手前へ まきちらす（いつも おこっている 短気な 王さま） */
-const BOU_EYE = { monhanashako: [[250, 46, 3.5], [258, 54, 3.5]], oomejiro: [[264.6, 66, 1.9]], shachi: [[252, 82.5, 2.8]], redpiranha: [[224.3, 60, 2.7]], kamitsukigame: [[236, 70, 2.6]], denkiunagi: [[254, 72.8, 1.8]], datsu: [[219, 73.4, 2.8]] };
+const BOU_EYE = { monhanashako: [[250, 46, 3.5], [258, 54, 3.5]], oomejiro: [[264.6, 66, 1.9]], shachi: [[252, 82.5, 2.8]], redpiranha: [[224.3, 60, 2.7]], kamitsukigame: [[229.6, 66.2, 2.4], [229.6, 83.8, 2.4]], denkiunagi: [[254, 73.8, 2]], datsu: [[219, 73.4, 2.8]] };
 const BOU_BG = '<svg class="kbg" viewBox="0 0 300 150" aria-hidden="true"><defs><radialGradient id="bkbgG" cx=".5" cy=".55" r=".75"><stop offset="0" stop-color="#3a0c0c"/><stop offset="1" stop-color="#0c0204"/></radialGradient></defs><rect width="300" height="150" fill="url(#bkbgG)"/></svg>';
 function bouArtSVGFull(f, still, parts) {
   const id = "bo" + (++uidN), mv = !still && !reduce;
@@ -3969,7 +4301,7 @@ const KFX = {
 };
 /* 影王の 絵（2026-11-03 A案）：体が ゆっくり うすくなり、まわりの 模様が 体に うつって 景色に とける。王冠だけは とけずに のこる（本当は 見つけて ほしい）
    重い ものは 1回だけ 画像に して、動きは うすくなる だけ */
-const KAGE_POS = { mimicoctopus: [158, 21, -8, .9, "sand"], leafyseadragon: [178, 27, -6, .7, "weed"], kaeruankou: [190, 18, 0, .9, "sponge"], kasu: [222, 46, 6, .75, "sand"], hirame: [214, 37, 8, .8, "sand"], kouika: [194, 47, 6, .75, "sand"], leaffish: [196, 30, 10, .7, "leaf"] };
+const KAGE_POS = { mimicoctopus: [158, 21, -8, .9, "sand"], leafyseadragon: [178, 27, -6, .7, "weed"], kaeruankou: [190, 18, 0, .9, "sponge"], kasu: [222, 46, 6, .75, "sand"], hirame: [86, 37, -8, .8, "sand"], kouika: [194, 47, 6, .75, "sand"], leaffish: [196, 30, 10, .7, "leaf"] };
 const KAGE_SCENE = {
   sand: { water: ["#4aa8a0", "#1f5a60"], ground: "#d2b88f", deco: '<g fill="#a8885e"><ellipse cx="34" cy="125" rx="18" ry="7"/><ellipse cx="262" cy="114" rx="24" ry="9"/></g><g stroke="#5a8a4a" stroke-width="3" fill="none" stroke-linecap="round" opacity=".85"><path d="M18 120 Q12 96 20 76 Q26 62 20 48"/><path d="M282 112 Q290 90 282 70 Q276 58 284 46"/></g>' },
   weed: { water: ["#3f8a7a", "#123f3a"], ground: "#8a7a4a", deco: '<g stroke="#a89a3a" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"><path d="M30 150 Q20 110 34 80 Q44 56 30 20"/><path d="M60 150 Q72 116 58 84 Q50 60 64 30"/><path d="M250 150 Q240 112 256 82 Q266 58 252 24"/><path d="M280 150 Q290 120 278 90"/></g><g fill="#c8b04a" opacity=".8"><ellipse cx="40" cy="70" rx="8" ry="4"/><ellipse cx="56" cy="104" rx="7" ry="3.5"/><ellipse cx="258" cy="66" rx="8" ry="4"/></g>' },
@@ -4249,7 +4581,7 @@ async function connectDb() {
   mode = "db";
   db.collection("players").onSnapshot(async snap => {
     const next = {};
-    snap.docs.forEach(d => { const raw = d.data(), v = raw ? JSON.parse(JSON.stringify(raw)) : raw; if (v && v.name) next[d.id] = { name: v.name, av: v.av || "same", book: v.book || {}, coins: v.coins || 0, bait: v.bait || {}, hr: Number.isFinite(v.hr) ? v.hr : 4, stats: v.stats || {}, sea: v.sea || "hare", storm: v.storm || 0, kings: v.kings || {}, fruit: v.fruit || 0, fruitAll: v.fruitAll || 0, fruitBy: v.fruitBy || {}, fruitKey: v.fruitKey || null, fruitSeen: v.fruitSeen || {}, umiSel: Array.isArray(v.umiSel) ? v.umiSel.slice(0, 21) : undefined, umiTitle: v.umiTitle || 0, netGot: v.netGot || 0, seaN: v.seaN || {}, seaNAt: v.seaNAt || "", umiOpened: v.umiOpened || 0, umiTier: Number.isFinite(v.umiTier) ? v.umiTier : (v.umiOpened ? 1 : 0), sj: v.sj || {}, sjDay: v.sjDay || "", hats: v.hats || {}, hat: v.hat || null, rampage: v.rampage || 0, rampGot: v.rampGot || 0, wx: v.wx || null, eq: v.eq || null, rodMax: v.rodMax, at: v.at || 0 }; });
+    snap.docs.forEach(d => { const raw = d.data(), v = raw ? JSON.parse(JSON.stringify(raw)) : raw; if (v && v.name) next[d.id] = { name: v.name, av: v.av || "same", book: v.book || {}, coins: v.coins || 0, bait: v.bait || {}, hr: Number.isFinite(v.hr) ? v.hr : 4, stats: v.stats || {}, sea: v.sea || "hare", storm: v.storm || 0, kings: v.kings || {}, fruit: v.fruit || 0, fruitAll: v.fruitAll || 0, fruitBy: v.fruitBy || {}, fruitKey: v.fruitKey || null, fruitSeen: v.fruitSeen || {}, umiSel: Array.isArray(v.umiSel) ? v.umiSel.slice(0, 21) : undefined, umiTitle: v.umiTitle || 0, netGot: v.netGot || 0, seaN: v.seaN || {}, seaNAt: v.seaNAt || "", rel: !!v.rel, umiOpened: v.umiOpened || 0, umiTier: Number.isFinite(v.umiTier) ? v.umiTier : (v.umiOpened ? 1 : 0), sj: v.sj || {}, sjDay: v.sjDay || "", hats: v.hats || {}, hat: v.hat || null, rampage: v.rampage || 0, rampGot: v.rampGot || 0, wx: v.wx || null, eq: v.eq || null, rodMax: v.rodMax, at: v.at || 0 }; });
     // first sync: move players kept only on this device into the shared record
     if (snap.empty && Object.keys(players).length && !connectDb.migrated) {
       connectDb.migrated = true;
@@ -4363,7 +4695,7 @@ function importPlayers(got) {
   let add = 0, upd = 0;
   for (const [pid, p] of Object.entries(got)) {
     if (!p || typeof p.name !== "string" || !p.name) continue;
-    const q = { name: p.name.slice(0, 10), av: p.av || "same", book: p.book || {}, coins: p.coins || 0, bait: p.bait || {}, hr: Number.isFinite(p.hr) ? p.hr : 4, stats: p.stats || {}, sea: SEAS && SEAS[p.sea] ? p.sea : "hare", storm: p.storm || 0, kings: p.kings || {}, fruit: p.fruit || 0, fruitAll: p.fruitAll || 0, fruitBy: numMap(p.fruitBy), fruitKey: SERIES[p.fruitKey] ? p.fruitKey : null, fruitSeen: numMap(p.fruitSeen), umiSel: Array.isArray(p.umiSel) ? p.umiSel.filter(id => typeof id === "string" && umiById(id)).slice(0, 21) : undefined, umiTitle: p.umiTitle ? 1 : 0, netGot: p.netGot ? 1 : 0, guide1: p.guide1 ? 1 : 0, guide50: p.guide50 ? 1 : 0, seaN: (p.seaN && typeof p.seaN === "object") ? Object.fromEntries(Object.entries(p.seaN).filter(([k, v]) => SEAS[k] && Number.isFinite(+v)).map(([k, v]) => [k, Math.max(0, Math.floor(+v))])) : {}, seaNAt: typeof p.seaNAt === "string" ? p.seaNAt.slice(0, 12) : "", umiOpened: p.umiOpened ? 1 : 0, umiTier: Number.isFinite(p.umiTier) ? Math.max(0, Math.min(UMI_TOP, Math.floor(p.umiTier))) : (p.umiOpened ? 1 : 0), sj: (p.sj && typeof p.sj === "object") ? Object.fromEntries(Object.entries(p.sj).filter(([k, v]) => SJ[k] && v && typeof v === "object").map(([k, v]) => [k, { pg: Math.max(1, Math.min(SJ[k].pages.length, Math.floor(+v.pg || 1))), c: Math.max(0, Math.floor(+v.c || 0)), d: typeof v.d === "string" ? v.d.slice(0, 12) : "", ids: Array.isArray(v.ids) ? v.ids.filter(id => typeof id === "string" && byId(id)).slice(0, 20) : [] }])) : {}, sjDay: typeof p.sjDay === "string" ? p.sjDay.slice(0, 12) : "", hats: (p.hats && typeof p.hats === "object") ? Object.fromEntries(Object.keys(p.hats).filter(h => SJ_HATS[h]).map(h => [h, 1])) : {}, hat: SJ_HATS[p.hat] && p.hats && p.hats[p.hat] ? p.hat : null, rampage: p.rampage || 0, rampGot: p.rampGot || 0, wx: p.wx || null, eq: (p.eq && typeof p.eq === "object") ? { rod: KGEAR[p.eq.rod] || /^t\d$/.test(p.eq.rod || "") ? p.eq.rod : null, reel: KGEAR[p.eq.reel] || /^t\d$/.test(p.eq.reel || "") ? p.eq.reel : null } : null, rodMax: p.rodMax, at: p.at || Date.now() };
+    const q = { rel: !!p.rel, name: p.name.slice(0, 10), av: p.av || "same", book: p.book || {}, coins: p.coins || 0, bait: p.bait || {}, hr: Number.isFinite(p.hr) ? p.hr : 4, stats: p.stats || {}, sea: SEAS && SEAS[p.sea] ? p.sea : "hare", storm: p.storm || 0, kings: p.kings || {}, fruit: p.fruit || 0, fruitAll: p.fruitAll || 0, fruitBy: numMap(p.fruitBy), fruitKey: SERIES[p.fruitKey] ? p.fruitKey : null, fruitSeen: numMap(p.fruitSeen), umiSel: Array.isArray(p.umiSel) ? p.umiSel.filter(id => typeof id === "string" && umiById(id)).slice(0, 21) : undefined, umiTitle: p.umiTitle ? 1 : 0, netGot: p.netGot ? 1 : 0, guide1: p.guide1 ? 1 : 0, guide50: p.guide50 ? 1 : 0, seaN: (p.seaN && typeof p.seaN === "object") ? Object.fromEntries(Object.entries(p.seaN).filter(([k, v]) => SEAS[k] && Number.isFinite(+v)).map(([k, v]) => [k, Math.max(0, Math.floor(+v))])) : {}, seaNAt: typeof p.seaNAt === "string" ? p.seaNAt.slice(0, 12) : "", umiOpened: p.umiOpened ? 1 : 0, umiTier: Number.isFinite(p.umiTier) ? Math.max(0, Math.min(UMI_TOP, Math.floor(p.umiTier))) : (p.umiOpened ? 1 : 0), sj: (p.sj && typeof p.sj === "object") ? Object.fromEntries(Object.entries(p.sj).filter(([k, v]) => SJ[k] && v && typeof v === "object").map(([k, v]) => [k, { pg: Math.max(1, Math.min(SJ[k].pages.length, Math.floor(+v.pg || 1))), c: Math.max(0, Math.floor(+v.c || 0)), d: typeof v.d === "string" ? v.d.slice(0, 12) : "", ids: Array.isArray(v.ids) ? v.ids.filter(id => typeof id === "string" && byId(id)).slice(0, 20) : [] }])) : {}, sjDay: typeof p.sjDay === "string" ? p.sjDay.slice(0, 12) : "", hats: (p.hats && typeof p.hats === "object") ? Object.fromEntries(Object.keys(p.hats).filter(h => SJ_HATS[h]).map(h => [h, 1])) : {}, hat: SJ_HATS[p.hat] && p.hats && p.hats[p.hat] ? p.hat : null, rampage: p.rampage || 0, rampGot: p.rampGot || 0, wx: p.wx || null, eq: (p.eq && typeof p.eq === "object") ? { rod: KGEAR[p.eq.rod] || /^t\d$/.test(p.eq.rod || "") ? p.eq.rod : null, reel: KGEAR[p.eq.reel] || /^t\d$/.test(p.eq.reel || "") ? p.eq.reel : null } : null, rodMax: p.rodMax, at: p.at || Date.now() };
     if (players[pid]) upd++; else add++;
     players[pid] = q;
   }
@@ -5209,7 +5541,7 @@ function reelIcon(it, sz, emb) { if (it && it.k) return kgIcon(it, sz, emb); con
   (lg ? '<path d="M48 8 l1.5 3.5 l3.5 1.5 l-3.5 1.5 l-1.5 3.5 l-1.5 -3.5 l-3.5 -1.5 l3.5 -1.5Z" fill="#fff"/>' : "") + (emb ? stormIconTop() : "") + '</svg>'; }
 let giftQ = [];
 /* 2026-11-04 ガイド：はじめて つれた とき・50ぴき つった とき・「？」ボタン */
-const GUIDE_TABS = ["あそびかた", "きろくを まもる", "スマホを かえる"];
+const GUIDE_TABS = ["あそびかた", "きろくを まもる", "スマホを かえる", "ボタン"];   // 2026-11-11「ボタン」は「？」から ひらいた ときだけ
 function guidePage(i) {
   if (i === 0) return '<div class="gdh">つりの しかた</div><ol class="gdol">' +
     '<li><b>「キャストする」</b>で うきを なげるよ。<small>ちずを タップすると つり場が かわるよ</small></li>' +
@@ -5219,21 +5551,29 @@ function guidePage(i) {
   if (i === 1) return isStandalone()
     ? '<div class="gdh">きろくは だいじょうぶ！</div><p class="gdp">ホーム画面から あそんでいるね。これで きろくは きえにくいよ。</p><p class="gdp">ねんのため、ときどき プレイヤーを えらぶ 画面の「きろくの ひきつぎ」で コードを とっておくと あんしん。</p>' + A2HS_WARN
     : '<div class="gdh gdwarn">つった きろく、きえちゃうかも！？</div><p class="gdp">いまの ままだと、しばらく あそばない ときに、きろくが けされて しまう ことが あるよ。</p><p class="gdp"><b>スマホの ホーム画面に アイコンを おく</b>と、アプリの ように ひらけて、きろくが きえにくく なるよ。</p><div class="a2hs gda2">' + a2hsSteps() + '</div>' + A2HS_WARN;
+  if (i === 3) return '<div class="gdh">がめんの ボタン</div><div class="gdbt">' +
+    '<span class="gdi">' + ST_ICON.snd + '</span><p><b>おと</b>　音を ならす／けす</p>' +
+    '<span class="gdi">' + ST_ICON.bgm + '</span><p><b>きょく</b>　きょくを ながす／止める</p>' +
+    '<span class="gdi rel">' + ST_ICON.tapDn + '</span><p><b>さわる・はなす</b>　「あわせる」「ひく」の タイミングを えらぶ<small>さわる：海を さわった しゅんかん</small><small>はなす：ゆびを おいて まって、白い 線が 緑に 入ったら ゆびを はなす（画面が ゆれにくい）</small><small>プレイヤーごとに おぼえるよ</small></p>' +
+    '<span class="gdi lite">' + ST_ICON.lite + '</span><p><b>かるい</b>　かざりの うごきを 止めて、なめらかに うごかす<small>古い スマホや パソコン むけ。つれやすさは かわらないよ</small></p>' +
+    '<span class="gdi thm"><i style="width:18px;height:18px;border-radius:50%;display:block;background:' + ST_THEME_BG.umi + '"></i></span><p><b>はいけい</b>　画面の まわりの いろを かえる（すなはま・うみ・さんご・よる）</p>' +
+    '</div><div class="gdnote">キャラの ところを おすと プレイヤーを きりかえ。上の タブで、なぎ・はれ・あらしの 日ごとの きろくが 見られるよ。</div>';
   return '<div class="gdh">べつの スマホや ブラウザで あそぶ とき</div><p class="gdp">きろくは、スマホごと・ブラウザ（Safari や Chrome）ごと・ホーム画面の アプリごとに、べつべつに ほぞん されるよ。</p>' +
     '<ol class="gdol"><li>プレイヤーを えらぶ 画面の<b>「きろくの ひきつぎ」</b>を ひらく</li><li><b>「ひきつぎコードを つくる」</b>→ コピーか ファイルで ほぞん</li><li>あたらしい ほうで ひらいて、コードを はりつけて<b>「よみこむ」</b></li></ol>';
 }
 function guideOpen(g) {
   const box = $("gift").querySelector(".gbox"); box.classList.remove("storm", "awaken"); box.classList.add("guide");
-  let pg = g.page || 0; const prev = $("gok").onclick;
+  let pg = g.page || 0; const prev = $("gok").onclick, tabs = g.why ? [0, 1, 2] : [0, 3, 1, 2], last = tabs.length - 1;   // ページの ならび（中身は guidePage の 番号）
+  pg = Math.max(0, tabs.indexOf(pg));
   $("gtitle").textContent = g.why === 50 ? "50ぴき つった！ すごい！" : g.why === 1 ? "はじめての 1ぴき！" : "あそびかた ガイド";
   const draw = () => {
     $("gbody").innerHTML = (g.why === 50 ? '<div class="gdcele">🎉 15分くらい あそんだね。ここまで あつめた ずかんを まもろう！</div>' : g.why === 1 ? '<div class="gdcele">ずかんに のったよ！ この きろくを なくさない ために…</div>' : "") +
-      '<div class="gdtabs" role="tablist">' + GUIDE_TABS.map((t, i) => '<button role="tab" aria-selected="' + (i === pg) + '" data-p="' + i + '">' + t + '</button>').join("") + '</div>' +
-      '<div class="gdcard">' + guidePage(pg) + '</div>';
+      '<div class="gdtabs' + (tabs.length > 3 ? " four" : "") + '" role="tablist">' + tabs.map((t, i) => '<button role="tab" aria-selected="' + (i === pg) + '" data-p="' + i + '">' + GUIDE_TABS[t] + '</button>').join("") + '</div>' +
+      '<div class="gdcard">' + guidePage(tabs[pg]) + '</div>';
     $("gbody").querySelectorAll(".gdtabs button").forEach(b => b.onclick = () => { pg = +b.dataset.p; draw(); });
-    $("gok").textContent = pg < 2 ? "つぎへ →" : "わかった！";
+    $("gok").textContent = pg < last ? "つぎへ →" : "わかった！";
   };
-  $("gok").onclick = () => { if (pg < 2) { pg++; draw(); return; } box.classList.remove("guide"); $("gok").onclick = prev; if (prev) prev(); else nextGift(); };
+  $("gok").onclick = () => { if (pg < last) { pg++; draw(); return; } box.classList.remove("guide"); $("gok").onclick = prev; if (prev) prev(); else nextGift(); };
   draw(); $("gift").hidden = false; setTimeout(() => { try { $("gok").focus(); } catch (e) {} }, 50);
 }
 function guideCheck(p) {   // つった あとに よぶ。出す ものが あれば ガイドを かえす
@@ -5825,7 +6165,7 @@ function pickCreature() {
   return pool[0];
 }
 const tri = (t, p) => { const x = (t / p) % 2; return x < 1 ? x : 2 - x; };
-function say(m, s) { $("msg").textContent = m || ""; $("sub").textContent = s || ""; }
+function say(m, s) { $("msg").textContent = m || ""; $("sub").textContent = s || ""; if (typeof relSync === "function") relSync(); }
 function pop(text, col) { const p = $("pop"); p.textContent = text; p.style.color = col; p.classList.remove("show"); void p.offsetWidth; p.classList.add("show"); }
 function shake() { if (reduce) return; const s = $("stage"); s.classList.remove("shake"); void s.offsetWidth; s.classList.add("shake"); }
 function btn(text, cls, dis) { const b = $("act"); b.textContent = text; b.className = "act" + (cls ? " " + cls : ""); b.disabled = !!dis; $("stage").classList.toggle("hasbtn", cls !== "go"); }
@@ -6033,7 +6373,19 @@ function act(e) {
   if (S.st === "reel") return tapReel(ts);
 }
 $("act").addEventListener("click", act);
-$("stage").addEventListener("pointerdown", e => { if (e.target.closest("#act")) return; if (S.st === "hook" || S.st === "reel") { e.preventDefault(); act(e); } });
+/* 2026-11-05 はんてい の きりかえ（プレイヤーごと）。rel＝ゆびを はなした ときに はんてい（たたく いきおいで 画面が ゆれない）。
+   まつ あいだ（wait）から ゆびを おいて おき、ここ！で はなす ことも できる。画面の 外で はなしたら かぞえない */
+const relOn = () => !!(players[cur] && players[cur].rel);
+let relDown = null;
+function relSync() { const st = $("stage"); if (st) st.classList.toggle("relhold", relOn() && !!S && (S.st === "wait" || S.st === "hook" || S.st === "reel")); }
+$("stage").addEventListener("pointerdown", e => { if (e.target.closest("#act")) return;
+  if (relOn()) { if (S.st === "wait" || S.st === "hook" || S.st === "reel") { e.preventDefault(); relDown = e.pointerId; } return; }
+  if (S.st === "hook" || S.st === "reel") { e.preventDefault(); act(e); } });
+$("stage").addEventListener("pointerup", e => { if (relDown === null || e.pointerId !== relDown) return; relDown = null;
+  const r = $("stage").getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) return;
+  if (S.st === "hook" || S.st === "reel") { e.preventDefault(); act(e); } });
+$("stage").addEventListener("pointercancel", () => { relDown = null; });
+$("stage").addEventListener("contextmenu", e => e.preventDefault());
 $("stage").addEventListener("click", e => { if (e.target.closest("#act") || e.target.closest(".reveal")) return; if (S.st === "idle" || S.st === "lost") act(); });
 document.addEventListener("keydown", e => { if (e.code === "Space" && e.target === document.body && !$("game").hidden) { e.preventDefault(); act(e); } });
 
@@ -7052,7 +7404,23 @@ const ST_T = { all: { l: "ぜんぶ", si: -1, pc: "#fff1c8", pt: "#8a5a10", pb: 
 const ST_ICON = {
   snd: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 9h4l5-4v14l-5-4H3z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18 6a8.5 8.5 0 0 1 0 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
   bgm: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 17.5a3 3 0 1 1-2-2.8V5.2l11-2.4v12.2a3 3 0 1 1-2-2.8V6.3L9 7.8z"/></svg>',
+  // 2026-11-05 はんてい：さわる（ゆびが 下へ）／はなす（ゆびが 上へ）
+  tapDn: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13V5.5a1.6 1.6 0 0 1 3.2 0V12l3.6.8a2 2 0 0 1 1.5 2.3l-.8 4.4a2 2 0 0 1-2 1.6h-4.2a2 2 0 0 1-1.6-.8L6.4 16a1.5 1.5 0 0 1 2.3-1.9z"/><path d="M3 4v5M1.2 7.2 3 9l1.8-1.8"/></svg>',
+  tapUp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13V5.5a1.6 1.6 0 0 1 3.2 0V12l3.6.8a2 2 0 0 1 1.5 2.3l-.8 4.4a2 2 0 0 1-2 1.6h-4.2a2 2 0 0 1-1.6-.8L6.4 16a1.5 1.5 0 0 1 2.3-1.9z"/><path d="M3 9V4M1.2 5.8 3 4l1.8 1.8"/></svg>',
   lite: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 4C10 4 5 9 5 19c10 0 15-5 15-15z"/><path d="M5 19L14 10"/></svg>',
+  // 2026-11-05「ぜんぶ」タブ：ロゴの うきの スタンプ（文字の おびは なし。小さいと つぶれるので）
+  uki: (() => { let e = ""; for (let i = 0; i < 28; i++) { const a = i / 28 * Math.PI * 2, r = i % 2 ? 27.6 : 29.7; e += (i ? "L" : "M") + (Math.cos(a) * r).toFixed(1) + " " + (Math.sin(a) * r).toFixed(1); }
+    return '<svg viewBox="-30 -30 60 60" aria-hidden="true"><defs><clipPath id="stUkiC"><circle r="21"/></clipPath></defs>' +
+      // 2026-11-05 ほかの 日の バッジと 同じ わりあい（ぎざぎざ → クリーム色の わ → 細い 線 → 絵）。白い ふちは なし
+      '<path d="' + e + 'Z" fill="#f07a2a"/><circle r="25.8" fill="#fffaf0"/><circle r="24.9" fill="none" stroke="#f07a2a" stroke-width=".7"/>' +
+      '<g transform="scale(1.143)"><circle r="21" fill="#bff0ff"/><g clip-path="url(#stUkiC)"><rect x="-22" y="5" width="44" height="20" fill="#2a8ac8"/><path d="M-22 5 q5.5 -3 11 0 t11 0 t11 0 t11 0" stroke="#fff" stroke-width="1.8" fill="none"/>' +
+      '<ellipse cx="0" cy="7.5" rx="14" ry="2.8" fill="none" stroke="#fff" stroke-width="1.4" opacity=".8"/><circle cx="11" cy="-11" r="4.2" fill="#ffd84a"/></g>' +
+      '<path d="M0 -20 V-11" stroke="#5a3a1a" stroke-width="2" stroke-linecap="round"/><path d="M0 -21 V-16" stroke="#ff5a4a" stroke-width="3" stroke-linecap="round"/>' +
+      '<path d="M-7 -3 Q-7 -12 0 -12 Q7 -12 7 -3Z" fill="#ff5a4a" stroke="#5a3a1a" stroke-width="1.8" stroke-linejoin="round"/>' +
+      '<rect x="-7.5" y="-3.5" width="15" height="3.2" fill="#2a1a12"/>' +
+      '<path d="M-7 -0.3 L7 -0.3 Q6.5 7.5 0 10.5 Q-6.5 7.5 -7 -0.3Z" fill="#fffaf0" stroke="#5a3a1a" stroke-width="1.8" stroke-linejoin="round"/>' +
+      '<path d="M0 10.5 V14.5" stroke="#5a3a1a" stroke-width="1.8" stroke-linecap="round"/>' +
+      '<path d="M-4 -9 q1.5 -1.5 3.4 -1.7" stroke="#fff" stroke-width="1.5" fill="none" stroke-linecap="round" opacity=".85"/></g><circle r="24" fill="none" stroke="#f07a2a" stroke-width="1.2"/></svg>'; })(),
   star: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 6 6.6.8-4.9 4.5 1.3 6.5L12 17l-5.9 3.3 1.3-6.5L2.5 9.3l6.6-.8z" fill="#f2c230" stroke="#c88a08" stroke-width="1"/></svg>'
 };
 // 2026-11-04 かい：どうぐの さいふと おなじ 貝の しるし（大むかし、貝がらが お金に つかわれて いた）
@@ -7113,7 +7481,7 @@ function renderStat() {
     html = '<button class="stch" data-st="sw" aria-label="' + esc(p.name) + '（プレイヤーを きりかえる）">' + stHarbor(curHour()) + '<span class="stcoin" title="かい">' + ST_SHELL + (p.coins || 0) + '</span>' + stFront(p, rd, rl) +
       '<span class="nm"><b>' + esc(p.name) + '</b><small>プレイヤー きりかえ ▸</small></span></button><button class="sthelp" data-st="help" aria-label="あそびかた・きろくの まもりかた">？</button>' +
       '<div class="stwx" style="--pc:' + t.pc + ';--pt:' + t.pt + ';--pb:' + t.pb + '"><div class="sttabs" role="tablist" aria-label="どの 日の きろく？">' +
-      keys.map(k => '<button role="tab" data-st="tab:' + k + '" aria-selected="' + (k === stTab) + '">' + (k === "all" ? ST_ICON.star : markSVG(k, 22, { nolabel: true })) + ST_T[k].l + '</button>').join("") + '</div>' +
+      keys.map(k => '<button role="tab" data-st="tab:' + k + '" aria-selected="' + (k === stTab) + '">' + (k === "all" ? ST_ICON.uki : markSVG(k, 22, { nolabel: true })) + ST_T[k].l + '</button>').join("") + '</div>' +
       '<div class="stpan p' + ix + '" role="tabpanel"><h4>' + (stTab === "all" ? "ぜんぶの きろく" : t.l + "に つった ずかん") + '</h4>' +
       '<div class="stbig"><b>' + zk + '</b><span>/ ' + SHARKS.length + ' しゅ</span></div><div class="stbar"><i style="width:' + pct(zk, SHARKS.length) + '%"></i></div>' +
       (stTab === "all" ? '<div class="stks"><small>つった 数</small><span>' + tot + ' ひき</span></div><div class="stks"><small>つった 王</small><span>' + KINGS.filter(k => (p.kings || {})[k.id]).length + ' / ' + KINGS.length + '</span></div>'
@@ -7121,11 +7489,36 @@ function renderStat() {
       '<div class="strr">' + rr.map(x => '<div><em>' + "★".repeat(x.r) + '</em><div class="stbar"><i style="width:' + pct(x.n, x.t) + '%"></i></div><span>' + x.n + '/' + x.t + '</span></div>').join("") + '</div></div></div>' +
       '<div class="stbt"><div class="steq"><div>' + still(rIc) + '<span>' + esc(short(rd.name, "さお")) + '</span><small>' + (rd.net ? "あみ" : "さお") + '</small></div><div>' + still(lIc0) + '<span>' + esc(short(rl.name, "リール")) + '</span><small>リール</small></div><div>' + hatIc + '<span>' + (hatNm ? esc(short(hatNm, "ぼうし")) : "なし") + '</span><small>ぼうし</small></div></div>' +
       '<div class="stset"><button data-st="snd" class="' + (SFX.on ? "" : "off") + '" aria-pressed="' + SFX.on + '" aria-label="こうかおん">' + ST_ICON.snd + '</button><button data-st="bgm" class="' + (BGM.on ? "" : "off") + '" aria-pressed="' + BGM.on + '" aria-label="きょく">' + ST_ICON.bgm + '</button>' +
+      '<button data-st="rel" class="rel" aria-pressed="' + !!p.rel + '" aria-label="はんてい：' + (p.rel ? "ゆびを はなした とき" : "さわった とき") + '（タップで かわる）">' + (p.rel ? ST_ICON.tapUp : ST_ICON.tapDn) + '</button>' +
       '<button data-st="lite" class="' + (lite ? "" : "off") + '" aria-pressed="' + lite + '" aria-label="かるい ひょうじ">' + ST_ICON.lite + '</button><button data-st="thm" class="thm" aria-label="はいけい：' + ST_THEME_NM[th] + '（タップで かわる）"><i style="width:20px;height:20px;border-radius:50%;display:block;box-shadow:0 0 0 1.5px #fff,0 0 0 2.5px #d8c8a0;background:' + ST_THEME_BG[th] + '"></i></button>' +
-      '<span>こうかおん</span><span>きょく</span><span>かるい</span><span>はいけい</span></div></div>';
+      '<span>おと</span><span>きょく</span><span>' + (p.rel ? "はなす" : "さわる") + '</span><span>かるい</span><span>はいけい</span></div></div>';
   }
   if (el._h === html) return; el._h = html; el.innerHTML = html;
 }
+/* 2026-11-11 さわる／はなす を きりかえたら、なにが かわったかを ボタンの すぐ 上の ふきだしで 知らせる（つり画面の 文字だけでは つながりが わからないため） */
+let relTipT = 0;
+/* 2026-11-11「かるい」も おなじ ふきだしで 知らせる（なにが かるく なるのか わからないため） */
+const ST_TIP = {
+  rel: on => [on ? ST_ICON.tapUp : ST_ICON.tapDn, on
+    ? '<b>「はなす」に したよ</b>海に ゆびを おいて まち、白い 線が 緑に 入ったら はなす。画面が ゆれにくいよ'
+    : '<b>「さわる」に したよ</b>白い 線が 緑に 入ったら、海を さわる。さわった しゅんかんに 「あわせる」「ひく」に なるよ',
+    'もう一ど おすと「' + (on ? "さわる" : "はなす") + '」に もどるよ'],
+  lite: on => [ST_ICON.lite, on
+    ? '<b>「かるい」を オンに したよ</b>ぼかしや かざりの うごきを 止めて、ゲージが なめらかに うごく ように するよ。古い スマホや パソコン むけ'
+    : '<b>「かるい」を オフに したよ</b>ぼかしや かざりの うごきが もどるよ。ゲージが カクカク したら オンに してね',
+    'つれやすさは かわらないよ。この きかいだけの せっていだよ']
+};
+function stTip(kind, on) {
+  const b = document.querySelector('#stp [data-st="' + kind + '"]'); if (!b) return; const [ic, body, note] = ST_TIP[kind](on);
+  let t = $("reltip"); if (!t) { t = document.createElement("div"); t.id = "reltip"; t.className = "reltip hide"; t.setAttribute("role", "status"); t.onclick = () => t.classList.add("hide"); document.body.appendChild(t); }
+  t.innerHTML = '<div class="rti ' + kind + (on ? "" : " off") + '">' + ic + '</div><div>' + body + '<small>' + note + '</small></div>';
+  const r = b.getBoundingClientRect(), w = Math.min(236, window.innerWidth - 16), left = Math.max(8, Math.min(window.innerWidth - w - 8, r.left + r.width / 2 - w / 2));
+  t.style.width = w + "px"; t.style.left = left + "px"; t.style.setProperty("--ax", (r.left + r.width / 2 - left) + "px");
+  t.classList.remove("hide"); t.style.top = "0px"; t.style.top = Math.max(8, r.top - t.offsetHeight - 10) + "px";
+  clearTimeout(relTipT); relTipT = setTimeout(() => t.classList.add("hide"), 6000);
+}
+window.addEventListener("scroll", () => { const t = $("reltip"); if (t) t.classList.add("hide"); }, { passive: true });
+document.addEventListener("pointerdown", e => { const t = $("reltip"); if (t && !(e.target.closest && e.target.closest('#reltip, #stp [data-st="rel"], #stp [data-st="lite"]'))) t.classList.add("hide"); }, true);   // ほかの ところを さわったら けす
 document.addEventListener("click", e => {
   const b = e.target.closest && e.target.closest("#stp [data-st]"); if (!b) return; const a = b.dataset.st;
   if (a === "sw") { $("pchip").click(); return; }
@@ -7133,7 +7526,8 @@ document.addEventListener("click", e => {
   if (a.startsWith("tab:")) { stTab = a.slice(4); renderStat(); return; }
   if (a === "snd") { $("sndbtn").click(); renderStat(); return; }
   if (a === "bgm") { $("bgmbtn").click(); renderStat(); return; }
-  if (a === "lite") { $("litebtn").click(); renderStat(); return; }
+  if (a === "lite") { $("litebtn").click(); renderStat(); stTip("lite", liteOn()); return; }
+  if (a === "rel") { const p = players[cur]; if (!p) return; p.rel = !p.rel; relDown = null; relSync(); pushPlayer(cur, x => ({ rel: !!x.rel, at: x.at })); renderStat(); stTip("rel", p.rel); if (!(S.st === "wait" || S.st === "hook" || S.st === "reel")) say(p.rel ? "はんてい：はなす" : "はんてい：さわる", p.rel ? "うみに ゆびを おいて まって、ここ！で ゆびを はなそう" : "うみを さわった しゅんかんに はんてい するよ"); return; }
   if (a === "thm") { const th = document.body.dataset.theme || "umi"; applyTheme(ST_THEMES[(ST_THEMES.indexOf(th) + 1) % ST_THEMES.length]); renderStat(); }
 });
 function renderAll() {
@@ -7364,3 +7758,5 @@ initTheme(); renderLogo(); try { document.fonts.ready.then(renderLogo); document
 
 </body>
 </html>
+
+</body></html>
