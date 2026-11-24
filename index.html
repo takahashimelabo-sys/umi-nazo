@@ -28,6 +28,52 @@ if ("serviceWorker" in navigator && location.protocol === "https:") addEventList
 .tkgov.inv .qr { width: min(68vw, 250px); margin: 10px auto 6px; background: #fff; padding: 8px; border-radius: 14px; box-shadow: 0 0 0 3px #bfe6f7; }
 .tkgov.inv .qr svg { display: block; width: 100%; height: auto; }
 .tkgov.inv .url { font-size: 11px; font-weight: 700; opacity: .65; word-break: break-all; }
+/* 2026-11-24 さいしょの じゅんび：スマホの ブラウザで はじめて ひらいた とき、プレイヤーを つくる 前に ホーム画面へ 入れてもらう */
+.a2g { position: fixed; inset: 0; z-index: 9000; background: linear-gradient(180deg, #7ad8f4 0%, #2a9ad6 40%, #145a9e 100%); display: grid; place-items: center; padding: 16px; overflow: auto; font-family: var(--display); }
+.a2g .in { box-sizing: border-box; width: min(100%, 420px); background: #fffaf0; color: #5a3e26; border-radius: 22px; padding: 18px 16px 14px; text-align: center; font-weight: 900; box-shadow: 0 6px 0 #0b3a7855; }
+.a2g h2 { margin: 2px 0 8px; font-size: 21px; line-height: 1.4; }
+.a2g .lead { font-size: 14px; line-height: 1.7; margin: 0 0 12px; }
+.a2g .lead em { font-style: normal; color: #d8505a; }
+.a2g .os { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 6px 0 10px; }
+.a2g .os button { all: unset; box-sizing: border-box; cursor: pointer; border: 3px solid #e2d4b8; background: #fff; border-radius: 18px; padding: 14px 6px 10px; display: grid; gap: 4px; justify-items: center; font-size: 16px; }
+.a2g .os button i { font-style: normal; font-size: 34px; line-height: 1; }
+.a2g .os button small { font-size: 11px; color: #2a8ac8; min-height: 1.2em; }
+.a2g .os button.me { border-color: #2a8ac8; box-shadow: 0 0 0 3px #bfe6f7; }
+.a2g ol { text-align: left; margin: 4px 0 10px; padding: 0; list-style: none; counter-reset: a2; display: grid; gap: 8px; }
+.a2g ol li { counter-increment: a2; position: relative; background: #fff; border-radius: 14px; padding: 10px 10px 10px 46px; font-size: 15px; line-height: 1.6; }
+.a2g ol li::before { content: counter(a2); position: absolute; left: 10px; top: 50%; translate: 0 -50%; width: 26px; height: 26px; border-radius: 50%; background: #2a8ac8; color: #fff; display: grid; place-items: center; font-size: 15px; }
+.a2g .k { display: inline-block; background: #eef8fd; border: 2px solid #8cc8e8; border-radius: 8px; padding: 0 6px; margin: 0 1px; }
+.a2g .note { font-size: 12px; line-height: 1.6; opacity: .8; margin: 4px 0 8px; }
+.a2g .acts { display: grid; gap: 8px; margin-top: 10px; }
+.a2g .go { all: unset; cursor: pointer; padding: 12px 14px; border-radius: 16px; background: #e8608a; color: #fff; font-size: 17px; box-shadow: 0 4px 0 #b83e66; }
+.a2g .sub { all: unset; cursor: pointer; padding: 8px; border-radius: 12px; background: #f3e9d4; font-size: 14px; }
+.a2g .skip { all: unset; cursor: pointer; font-size: 12px; color: #9a8466; text-decoration: underline; padding: 6px; margin-top: 4px; }
+.a2g .have { all: unset; box-sizing: border-box; cursor: pointer; display: block; width: 100%; margin: 2px 0 6px; padding: 10px; border-radius: 14px; background: #eef8fd; border: 2px dashed #8cc8e8; font-size: 14px; }
+.a2g details.hard { text-align: left; margin-top: 10px; font-size: 13px; background: #f7efe0; border-radius: 12px; padding: 6px 10px; }
+.a2g details.hard summary { cursor: pointer; color: #9a8466; }
+.a2g details.hard p { margin: 6px 0; line-height: 1.6; font-weight: 700; }
+.a2g .warn { color: #d8505a; }
+.a2g .msg { min-height: 1.2em; font-size: 13px; color: #2a8ac8; }
+.a2b { background: #fff3c4; border: 2px solid #f0c040; border-radius: 14px; padding: 8px 10px; margin: 0 0 10px; color: #5a3e26; font-size: 13px; line-height: 1.6; font-weight: 800; text-align: center; }
+.a2b button { font: inherit; font-weight: 900; border: 0; border-radius: 999px; padding: 6px 14px; margin-top: 6px; background: #2a8ac8; color: #fff; cursor: pointer; box-shadow: 0 3px 0 #1a5a8a; }
+.a2g .ico { width: 72px; height: 72px; border-radius: 16px; margin: 4px auto 8px; display: block; box-shadow: 0 3px 8px #0003; }
+/* 2026-11-24 iPhone SE くらいの 小さな 画面でも 読みやすい ように 文字を 大きく。長い ときは 上から スクロール */
+.a2g { display: flex !important; padding: 10px !important; }
+.a2g .in { margin: auto; padding: 16px 14px 14px !important; }
+.a2g h2 { font-size: 24px !important; }
+.a2g .lead { font-size: 17px !important; }
+.a2g .have { font-size: 17px !important; padding: 12px !important; }
+.a2g .os button { font-size: 19px !important; }
+.a2g .os button small { font-size: 14px !important; }
+.a2g ol li { font-size: 18px !important; padding: 12px 10px 12px 48px !important; }
+.a2g ol li::before { width: 30px !important; height: 30px !important; font-size: 17px !important; }
+.a2g .note { font-size: 15px !important; }
+.a2g .go { font-size: 20px !important; }
+.a2g .sub { font-size: 17px !important; padding: 10px !important; }
+.a2g details.hard { font-size: 16px !important; }
+.a2g details.hard p { font-size: 16px !important; }
+.a2g .msg { font-size: 15px !important; }
+.a2b { font-size: 15px !important; } .a2b button { font-size: 16px !important; }
 </style>
 <!-- 2026-11-03 時計の 帯には、うしろの 海と おなじ もようを かぶせる（スクロールしても 中身が 時計の うらに 入りこまない。時計の 文字は 黒のまま） -->
 <style>/* 2026-11-03 Safari の タブで あそぶ ときは、時計の まわりの 色を Safari が 背景の 色から えらぶので、背景の いちばん 上の 色に そろえる */
@@ -7453,6 +7499,116 @@ function inviteOpen() {
   $("invx").onclick = close;
   if ($("invsh")) $("invsh").onclick = () => { navigator.share({ title: "うみのナゾずかん", url: UMI_URL }).catch(() => {}); };
 }
+/* 2026-11-24 さいしょの じゅんび（ホーム画面に 入れてから はじめる）。
+   ・スマホの ブラウザで ひらいて いて、まだ プレイヤーが いない とき → プレイヤーを つくる 前に この 画面
+   ・スマホの ブラウザで、もう プレイヤーが いる とき → だれが あそぶ？ に「ホーム画面に うつそう」の あんない
+   ・パソコンや、ホーム画面の アイコンから ひらいた ときは なにも 出さない
+   ・「入れないで あそぶ」は ふつうの ボタンには しない（「うまく できない ときは」の 中だけ） */
+let a2gDefer = null, a2gOs = "", a2gStep = 0, a2gOff = false, a2gMode = "new", a2gMsg = "";
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); a2gDefer = e; if (document.querySelector(".a2g")) a2gDraw(); });
+window.addEventListener("appinstalled", () => { a2gDefer = null; if (document.querySelector(".a2g")) { a2gStep = 2; a2gDraw(); } });
+function a2gEnv() {
+  const ua = navigator.userAgent;
+  const ios = /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const and = /Android/i.test(ua);
+  const app = navigator.standalone === true || (window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+  const inapp = /Line\/|FBAN|FBAV|Instagram|Twitter|MicroMessenger|KAKAOTALK/i.test(ua) || (and && /; wv\)/.test(ua));
+  return { ios, and, app, inapp, other: ios && /CriOS|FxiOS|EdgiOS/.test(ua) };
+}
+const a2gPhone = () => { const e = a2gEnv(); return (e.ios || e.and) && !e.app; };
+const a2gCount = () => Object.keys(players || {}).length;
+function a2gNeeded() { return !a2gOff && a2gPhone() && a2gCount() === 0; }
+function a2gMoveName() { const s = document.querySelector("#pmove summary"); return s ? s.textContent.split("（")[0].trim() : "きろくの ひきつぎ"; }
+function a2gOpen(force, mode, step) {
+  if (!force && !a2gNeeded()) return;
+  const e = a2gEnv(); a2gOs = e.ios ? "ios" : e.and ? "and" : ""; a2gMode = mode || "new"; a2gMsg = "";
+  a2gStep = step != null ? step : (e.inapp ? "inapp" : a2gMode === "move" ? "move" : 0);
+  let ov = document.querySelector(".a2g"); if (!ov) { ov = document.createElement("div"); ov.className = "a2g"; document.body.appendChild(ov); }
+  a2gDraw();
+}
+function a2gClose() { const ov = document.querySelector(".a2g"); if (ov) ov.remove(); }
+function a2gDraw() {
+  const ov = document.querySelector(".a2g"); if (!ov) return;
+  const e = a2gEnv(), K = t => '<span class="k">' + t + '</span>', MV = a2gMoveName();
+  const back = a2gStep === 0 && a2gMode === "new" ? "" : '<button type="button" class="sub" data-a="back">← もどる</button>';
+  let h = "";
+  if (a2gStep === "inapp") {
+    h = '<h2>🧭 ブラウザで ひらきなおそう</h2><p class="lead">いまは LINE などの アプリの 中で ひらいて いるよ。<br>ここでは ホーム画面に 入れられないんだ。</p>' +
+      '<ol><li>画面の はしに ある ' + K("⋯") + ' や ' + K("🧭") + ' を タップ</li><li>' + K("ブラウザで開く") + ' か ' + K("Safariで開く") + ' を えらぶ<br><span class="note">（Android は ' + K("Chromeで開く") + ' の ことも あるよ）</span></li></ol>' +
+      '<div class="acts"><button type="button" class="sub" data-a="copy">📋 アドレスを コピーする</button></div><div class="msg">' + a2gMsg + '</div>' +
+      '<p class="note">コピーした ときは、Safari（Android は Chrome）の 上の 入力らんに はりつけてね。</p>' + a2gHard();
+  } else if (a2gStep === "move") {
+    h = '<h2>🐋 ホーム画面に うつそう</h2><p class="lead">いまは ブラウザで あそんで いるよ。<br>しばらく ひらかないと、きろくが <em>きえて しまう</em> ことが あるんだ。<br>3つの じゅんばんで うつそう！</p>' +
+      '<ol><li>「' + MV + '」で コードを とる<br><button type="button" class="sub" data-a="mv" style="margin-top:6px">ここを ひらく</button></li>' +
+      '<li>ホーム画面に 入れる<br><button type="button" class="sub" data-a="how" style="margin-top:6px">やりかたを 見る</button></li>' +
+      '<li>ホーム画面の アイコンから ひらいて、「' + MV + '」で コードを 入れる</li></ol>' +
+      '<p class="note">うつし おわるまで、この ブラウザの きろくは けさないでね。</p><div class="acts"><button type="button" class="sub" data-a="close">とじる</button></div>';
+  } else if (a2gStep === "have") {
+    h = '<h2>🐋 アイコンから ひらいてね</h2><p class="lead">ホーム画面の <b>うみのナゾずかん</b> の アイコンから ひらけば、いつもの きろくで あそべるよ。</p>' +
+      '<p class="lead"><span class="warn">ここで もう いちど 入れると、アイコンが 2つに なるよ。</span><br>あたらしい ほうは からっぽ。<br><b>まえの アイコンは けさないでね。</b></p>' +
+      '<p class="note">この 画面は とじて だいじょうぶ。</p><div class="acts">' + back + '</div>';
+  } else if (a2gStep === 0) {
+    h = (a2gMode === "move" ? '<h2>📲 ホーム画面に 入れよう</h2>' : '<h2>🐋 はじめる まえに<br>ホーム画面に 入れよう！</h2>' +
+      '<p class="lead">ホーム画面に 入れると、アプリの ように ひらけるよ。<br>入れないと、つった さかなの きろくが <em>きえて しまう</em> ことが あるんだ。</p>' +
+      '<button type="button" class="have" data-a="have">🐋 もう ホーム画面に アイコンが ある 子は こちら</button>') +
+      '<p class="lead" style="margin:8px 0 4px">きみの スマホは どっち？</p>' +
+      '<div class="os"><button type="button" data-os="ios" class="' + (e.ios ? "me" : "") + '"><i>🍎</i>iPhone・iPad<small>' + (e.ios ? "たぶん こっち" : "") + '</small></button>' +
+      '<button type="button" data-os="and" class="' + (e.and ? "me" : "") + '"><i>🤖</i>Android<small>' + (e.and ? "たぶん こっち" : "") + '</small></button></div>' +
+      (back ? '<div class="acts">' + back + '</div>' : '');
+  } else if (a2gStep === 1) {
+    if (a2gOs === "ios") {
+      h = '<h2>🍎 iPhone・iPad の ばあい</h2>' + (e.other ? '<p class="note">⚠ Safari（サファリ）で ひらいてね。ほかの アプリでは うまく いかない ことが あるよ。</p>' : '') +
+        '<ol><li>画面の 右下の ' + K("…") + ' を タップ<br><span class="note">（iPad は 上の ' + K("□に↑") + '）</span></li>' +
+        '<li>' + K("共有") + ' を タップ</li>' +
+        '<li>' + K("表示を増やす") + ' を タップ<br><span class="note">（' + K("その他") + ' の ことも あるよ）</span></li>' +
+        '<li>' + K("ホーム画面に追加") + ' → ' + K("追加") + '</li></ol>' +
+        '<p class="note">「…」が ない ときは、下の 共有ボタン ' + K("□に↑") + ' から ' + K("ホーム画面に追加") + ' を さがしてね。</p>';
+    } else {
+      h = '<h2>🤖 Android の ばあい</h2>' + (a2gDefer ? '<div class="acts" style="margin:4px 0 10px"><button type="button" class="go" data-a="inst">📲 ホーム画面に 入れる</button></div><p class="note">うまく いかない ときは、下の やりかたでも できるよ。</p>' : '') +
+        '<ol><li>画面の 右上の ' + K("⋮") + ' を タップ</li>' +
+        '<li>' + K("ホーム画面に追加") + ' を タップ<br><span class="note">（' + K("アプリを インストール") + ' と 出る ことも あるよ）</span></li>' +
+        '<li>' + K("インストール") + ' か ' + K("追加") + ' を タップ</li></ol>';
+    }
+    h += '<div class="acts"><button type="button" class="go" data-a="done">✅ 入れたよ！</button>' + back + '</div>' + (a2gMode === "new" ? a2gHard() : "");
+  } else {
+    h = '<h2>やったね！</h2><img class="ico" src="icon-180.png" alt="" onerror="this.remove()">' +
+      (a2gMode === "move"
+        ? '<p class="lead">ホーム画面に できた <b>うみのナゾずかん</b> の アイコンを タップして ひらいてね。<br>そこで「' + MV + '」を ひらいて、とった コードを 入れよう！</p>'
+        : '<p class="lead">ホーム画面に できた <b>うみのナゾずかん</b> の アイコンを タップして ひらいてね。<br>そこで プレイヤーを つくろう！</p><p class="note">この 画面は とじて だいじょうぶ。<br>ここで あそぶと、アイコンの ほうには きろくが うつらないよ。</p>') +
+      '<div class="acts"><button type="button" class="sub" data-a="back">← やりかたを もう いちど 見る</button>' + (a2gMode === "move" ? '<button type="button" class="sub" data-a="close">とじる</button>' : '') + '</div>';
+  }
+  ov.innerHTML = '<div class="in" role="dialog" aria-label="ホーム画面に 入れよう">' + h + '</div>';
+  ov.querySelectorAll("[data-os]").forEach(b => b.onclick = () => { a2gOs = b.dataset.os; a2gStep = 1; a2gDraw(); });
+  ov.querySelectorAll("[data-a]").forEach(b => b.onclick = () => {
+    const a = b.dataset.a;
+    if (a === "back") { a2gStep = a2gStep === "have" ? 0 : a2gStep === 0 ? (a2gMode === "move" ? "move" : 0) : a2gStep === 2 ? 1 : 0; a2gDraw(); }
+    else if (a === "have") { a2gStep = "have"; a2gDraw(); }
+    else if (a === "how") { a2gStep = 0; a2gDraw(); }
+    else if (a === "done") { a2gStep = 2; a2gDraw(); }
+    else if (a === "close") { a2gClose(); }
+    else if (a === "skip") { a2gOff = true; a2gClose(); }
+    else if (a === "mv") { a2gClose(); if (typeof mv !== "undefined") { mv.open = true; renderMove(); } const el = $("pmove"); if (el) el.scrollIntoView({ block: "start", behavior: "smooth" }); }
+    else if (a === "copy") { const u = typeof UMI_URL === "string" ? UMI_URL : location.href.split("#")[0]; const ok = () => { a2gMsg = "コピーしたよ！"; a2gDraw(); }; try { navigator.clipboard.writeText(u).then(ok, () => { a2gMsg = u; a2gDraw(); }); } catch (x) { a2gMsg = u; a2gDraw(); } }
+    else if (a === "inst" && a2gDefer) { const d = a2gDefer; d.prompt(); d.userChoice.then(r => { if (r && r.outcome === "accepted") { a2gDefer = null; a2gStep = 2; a2gDraw(); } }).catch(() => {}); }
+  });
+}
+function a2gHard() {
+  return '<details class="hard"><summary>うまく できない ときは</summary><p>おうちの 人に 手つだって もらってね。</p>' +
+    '<p class="warn">どうしても 入れられない ときは、このまま あそぶ ことも できるよ。でも、7日くらい ひらかないと きろくが きえて しまう ことが あるよ。</p>' +
+    '<button type="button" class="sub" data-a="skip" style="display:block;margin:6px auto">わかった。このまま あそぶ</button></details>';
+}
+function a2gBanner() {   // もう ブラウザで あそんで いる 子への あんない（だれが あそぶ？ の 画面だけ。つりの 画面には 出さない）
+  const old = $("a2b"); if (old) old.remove();
+  if (a2gPhone() && $("a2hs")) $("a2hs").remove();   // GitHub版：スマホの ブラウザでは 前からの「ホーム画面に 追加して あそぼう」の かわりに これを 出す（パソコンは 前の まま）
+  if (!a2gPhone() || a2gCount() === 0) return;
+  const pl = $("players"), list = $("plist"); if (!pl || !list) return;
+  const d = document.createElement("div"); d.className = "a2b"; d.id = "a2b";
+  d.innerHTML = '⚠ いまは ブラウザで あそんで いるよ。しばらく ひらかないと、きろくが きえて しまう ことが あるよ。<br><button type="button">🐋 ホーム画面に うつそう</button>';
+  d.querySelector("button").onclick = () => a2gOpen(true, "move");
+  pl.insertBefore(d, list);
+}
+{ const _sp = showPlayers; showPlayers = function (on) { _sp(on); if (on) { a2gOpen(false); a2gBanner(); } }; }
+{ const _rp = renderPlayers; renderPlayers = function () { _rp.apply(this, arguments); a2gBanner(); }; }
 function spotTitle() { if (spotTitle.last === spot) return; spotTitle.last = spot; const e = $("spotttl"); if (!e) return; e.textContent = SPOTS[spot].name; e.classList.remove("on"); void e.offsetWidth; e.classList.add("on"); }
 function say(m, s) { $("msg").textContent = m || ""; $("sub").textContent = s || ""; if (typeof relSync === "function") relSync(); }
 function pop(text, col) { const p = $("pop"); p.textContent = text; p.style.color = col; p.classList.remove("show"); void p.offsetWidth; p.classList.add("show"); }
