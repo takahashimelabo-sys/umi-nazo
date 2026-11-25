@@ -4486,6 +4486,196 @@ Object.assign(SEA_ART, {
   }
 });
 SHARKS.push(K_("sandoctopus", "サザンサンドオクトパス", "mollusc", 42, 4, "オーストラリア南部の 浅い 砂地（0〜50m）", "小さな エビや カニの なかま", "2008年、メルボルンの 南の 海で 夜に もぐった 研究者が、砂の 中へ 消える ところを 見つけた。ろうとから 水を ふきつけて 砂を 流砂の ように やわらかく して もぐる", "色を かえられない かわりに、砂の 中に ねばねばで かためた えんとつつきの 家を 作る タコ。", { f: "octopus", v: "sand", col: "#c8642e" }));
+/* 2026-11-25 海外の 海を ふやす 20種（カリブ海・南極と 北極・深海・アフリカ・ガラパゴス など）。
+   PCの 内蔵ブラウザで ウィキメディア・コモンズの 写真を 1種 10まい いじょう ならべて 見て、多くの 写真に 共通する 形と 色を とった。
+   事実は 英語版ウィキペディアで たしかめた。絵は「ぬいぐるみに したら かわいい」を 先に して、目は 大きめ・ハイライト つき */
+TYPES.bird = { name: "ペンギン", ic: "鳥", col: "#9ec2e0" };
+const EYE_ = (x, y, r, ring) => (ring ? '<circle cx="' + x + '" cy="' + y + '" r="' + (r + 1.6) + '" fill="' + ring + '"/>' : '') + '<circle cx="' + x + '" cy="' + y + '" r="' + r + '" fill="#1a1412"/><circle cx="' + (x + r * .35) + '" cy="' + (y - r * .35) + '" r="' + (r * .38) + '" fill="#fff"/>';
+Object.assign(SEA_ART, {
+  penguin(a, id, sil) {   // ペンギン（正面）：黒い 頭と せなか、白い おなか、横に ひろげた つばさ、足は 2つ
+    const K = c => sil ? "#061019" : c; let o = "";
+    o += '<path d="M112 70 Q84 92 86 122 Q100 110 116 92Z" fill="' + K(a.back) + '"/><path d="M188 70 Q216 92 214 122 Q200 110 184 92Z" fill="' + K(a.back) + '"/>';   // つばさ
+    o += '<ellipse cx="134" cy="141" rx="13" ry="5" fill="' + K(a.feet) + '"/><ellipse cx="166" cy="141" rx="13" ry="5" fill="' + K(a.feet) + '"/>';
+    o += '<path d="M150 12 C178 12 192 32 192 54 C202 78 206 110 194 130 C182 146 118 146 106 130 C94 110 98 78 108 54 C108 32 122 12 150 12Z" fill="' + K(a.back) + '"/>';
+    if (sil) return o;
+    if (a.v === "emperor") {
+      o += '<defs><linearGradient id="' + id + 'pb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6e7a8"/><stop offset=".35" stop-color="#fbf6e6"/><stop offset="1" stop-color="#ffffff"/></linearGradient></defs>';
+      o += '<path d="M150 50 C178 50 188 80 188 104 C188 128 172 140 150 140 C128 140 112 128 112 104 C112 80 122 50 150 50Z" fill="url(#' + id + 'pb)"/>';
+      o += '<path d="M118 44 Q110 58 124 66 Q130 56 126 46Z" fill="#f4c430"/><path d="M182 44 Q190 58 176 66 Q170 56 174 46Z" fill="#f4c430"/>';   // 耳の あたりの こい 黄色
+      o += '<path d="M150 22 C164 22 172 30 174 40" stroke="' + shade(a.back, .35) + '" stroke-width="2" fill="none" opacity=".5"/>';
+      o += '<path d="M145 42 L155 42 L150 60Z" fill="#1e1e22"/><path d="M147.4 47 L152.6 47 L150 56Z" fill="#f08a4a"/>';   // 下むきの 長い くちばしと だいだい色の すじ
+      o += EYE_(136, 38, 3.6, "#f2f2f4") + EYE_(164, 38, 3.6, "#f2f2f4");
+    } else {   // ケープペンギン：白い おびが 目の 上から ほおを まわり、むねに 黒い おび、目の 上に ピンク
+      o += '<path d="M150 56 C178 56 188 84 188 106 C188 128 172 140 150 140 C128 140 112 128 112 106 C112 84 122 56 150 56Z" fill="#ffffff"/>';
+      o += '<path d="M122 52 Q118 30 150 24 Q182 30 178 52 Q174 64 168 68 Q176 50 168 40 Q150 30 132 40 Q124 50 132 68 Q126 64 122 52Z" fill="#ffffff"/>';   // 白い おび
+      o += '<path d="M116 122 Q114 90 150 86 Q186 90 184 122" stroke="#1e1e22" stroke-width="5" fill="none" stroke-linecap="round"/>';   // むねの 黒い おび
+      [[140, 104], [160, 112], [150, 124], [132, 116], [168, 100]].forEach(([x, y]) => o += '<circle cx="' + x + '" cy="' + y + '" r="2" fill="#1e1e22" opacity=".8"/>');
+      o += '<path d="M130 38 Q137 30 144 37" stroke="#f48aa0" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M156 37 Q163 30 170 38" stroke="#f48aa0" stroke-width="4" fill="none" stroke-linecap="round"/>';   // 目の 上の ピンク
+      o += '<path d="M144 46 L156 46 L150 58Z" fill="#1e1e22"/><path d="M146 50 L154 50" stroke="#c8c8cc" stroke-width="1"/>';
+      o += EYE_(137, 42, 3.4, "#f2f2f4") + EYE_(163, 42, 3.4, "#f2f2f4");
+    }
+    o += '<ellipse cx="128" cy="60" rx="6" ry="3.4" fill="#ff9aa8" opacity=".35"/><ellipse cx="172" cy="60" rx="6" ry="3.4" fill="#ff9aa8" opacity=".35"/>';   // ほっぺ
+    return o + '<ellipse cx="136" cy="24" rx="12" ry="4" fill="#fff" opacity=".18"/>';
+  },
+  pyrosome(a, id, sil) {   // ヒカリボヤ：小さな 生きものが 集まった つつ。左は とじて 丸く、右は 口が あく。表面は ぽこぽこ、つぶつぶが 青緑に 光る
+    const K = c => sil ? "#061019" : c; let o = "";
+    const body = 'M58 104 Q40 96 50 80 L226 34 Q252 28 262 52 Q270 76 248 84 L70 118 Q56 120 58 104Z';
+    if (!sil) o += '<path d="' + body + '" fill="#9ef2ff" opacity=".18" transform="translate(150 75) scale(1.08) translate(-150 -75)"/>';
+    o += '<path d="' + body + '" fill="' + K(a.col) + '" fill-opacity="' + (sil ? 1 : .85) + '"/>';
+    if (sil) return o;
+    o += '<ellipse cx="252" cy="58" rx="10" ry="22" transform="rotate(-16 252 58)" fill="' + shade(a.col, -.3) + '"/><ellipse cx="252" cy="58" rx="6" ry="15" transform="rotate(-16 252 58)" fill="#2a3a5a" opacity=".6"/>';
+    for (let i = 0; i < 46; i++) { const t = .04 + (i * .137) % .86, s = ((i * .391) % 1) - .5, x = 60 + t * 180, y = 104 - t * 52 + s * 22; o += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (2.2 + i % 3 * .6) + '" fill="' + shade(a.col, .35) + '" stroke="' + shade(a.col, -.15) + '" stroke-width=".6"/>'; if (i % 3 === 0) o += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="1.2" fill="' + a.glow + '"/>'; }
+    return o + '<path d="M70 96 L230 46" stroke="#fff" stroke-width="5" opacity=".25" stroke-linecap="round"/>';
+  },
+  pompeii(a, id, sil) {   // ポンペイワーム：熱水の えんとつに たつ つつから、毛の ような さいきんに つつまれた 体と 赤い えらを 出す
+    const K = c => sil ? "#061019" : c; let o = "";
+    o += '<path d="M0 150 L0 132 Q40 120 70 128 L92 70 Q104 60 116 70 L128 130 Q200 118 300 134 L300 150Z" fill="' + K("#4a423c") + '"/>';   // 熱水の えんとつ
+    if (!sil) o += '<path d="M104 64 Q96 40 108 22 Q118 8 112 -4" stroke="#e8eef2" stroke-width="10" fill="none" opacity=".25" stroke-linecap="round"/>';
+    o += '<path d="M150 140 Q146 100 160 70 Q170 48 186 40" stroke="' + K(a.tube) + '" stroke-width="22" fill="none" stroke-linecap="round"/>';   // つつ
+    o += '<path d="M182 46 Q194 34 210 32" stroke="' + K(a.col) + '" stroke-width="16" fill="none" stroke-linecap="round"/>';   // 体
+    if (sil) return o;
+    for (let i = 0; i < 26; i++) { const t = i / 25, x = 180 + t * 30 + Math.sin(i) * 2, y = 48 - t * 16 + Math.cos(i * 2) * 2; o += '<path d="M' + x.toFixed(1) + ' ' + (y - 6).toFixed(1) + ' l' + (Math.sin(i * 1.7) * 3).toFixed(1) + ' -6 M' + x.toFixed(1) + ' ' + (y + 6).toFixed(1) + ' l' + (Math.cos(i * 1.3) * 3).toFixed(1) + ' 6" stroke="#fff6f0" stroke-width="1.6" stroke-linecap="round"/>'; }
+    for (let k = 0; k < 8; k++) { const ang = -1.2 + k * .32; o += '<path d="M210 32 q' + (Math.cos(ang) * 12).toFixed(1) + ' ' + (Math.sin(ang) * 12).toFixed(1) + ' ' + (Math.cos(ang) * 26).toFixed(1) + ' ' + (Math.sin(ang) * 22).toFixed(1) + '" stroke="' + a.gill + '" stroke-width="3.4" fill="none" stroke-linecap="round"/>'; }
+    for (let i = 0; i < 8; i++) o += '<path d="M150 ' + (134 - i * 9) + ' q11 -2 22 0" stroke="' + shade(a.tube, -.18) + '" stroke-width="1.4" fill="none" opacity=".6" transform="rotate(' + (-i * 4) + ' 160 ' + (130 - i * 9) + ')"/>';
+    return o;
+  },
+  manatee(a, id, sil) {   // マナティー：まるい うちわの しっぽ、ずんぐりした 体、四角い 口もとに ひげ、小さな 目
+    const K = c => sil ? "#061019" : c; let o = "";
+    o += '<path d="M76 74 Q40 44 14 64 Q4 76 14 88 Q40 108 76 80Z" fill="' + K(shade(a.col, -.08)) + '"/>';   // うちわの しっぽ
+    o += '<path d="M70 76 Q92 44 160 42 Q214 42 240 58 Q262 62 270 76 Q274 92 258 98 Q244 104 232 100 Q200 116 150 114 Q96 112 70 84Z" fill="' + K(a.col) + '"/>';
+    o += '<path d="M200 98 Q210 122 196 132 Q186 128 182 116 Q186 108 188 100Z" fill="' + K(shade(a.col, -.1)) + '"/>';   // 前の ひれ
+    if (sil) return o;
+    o += '<path d="M90 96 Q150 118 226 100 Q200 116 150 114 Q100 112 90 96Z" fill="' + a.belly + '" opacity=".8"/>';
+    for (let i = 0; i < 16; i++) o += '<ellipse cx="' + (96 + (i * 41) % 140) + '" cy="' + (54 + (i * 17) % 40) + '" rx="' + (3 + i % 3) + '" ry="2" fill="' + a.moss + '" opacity=".35"/>';
+    for (let i = 0; i < 6; i++) o += '<path d="M' + (110 + i * 18) + ' 50 q5 24 0 52" stroke="' + shade(a.col, -.2) + '" stroke-width="1.4" fill="none" opacity=".35"/>';
+    [[190, 128], [194, 130], [198, 128]].forEach(([x, y]) => o += '<circle cx="' + x + '" cy="' + y + '" r="1.4" fill="#f2ead8"/>');   // つめ
+    o += '<ellipse cx="258" cy="84" rx="13" ry="11" fill="' + shade(a.col, .12) + '"/>';
+    for (let i = 0; i < 12; i++) o += '<circle cx="' + (250 + (i % 4) * 5) + '" cy="' + (80 + Math.floor(i / 4) * 5) + '" r=".9" fill="' + shade(a.col, -.45) + '"/>';
+    o += '<path d="M252 96 Q260 99 268 94" stroke="' + shade(a.col, -.45) + '" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+    o += EYE_(236, 68, 3.4) + '<ellipse cx="240" cy="80" rx="6" ry="3.4" fill="#ff9aa8" opacity=".3"/>';
+    return o + '<ellipse cx="160" cy="52" rx="44" ry="6" fill="#fff" opacity=".2"/>';
+  },
+  sharkray(a, id, sil) {   // シノノメサカタザメ（よこから）：丸く ひらたい 頭、サメの ような 高い 背びれ 2まいと しっぽ、白い 点、頭と 背中に とげの すじ
+    const K = c => sil ? "#061019" : c; let o = "";
+    o += '<path d="M70 80 Q48 70 22 36 Q30 66 34 80 Q30 94 24 112 Q48 92 70 86Z" fill="' + K(a.top) + '"/>';   // しっぽ
+    o += '<path d="M160 64 Q166 30 186 16 Q186 40 196 62Z" fill="' + K(a.top) + '"/><path d="M104 70 Q108 44 124 32 Q124 50 132 68Z" fill="' + K(a.top) + '"/>';   // 背びれ 2まい
+    o += '<path d="M282 86 Q282 62 250 58 Q214 52 180 60 Q130 68 66 78 L66 88 Q130 96 180 100 Q220 106 254 104 Q282 102 282 86Z" fill="' + K(a.top) + '"/>';
+    o += '<path d="M232 100 Q216 128 176 132 Q190 116 196 100Z" fill="' + K(shade(a.top, -.08)) + '"/>';   // 胸びれ
+    if (sil) return o;
+    o += '<path d="M90 92 Q170 104 280 94 Q270 104 250 104 Q200 106 180 100 Q130 96 90 92Z" fill="' + a.bot + '" opacity=".85"/>';
+    for (let i = 0; i < 26; i++) o += '<circle cx="' + (84 + (i * 47) % 160) + '" cy="' + (72 + (i * 13) % 18) + '" r="' + (1.6 + i % 2) + '" fill="' + a.spot + '" opacity=".9"/>';
+    for (let i = 0; i < 9; i++) o += '<path d="M' + (182 + i * 9) + ' ' + (60 - Math.sin(i * .5) * 2).toFixed(1) + ' l3 -5 l3 5Z" fill="' + shade(a.top, -.25) + '"/>';   // とげの すじ
+    o += '<ellipse cx="218" cy="80" rx="9" ry="5" fill="#1e1a16" opacity=".75"/>';   // 胸びれの 上の 黒い もよう
+    o += '<path d="M264 96 Q270 100 278 96" stroke="' + shade(a.top, -.45) + '" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    return o + EYE_(252, 70, 4) + '<ellipse cx="200" cy="66" rx="40" ry="4" fill="#fff" opacity=".18"/>';
+  }
+});
+/* 今までの 絵に たす ところ（もとの 絵は そのまま。たりない ところだけ 上に かさねる） */
+{
+  const seal0 = SEA_ART.seal;
+  SEA_ART.seal = function (a, id, sil) {
+    let o = seal0(a, id, sil);
+    if (a.trunk) o += '<path d="M234 64 Q258 60 267 76 Q272 92 262 99 Q251 103 247 93 Q245 85 236 84Z" fill="' + (sil ? "#061019" : shade(a.col, .04)) + '"/>' + (sil ? "" : '<path d="M250 70 q8 3 9 11 M254 84 q4 3 3 8" stroke="' + shade(a.col, -.22) + '" stroke-width="1.2" fill="none" opacity=".5"/><ellipse cx="257" cy="98" rx="2.6" ry="2" fill="' + shade(a.col, -.45) + '"/>');   // ゾウアザラシの はな
+    if (sil) return o;
+    if (a.harp) o += '<path d="M198 50 Q186 76 160 88 Q128 100 102 84 Q92 72 96 58 Q104 72 116 78 Q140 88 162 78 Q182 68 188 48Z" fill="' + a.harp + '" opacity=".92"/><path d="M206 50 Q234 46 248 62 Q262 74 258 90 Q246 96 236 92 Q222 82 214 66Z" fill="' + a.harp + '"/>';   // タテゴトアザラシの 黒い 顔と、背中の たてごと形
+    if (a.bigEye || a.harp) o += EYE_(222, 64, a.bigEye || 5.5, a.harp ? "#5a5e66" : null);
+    return o;
+  };
+  const whale0 = SEA_ART.whale;
+  SEA_ART.whale = function (a, id, sil) {
+    let o = whale0(a, id, sil);
+    if (!sil && a.scars) for (let i = 0; i < 22; i++) { const x = 80 + (i * 53) % 170, y = 60 + (i * 29) % 30; o += '<path d="M' + x + ' ' + y + ' q' + (8 + i % 4 * 3) + ' ' + (i % 2 ? -3 : 3) + ' ' + (16 + i % 5 * 3) + ' ' + (i % 3 - 1) * 2 + '" stroke="' + a.scars + '" stroke-width="' + (1 + i % 2 * .6) + '" fill="none" opacity=".75" stroke-linecap="round"/>'; }   // ハナゴンドウの 白い きずあと
+    if (!sil && a.bigEye) o += EYE_(a.ex || 256, a.ey || 72, a.bigEye);
+    return o;
+  };
+  const ray0 = SEA_ART.ray;
+  SEA_ART.ray = function (a, id, sil) {
+    let o = ray0(a, id, sil);
+    if (!sil && a.tee) o += '<path d="M204 46 L204 68 Q186 58 160 36 Q184 40 204 46Z M204 104 L204 82 Q186 92 160 114 Q184 110 204 104Z" fill="' + a.tee + '"/><path d="M240 75 Q236 62 222 60 Q190 54 140 6 M240 75 Q236 88 222 90 Q190 96 140 144" stroke="' + a.tee + '" stroke-width="1.6" fill="none" opacity=".45"/>' + EYE_(232, 62, 3.2) + EYE_(232, 88, 3.2);   // オニイトマキエイ：かたの 白い もようの 前の ふちが まっすぐ（T字）。ふちが うすく 白い
+    return o;
+  };
+  const snail0 = SEA_ART.snail;
+  SEA_ART.snail = function (a, id, sil) {
+    if (a.v !== "conch") return snail0(a, id, sil);
+    const K = c => sil ? "#061019" : c; let o = "";   // ピンクガイ（直し案）：左上へ だんだんに とがる まきの 先、かたに 高く とがった こぶが ならぶ、右上へ 大きく ひろがる ふち、口は ピンク
+    const col = a.col, dk = shade(col, -.12);
+    // 右上へ ひろがる ふち（うら がわ）
+    o += '<path d="M150 60 Q200 30 268 8 Q274 40 258 74 Q244 104 214 118 L170 112Z" fill="' + K(shade(col, .05)) + '" stroke="' + K(shade(col, -.28)) + '" stroke-width="1.4"/>';
+    // 本体（いちばん 大きな まき）
+    o += '<path d="M58 88 Q60 64 92 56 Q140 46 186 54 Q222 62 236 84 Q240 110 206 124 Q150 136 96 122 Q60 112 58 88Z" fill="' + K(col) + '" stroke="' + K(shade(col, -.28)) + '" stroke-width="1.4"/>';
+    // まきの 先：左上へ のびる とんがり（だんだんの すじと 小さな こぶ）
+    o += '<path d="M64 74 Q48 50 34 16 Q62 28 108 54Z" fill="' + K(dk) + '" stroke="' + K(shade(col, -.3)) + '" stroke-width="1.4"/>';
+    [[90, 48], [72, 37], [56, 28], [44, 21]].forEach(([x, y], i) => { const r = 6 - i; o += '<path d="M' + (x - r) + ' ' + (y + 3) + ' Q' + (x - 1) + ' ' + (y - r * 1.4) + ' ' + x + ' ' + (y - r * 1.8) + ' Q' + (x + 1) + ' ' + (y - r * 1.4) + ' ' + (x + r) + ' ' + (y + 3) + 'Z" fill="' + K(dk) + '"/>'; });
+    // かたの 高い こぶ
+    [[100, 52, 20], [124, 47, 26], [148, 45, 30], [172, 48, 26], [194, 54, 18]].forEach(([x, y, h]) => { o += '<path d="M' + (x - 10) + ' ' + (y + 8) + ' Q' + (x - 3) + ' ' + (y - h * .5) + ' ' + x + ' ' + (y - h) + ' Q' + (x + 3) + ' ' + (y - h * .5) + ' ' + (x + 10) + ' ' + (y + 8) + 'Z" fill="' + K(col) + '"/>'; });
+    if (sil) return o;
+    // こぶと まきの かげ
+    [[100, 52, 20], [124, 47, 26], [148, 45, 30], [172, 48, 26], [194, 54, 18]].forEach(([x, y, h]) => o += '<path d="M' + (x + 1) + ' ' + (y - h + 4) + ' Q' + (x + 3) + ' ' + (y - h * .4) + ' ' + (x + 8) + ' ' + (y + 6) + '" stroke="' + shade(col, -.2) + '" stroke-width="1.4" fill="none" opacity=".6"/>');
+    o += '<path d="M60 66 Q78 58 100 52 M52 52 Q68 44 84 42 M44 38 Q56 32 66 32" stroke="' + shade(col, -.32) + '" stroke-width="1.4" fill="none" opacity=".65"/>';
+    // ピンクの 口（ふちの 内がわ）
+    o += '<defs><radialGradient id="' + id + 'cq" cx=".35" cy=".7" r=".75"><stop offset="0" stop-color="#d84a6e"/><stop offset=".45" stop-color="' + a.mouth + '"/><stop offset="1" stop-color="#fde6da"/></radialGradient></defs>';
+    o += '<path d="M168 104 Q160 80 176 62 Q210 36 262 14 Q264 44 250 72 Q236 100 208 112 Q186 116 168 104Z" fill="url(#' + id + 'cq)"/>';
+    o += '<path d="M176 100 Q196 84 236 50" stroke="#fff" stroke-width="3" opacity=".35" fill="none" stroke-linecap="round"/>';
+    // 本体の すじ
+    for (let i = 0; i < 4; i++) o += '<path d="M' + (70 + i * 6) + ' ' + (90 + i * 7) + ' Q' + (120 + i * 4) + ' ' + (100 + i * 8) + ' ' + (166 + i * 2) + ' ' + (102 + i * 5) + '" stroke="' + shade(col, -.16) + '" stroke-width="1.3" fill="none" opacity=".5"/>';
+    return o + '<ellipse cx="116" cy="74" rx="24" ry="6" fill="#fff" opacity=".35"/>';
+  };
+  const octo0 = SEA_ART.octopus;
+  SEA_ART.octopus = function (a, id, sil) {
+    if (a.v !== "grimpo") return octo0(a, id, sil);
+    const K = c => sil ? "#061019" : c; let o = "";   // ジュウモンジダコ：たてに 長い つりがねの 体、上の ほうに 大きな 耳の ひれ、うでの 間の まくが ひらひらの スカート
+    o += '<path d="M96 58 Q66 30 58 54 Q64 72 100 76Z" fill="' + K(shade(a.col, -.06)) + '"/><path d="M204 58 Q234 30 242 54 Q236 72 200 76Z" fill="' + K(shade(a.col, -.06)) + '"/>';   // 耳の ひれ
+    o += '<path d="M150 14 Q206 14 206 68 Q206 90 196 100 Q230 112 236 134 Q216 128 204 138 Q192 128 178 140 Q164 130 150 142 Q136 130 122 140 Q108 128 96 138 Q84 128 64 134 Q70 112 104 100 Q94 90 94 68 Q94 14 150 14Z" fill="' + K(a.col) + '" fill-opacity="' + (sil ? 1 : .95) + '"/>';
+    if (sil) return o;
+    [[76, 132], [108, 136], [136, 138], [164, 138], [192, 136], [224, 132]].forEach(([x, y]) => o += '<path d="M' + x + ' ' + (y - 6) + ' q4 8 -2 12" stroke="' + shade(a.col, -.12) + '" stroke-width="3" fill="none" stroke-linecap="round"/>');
+    o += '<path d="M150 20 Q190 22 196 60" stroke="#fff" stroke-width="6" fill="none" opacity=".35" stroke-linecap="round"/>';
+    for (let i = 0; i < 7; i++) o += '<circle cx="' + (112 + i * 13) + '" cy="' + (118 + (i % 2) * 6) + '" r="1.8" fill="' + shade(a.col, -.2) + '" opacity=".5"/>';
+    return o + EYE_(128, 78, 5.5) + EYE_(172, 78, 5.5) + '<ellipse cx="118" cy="92" rx="7" ry="4" fill="#ff9aa8" opacity=".4"/><ellipse cx="182" cy="92" rx="7" ry="4" fill="#ff9aa8" opacity=".4"/>';
+  };
+}
+SHARKS.push(
+  K_("onikamasu", "オニカマス", "fish", 170, 3, "世界の あたたかい 海の サンゴしょうや マングローブ（カリブ海・インド洋・太平洋）", "魚", "じっと まって いて、えものに 一気に とびかかる。その ときの 速さは 時速 50kmを こえる", "カマスの なかまで いちばん 大きい。下あごが 前に 出た 大きな 口と、するどい 歯が 目じるし。体の わきに 黒い 点が ちらばる。",
+    F_({ top: "#56697c", bot: "#eef2f4", fin: "#3a4450", tailCol: "#2e3440", h: .1, tm: .55, snout: "pointed", tail: "fork", d: [.5, .57, 12], an: [.18, .27, 10], eye: 4.6, mouth: "teeth", pat: [{ k: "bars", at: [.2, .27, .34, .41, .48, .55, .62, .69, .76], w: .022, col: "#36485a", down: -3 }, { k: "spots", n: 9, r: 2.4, col: "#161a20", band: [.3, .7] }] })),
+  K_("caribmejiro", "カリブメジロザメ", "power", 300, 3, "大西洋の 西の あたたかい 海（カリブ海・フロリダ〜ブラジル）", "魚、イカ・タコ", "よく 泳ぐ サメなのに、海の 底や ほらあなで じっと 動かずに やすむ すがたが 見られる", "カリブ海の サンゴしょうで いちばん よく 会える サメ。ひれには 目立つ もようが なく、ひれの 先が 少し こい 色。",
+    { top: "#7a786c", bot: "#f2f0ea", d: .16, snout: "round", tail: "hetero", d1: [40, 36], pect: [44, 28], eye: 4.5 }),
+  K_("shinonomesakatazame", "シノノメサカタザメ", "ray", 270, 4, "インド洋〜太平洋の 西の あたたかい 海（水深 90mまで）の 砂や どろの 底", "魚、エビ・カニ、貝", "頭や 背中に、とげの ある でこぼこの すじが 何本も 走って いる", "丸い 頭と、サメの ような 大きな 背びれと しっぽを もつ エイの なかま。白い 点の もようが ある。数が とても へって いる。",
+    { f: "sharkray", top: "#8e8672", bot: "#ece6d8", spot: "#f6f2e6" }),
+  K_("pinkgai", "ピンクガイ", "mollusc", 35, 2, "カリブ海と 大西洋の 西の あたたかい 海（海草の 原っぱ）", "海草や 海そう", "からの 口が あざやかな ピンク色。大人に なると からの ふちが 大きく ひろがり、あついほど 年を とって いる", "カリブ海で いちばん 大きな 巻貝の ひとつ。英語では「クイーンコンク（女王の 貝）」と よばれる。足で からを 前に 投げる ように して、はねて 進む。",
+    { f: "snail", v: "conch", col: "#ead6ae", mouth: "#f4a6a0" }),
+  K_("nassau", "ナッソーグルーパー", "fish", 100, 4, "大西洋の 西の あたたかい 海（カリブ海・バハマ・フロリダ）の サンゴしょう", "魚、カニ、小さな エビ", "冬の 満月の ころ、毎年 同じ 場所に たくさん 集まって、いっせいに 卵を うむ", "体の 色は すむ 場所で かわる。こげ茶色の 太い しまと、しっぽの つけねの 黒い 点が 目じるし。ぜつめつが とても 心配されて いる。",
+    F_({ top: "#c4a078", bot: "#f0e4ce", fin: "#b08a64", h: .25, tm: .5, snout: "blunt", tail: "round", d: [.25, .78, 14, 1], an: [.15, .35, 14], eye: 4.6, mouth: "big", pat: [{ k: "bars", at: [.24, .42, .6, .78], w: .06, col: "#6e4a2c" }, { k: "stripe", y: -.1, col: "#5a3a22", w: 2.6, from: .82, to: .99 }, { k: "patch", t: .1, y: -.7, col: "#1e1610", sq: true }] })),
+  K_("oniitomakiei", "オニイトマキエイ", "ray", 700, 3, "世界の あたたかい 外洋", "動物プランクトン", "頭の 前の 2まいの ひれを ひろげて、大きな 四角い 口へ プランクトンを 流しこむ", "エイの なかまで いちばん 大きく、ひれの はしから はしまで 7mにも なる。背中は 黒く、かたの 白い もようの 前の ふちが まっすぐ（T字形）。",
+    { f: "ray", v: "manta", top: "#1c2128", mark: "#1c2128", tee: "#f2f4f6" }),
+  K_("shiroshumoku", "シロシュモクザメ", "power", 500, 3, "世界の あたたかい〜すずしい 海", "魚、イカ、サメ・エイ", "夏に なると すずしい 水を おって、何百〜何千びきの 大きな 群れで 旅を する ことが ある", "ハンマーの 形の 頭の 前の ふちに、くぼみが なく なめらか。シュモクザメの なかまで 2番目に 大きい。",
+    { view: "top", body: "hammer", top: "#6c7a6e" }),
+  K_("hanagondou", "ハナゴンドウ", "whale", 300, 3, "世界の あたたかい〜すずしい 海の、大陸の まわり", "イカ", "体じゅうに 白い きずの あとが たくさん あり、それが 目じるしに なる", "くちばしが なく、まるい 頭の イルカ。イカが 大好きで、600m 近くまで もぐって さがす。10〜50頭の 群れで くらす。",
+    { f: "whale", col: "#8e959c", belly: "#e2e6e8", h: 18, dorsal: "tall", dx: 150, pec: 18, px: 214, scars: "#f6f8f8", bigEye: 3.2, ex: 262, ey: 72 }),
+  K_("kouteipenguin", "コウテイペンギン", "bird", 100, 4, "南極", "魚、オキアミ、イカ", "冬の 南極で 子そだてを する ただ 1つの ペンギン。お父さんが 2か月 いじょう 卵を あたためる", "いちばん 大きな ペンギン（高さ 1mほど）。耳の あたりの こい 黄色と、むねの うすい 黄色が 目じるし。500mより 深く もぐれる。",
+    { f: "penguin", v: "emperor", back: "#24272e", feet: "#3a3a40" }),
+  K_("taiseiyousake", "タイセイヨウサケ", "fish", 100, 2, "北大西洋と、そこに 流れこむ ヨーロッパや 北アメリカの 川", "小魚、エビの なかま", "太平洋の サケと ちがい、卵を うんだ あとも 生きのこって、また 海へ もどる ものが いる", "川で 生まれ、海で 大きく なり、川へ もどって 卵を うむ。ノルウェーなどで たくさん 育てられて いる。",
+    F_({ top: "#5a7088", bot: "#f2f4f6", fin: "#6a7888", h: .19, snout: "pointed", tail: "trunc", d: [.5, .62, 14], an: [.15, .3, 10], mouth: "big", adipose: true, pat: [{ k: "spots", n: 16, r: 2, col: "#1e2228", band: [-.9, -.2] }] })),
+  K_("minamizouazarashi", "ミナミゾウアザラシ", "mammal", 580, 4, "南極の まわりの 島々と 冷たい 海", "イカ、魚", "2000mより 深く もぐった 記録が ある。クジラの なかまを のぞくと、空気を すう 生きもので いちばん 深く もぐる", "オスの 鼻は ゾウの 鼻の ように ふくらみ、大きな 声で ほえる ときに 使う。オスは 3トンを こえる、いちばん 大きな アザラシ。",
+    { f: "seal", col: "#857a70", belly: "#a89c90", wrink: true, trunk: true, bigEye: 6.5 }),
+  K_("tategotoazarashi", "タテゴトアザラシ", "mammal", 200, 3, "北大西洋と 北極の 海（氷の 上で 子そだて）", "魚、エビの なかま", "赤ちゃんは 生まれてから 2〜3週間、まっ白な 毛に つつまれて いる", "大人は 銀色の 体に、黒い 顔と、背中の 黒い もようが 楽器の たてごとの 形に 見える。目は まっ黒。",
+    { f: "seal", col: "#c4c8cc", belly: "#e6e8ea", harp: "#26282e" }),
+  K_("hokkyokuiwana", "ホッキョクイワナ", "fish", 100, 2, "北極の まわりの 冷たい 海と、川や 湖", "小魚、エビの なかま、虫", "川や 湖に すむ 魚の 中で、いちばん 北に すむ", "サケや イワナの なかま。背中は こい 色で、おなかは 赤や 黄色や 白。すむ 場所や 季節で 色が かわる。ふつうは 40cmほど。",
+    F_({ top: "#4e5e4c", bot: "#e8643c", fin: "#d8502a", h: .21, snout: "round", tail: "trunc", d: [.5, .62, 14], an: [.15, .3, 10], mouth: "big", adipose: true, pat: [{ k: "spots", n: 18, r: 2, col: "#f4e6cc", band: [-.9, -.05] }] })),
+  K_("pompeiiworm", "ポンペイワーム", "worm", 13, 4, "東太平洋の 深海の、熱い 水が ふき出す えんとつ", "体に つく さいきんが つくる 栄養", "しっぽの 先は 50℃の 熱い 水の 中、頭は 22℃ほどの 水に 出して くらす", "長さ 10cmほどの ゴカイの なかま。体に さいきんが びっしり ついて、毛の ように 見える。頭には 赤い えらが ある。1980年代に ガラパゴス諸島の 近くで 見つかった。",
+    { f: "pompeii", col: "#f2d6cc", tube: "#cfc8bc", gill: "#e8343a" }),
+  K_("juumonjidako", "ジュウモンジダコ", "mollusc", 30, 3, "世界中の 深海（水深 1000〜7000m）", "エビ・カニの なかま、貝、ゴカイ", "耳の ような 2まいの ひれを パタパタ 動かして 泳ぐ。英語では「ダンボ・オクトパス」と よばれる", "ぷるぷるの 体の 深海の タコ。ほかの タコの ように 水を ふき出して 進むのでは なく、ひれで ゆっくり 泳ぐ。",
+    { f: "octopus", v: "grimpo", col: "#f4dcd8" }),
+  K_("hikariboya", "ヒカリボヤ", "uninamako", 60, 2, "世界中の あたたかい〜すずしい 海（昼は 250mより 深く、夕方に 上がって くる）", "プランクトン", "さわると、青緑色に 明るく 光る。名前の「ピロソマ」は ギリシャ語で「火の 体」", "小さな 生きものが 何千も 集まって できた、つつの 形の 体。長さ 60cmにも なる。毎日 何百mも 上がったり 下がったり する。",
+    { f: "pyrosome", col: "#f2c8d4", glow: "#7ff2e8" }),
+  K_("orangeroughy", "オレンジラフィー", "fish", 75, 3, "ニュージーランドや オーストラリア、大西洋などの 深海（水深 180〜1800m）の 冷たい 水", "エビの なかま、小魚、イカ", "200年 いじょう 生きる ことが ある、とても 長生きの 魚", "生きて いる ときは あざやかな 赤レンガ色。頭に ほそい みぞが たくさん ある。育つのが とても ゆっくりで、20年 いじょう たたないと 卵を うまない。",
+    F_({ top: "#e4502c", bot: "#f2925c", fin: "#e8683a", h: .38, tm: .5, snout: "blunt", tail: "fork", d: [.3, .7, 18, 1], an: [.12, .3, 14], eye: 9, eyeCol: "#d8e0ec", mouth: "big" })),
+  K_("americamanatee", "アメリカマナティー", "whale", 460, 3, "カリブ海と、アメリカ東部〜ブラジル北部の あたたかい 海辺や 川", "水草や 海草", "体じゅうの 毛は とても びんかんな ひげで、えさを さがしたり、道を 知ったり するのに 使う", "ジュゴンの なかま。しっぽは ジュゴンと ちがって、うちわの ように 丸い。69さいまで 生きた マナティーも いる。",
+    { f: "manatee", col: "#8a8478", belly: "#a8a092", moss: "#6a8a5a" }),
+  K_("capepenguin", "ケープペンギン", "bird", 70, 3, "アフリカ南部の 海岸（南アフリカ・ナミビア）", "魚、イカ", "ロバの ような 大きな 鳴き声を 出す", "目の 上に ピンク色の はだが あり、むねに 黒い おびが 1本 ある。いまは ペンギンの 中で いちばん 数が 少なく、ぜつめつが とても 心配されて いる。",
+    { f: "penguin", v: "cape", back: "#1e1e22", feet: "#2a2a2e" }),
+  K_("galapagosashika", "ガラパゴスアシカ", "mammal", 250, 3, "ガラパゴス諸島（エクアドル）", "イワシ、イカ、タコ", "アシカの なかまで いちばん 小さい", "ガラパゴス諸島の はまで、のんびり ねそべって いる すがたが よく 見られる。オスは 大人に なると、おでこが 少し もりあがる。",
+    { f: "seal", col: "#8c7258", belly: "#b39a7e", ear: true, flip: true, whisk: "long", snout: 1, bigEye: 6 })
+);
+
 SHARKS.forEach((s, i) => s.no = String(i + 1).padStart(3, "0"));
 const byId = id => SHARKS.find(s => s.id === id);
 const sizeTxt = cm => cm >= 100 ? "最大 約" + (cm / 100) + "m" : "最大 約" + cm + "cm";
@@ -4684,8 +4874,8 @@ const JP_WORDS = /日本|世界中|北海道|本州|九州|四国|沖縄|駿河|
 const WHY_VERIFIED = {
   fragile: ["sakegashira", "akanamada", "hohojiro", "rabuka", "ryuguunotsukai", "mitsukuri", "chouchinankou", "mendako", "scalyfoot"],
   newsp: ["yokozunaiwashi", "psychedelicfrog", "mimicoctopus"],
-  nojp: ["sheephead", "umiiguana", "redlipbat", "raigyodamashi", "hyouazarashi", "taiseiyoudara", "christmasakagani", "hawaiimonk"],
-  endangered: ["europeunagi", "hawaiimonk", "kanmuribudai", "kabutogani", "mahseer", "coelacanth", "osagame", "itou", "mekongcatfish"]
+  nojp: ["caribmejiro", "nassau", "kouteipenguin", "minamizouazarashi", "tategotoazarashi", "americamanatee", "capepenguin", "galapagosashika", "pompeiiworm", "sheephead", "umiiguana", "redlipbat", "raigyodamashi", "hyouazarashi", "taiseiyoudara", "christmasakagani", "hawaiimonk"],
+  endangered: ["shinonomesakatazame", "nassau", "capepenguin", "galapagosashika", "europeunagi", "hawaiimonk", "kanmuribudai", "kabutogani", "mahseer", "coelacanth", "osagame", "itou", "mekongcatfish"]
 };
 function whyTags(s) {
   if (s.r < 3 || s.r > 4) return [];
@@ -4705,8 +4895,9 @@ function whyTags(s) {
 const TAXO_RAW = "aozame:軟骨魚類;yoshikiri:軟骨魚類;nezumi:軟骨魚類;hohojiro:軟骨魚類;itachi:軟骨魚類;oomejiro:軟骨魚類;hirashumoku:軟骨魚類;kasu:軟骨魚類;oose:軟骨魚類;neko:軟骨魚類;rabuka:軟骨魚類;mitsukuri:軟骨魚類;daruma:軟骨魚類;nishiondenn:軟骨魚類;fujikujira:軟骨魚類;jinbee:軟骨魚類;uba:軟骨魚類;megamouth:軟骨魚類;mizu:刺胞動物;aka:刺胞動物;echizen:刺胞動物;eboshi:刺胞動物;kanmuri:刺胞動物;giyaman:刺胞動物;tako:刺胞動物;sakasa:刺胞動物;beni:刺胞動物;habu:刺胞動物;andon:刺胞動物;daiou:刺胞動物;kamuri:刺胞動物;owan:刺胞動物;kiirohagi:条鰭類;harisenbon:条鰭類;ojisan:条鰭類;aoumigame:爬虫類;chinanago:条鰭類;nanyouhagi:条鰭類;manta:軟骨魚類;bluejelly:刺胞動物;kakurekumanomi:条鰭類;debasuzumedai:条鰭類;kingyohanadai:条鰭類;purplequeen:条鰭類;sazanamiyakko:条鰭類;tsunodashi:条鰭類;furisodeebi:甲殻類;nishikianago:条鰭類;torafuzame:軟骨魚類;yumeumeiro:条鰭類;tenguhakofugu:条鰭類;fueyakkodai:条鰭類;togechou:条鰭類;montsukihagi:条鰭類;rouninaji:条鰭類;otohimeebi:甲殻類;hekoayu:条鰭類;akebonohaze:条鰭類;nemuribuka:軟骨魚類;tenguhagi:条鰭類;soushihagi:条鰭類;nisegoishi:条鰭類;montsukihanadai:条鰭類;shirobosiakamoebi:甲殻類;tamakai:条鰭類;gurukuma:条鰭類;nishikiebi:甲殻類;honsomewakebera:条鰭類;kurogane:軟骨魚類;yosujifuedai:条鰭類;shirowani:軟骨魚類;madako:軟体動物;aoriika:軟体動物;hirame:条鰭類;madai:条鰭類;utsubo:条鰭類;sakuradai:条鰭類;iseebi:甲殻類;hoshiei:軟骨魚類;kawahagi:条鰭類;izukasago:条鰭類;ishidai:条鰭類;isaki:条鰭類;suzuki:条鰭類;houbou:条鰭類;sagifue:条鰭類;kue:条鰭類;kobudai:条鰭類;kabuto:有櫛動物;baynettle:刺胞動物;maiwashi:条鰭類;manbou:条鰭類;itomakiei:軟骨魚類;katakuchi:条鰭類;maaji:条鰭類;buri:条鰭類;kobanzame:条鰭類;akashumoku:軟骨魚類;kitamizu:刺胞動物;clione:軟体動物;lumpfish:条鰭類;purplejelly:刺胞動物;fusaginpo:条鰭類;takaashigani:甲殻類;kinmedai:条鰭類;goushuukinme:条鰭類;sawagani:甲殻類;pirarucu:条鰭類;enzeru:条鰭類;amago:条鰭類;arowana:条鰭類;penguintetra:条鰭類;oikawa:条鰭類;kachama:条鰭類;ooyokokubi:爬虫類;redpiranha:条鰭類;mizudako:軟体動物;ookamiuo:条鰭類;hokke:条鰭類;hanasakigani:甲殻類;tarabagani:甲殻類;kegani:甲殻類;madara:条鰭類;shirozake:条鰭類;benizake:条鰭類;dangouo:条鰭類;kitayurei:刺胞動物;hokkokuakaebi:甲殻類;ohyou:条鰭類;garibaldi:条鰭類;nishin:条鰭類;kichiji:条鰭類;chouchinankou:条鰭類;daiougusoku:甲殻類;mendako:軟体動物;ryuguunotsukai:条鰭類;houraieso:条鰭類;demenigisu:条鰭類;gindara:条鰭類;akamutsu:条鰭類;nutaunagi:無顎類;akazaebi:甲殻類;benizuwai:甲殻類;koumoridako:軟体動物;tenganmuneeso:条鰭類;iwana:条鰭類;yamame:条鰭類;ayu:条鰭類;nihonunagi:条鰭類;namazu:条鰭類;koi:条鰭類;dojou:条鰭類;denkiunagi:条鰭類;corydoras:条鰭類;redtail:条鰭類;neontetra:条鰭類;discus:条鰭類;polkadotray:軟骨魚類;medaka:条鰭類;ishigame:爬虫類;kuromaguro:条鰭類;katsuo:条鰭類;masaba:条鰭類;sanma:条鰭類;tobiuo:条鰭類;shiira:条鰭類;bashoukajiki:条鰭類;yogore:軟骨魚類;kanpachi:条鰭類;akaumigame:爬虫類;osagame:爬虫類;gingameaji:条鰭類;surumeika:軟体動物;hotaruika:軟体動物;kasago:条鰭類;mebaru:条鰭類;ainame:条鰭類;kurodai:条鰭類;mejina:条鰭類;haokoze:条鰭類;gonzui:条鰭類;kouika:軟体動物;hyoumondako:軟体動物;minokasago:条鰭類;umazurahagi:条鰭類;torafugu:条鰭類;kusafugu:条鰭類;hakofugu:条鰭類;maanago:条鰭類;tatsunootoshigo:条鰭類;shirogisu:条鰭類;gazami:甲殻類;kurumaebi:甲殻類;akaei:軟骨魚類;tsumaguro:軟骨魚類;napoleon:条鰭類;hamakumanomi:条鰭類;mongarakawahagi:条鰭類;murasamemongara:条鰭類;hatatatedai:条鰭類;chouchouuo:条鰭類;nanyoutsubameuo:条鰭類;nishikiyakko:条鰭類;tatejimakinchaku:条鰭類;isomaguro:条鰭類;hanahigeutsubo:条鰭類;gomamongara:条鰭類;minamihakofugu:条鰭類;nanyoubudai:条鰭類;kumanomi:条鰭類;ootenjiku:軟骨魚類;nishikiteguri:条鰭類;kaeruankou:条鰭類;rurisuzumedai:条鰭類;colossal:軟体動物;koriuo:条鰭類;daiouika:軟体動物;yokozunaiwashi:条鰭類;shinkaikusauo:条鰭類;onikinme:条鰭類;fukurounagi:条鰭類;blobfish:条鰭類;coelacanth:肉鰭類;kurokajiki:条鰭類;mekajiki:条鰭類;akamanbou:条鰭類;murasakidako:軟体動物;aominoumiushi:軟体動物;mimicoctopus:軟体動物;pygmyseahorse:条鰭類;psychedelicfrog:条鰭類;ishinagi:条鰭類;himantura:軟骨魚類;goliathtiger:条鰭類;mahaze:条鰭類;bora:条鰭類;ishigakidai:条鰭類;kyusen:条鰭類;nenbutsudai:条鰭類;suzumedai:条鰭類;sorasuzumedai:条鰭類;kagokakidai:条鰭類;takanohadai:条鰭類;kijihata:条鰭類;matoudai:条鰭類;oniokoze:条鰭類;aigo:条鰭類;ginpo:条鰭類;hiiragi:条鰭類;misujiryukyu:条鰭類;rokusensuzumedai:条鰭類;akahimeji:条鰭類;tsuyubera:条鰭類;adeyakko:条鰭類;aoyagara:条鰭類;herayagara:条鰭類;hanaminokasago:条鰭類;irobudai:条鰭類;shimahagi:条鰭類;fuuraichou:条鰭類;sujiara:条鰭類;hanagoi:条鰭類;takasago:条鰭類;hirenagahagi:条鰭類;kihada:条鰭類;mebachi:条鰭類;binnaga:条鰭類;sawara:条鰭類;hiramasa:条鰭類;marusouda:条鰭類;tsumuburi:条鰭類;akakamasu:条鰭類;datsu:条鰭類;sayori:条鰭類;urumeiwashi:条鰭類;shimagatsuo:条鰭類;amimongara:条鰭類;ibodai:条鰭類;burimodoki:条鰭類;kurosoi:条鰭類;magarei:条鰭類;hatahata:条鰭類;suketoudara:条鰭類;tokubire:条鰭類;sakuramasu:条鰭類;karafutomasu:条鰭類;hoteiuo:条鰭類;komai:条鰭類;nametagarei:条鰭類;shishamo:条鰭類;botanebi:甲殻類;kemushikajika:条鰭類;yanaginomai:条鰭類;souhachi:条鰭類;kiankou:条鰭類;norogenge:条鰭類;yumekasago:条鰭類;akagutsu:条鰭類;midorifusaankou:条鰭類;kusauo:条鰭類;medai:条鰭類;ara:条鰭類;mutsu:条鰭類;ezoisoainame:条鰭類;gisu:条鰭類;irakoanago:条鰭類;ooenkougani:甲殻類;tsubodai:条鰭類;nanukazame:軟骨魚類;ugui:条鰭類;ginbuna:条鰭類;nigoi:条鰭類;kawamutsu:条鰭類;yaritanago:条鰭類;yoshinobori:条鰭類;kajika:条鰭類;mokuzugani:甲殻類;tenagaebi:甲殻類;itou:条鰭類;guppy:条鰭類;oscar:条鰭類;asianarowana:条鰭類;alligatorgar:条鰭類;mekongcatfish:条鰭類;sazae:軟体動物;kuroawabi:軟体動物;hamaguri:軟体動物;asari:軟体動物;aoigai:軟体動物;horagai:軟体動物;amboina:軟体動物;ooshako:軟体動物;hanabiradakara:軟体動物;kumogai:軟体動物;hotategai:軟体動物;hokkigai:軟体動物;ezobora:軟体動物;oumugai:軟体動物;scalyfoot:軟体動物;yamatoshijimi:軟体動物;kawanina:軟体動物;mahseer:条鰭類;oogusokumushi:甲殻類;hashikinme:条鰭類;ebisudai:条鰭類;zuwaigani:甲殻類;ookoshiori:甲殻類;torazame:軟骨魚類;beniteguri:条鰭類;igaguri:甲殻類;oohomora:甲殻類;chikamekintoki:条鰭類;hikarikinme:条鰭類;wanukefuuryuuuo:条鰭類;nokogirizame:軟骨魚類;goemonkoshiori:甲殻類;satsumahaori:環形動物;okinaebisu:軟体動物;aburabouzu:条鰭類;amerikazarigani:甲殻類;nijimasu:条鰭類;honyadokari:甲殻類;ezomebaru:条鰭類;muroaji:条鰭類;mitsuboshi:条鰭類;matsukawa:条鰭類;togekurigani:甲殻類;oshorokoma:条鰭類;suma:条鰭類;shimaaji:条鰭類;yashahaze:条鰭類;kabutogani:鋏角類;oosanshouuo:両生類;akanamada:条鰭類;kyuriuo:条鰭類;chika:条鰭類;kurogashira:条鰭類;ishigarei:条鰭類;ezobafununi:棘皮動物;kitamurasakiuni:棘皮動物;manamako:棘皮動物;yariika:軟体動物;akagarei:条鰭類;kitanohokke:条鰭類;meganekasube:軟骨魚類;aburatsunozame:軟骨魚類;yanagidako:軟体動物;aburagani:甲殻類;maboya:尾索動物;togekajika:条鰭類;karasugarei:条鰭類;kitsunemebaru:条鰭類;fuusenuo:条鰭類;budouebi:甲殻類;wakasagi:条鰭類;tairikubaratanago:条鰭類;motsugo:条鰭類;bluegill:条鰭類;blackbass:条鰭類;herabuna:条鰭類;kingyo:条鰭類;sujiebi:甲殻類;aburahaya:条鰭類;akamimigame:爬虫類;kusagame:爬虫類;kamuruchi:条鰭類;suppon:爬虫類;teppouuo:条鰭類;haigyo:肉鰭類;mutsugorou:条鰭類;kawayatsume:無顎類;polypterus:条鰭類;nihonzarigani:甲殻類;itoyo:条鰭類;sakegashira:条鰭類;mizuuo:条鰭類;kanmuribudai:条鰭類;wonderpus:軟体動物;hokkyokudara:条鰭類;piraiba:条鰭類;umitengu:条鰭類;nishikifuuraiuo:条鰭類;kurotogarizame:軟骨魚類;sakebikunin:条鰭類;kunimasu:条鰭類;megalodon:軟骨魚類;sakatazame:軟骨魚類;semiebi:甲殻類;hanaokoze:条鰭類;yamatomeribe:軟体動物;namedango:条鰭類;ibaraganimodoki:甲殻類;bouzuginpo:条鰭類;tanakagenge:条鰭類;oounagi:条鰭類;jau:条鰭類;tarairon:条鰭類;kobushime:軟体動物;monhanashako:甲殻類;hanaika:軟体動物;borokasago:条鰭類;ginzame:軟骨魚類;torinoashi:棘皮動物;ibaragani:甲殻類;shironagasu:哺乳類;nagasu:哺乳類;zatou:哺乳類;minku:哺乳類;makkou:哺乳類;shachi:哺乳類;bandou:哺乳類;kamairuka:哺乳類;shiroiruka:哺乳類;ikkaku:哺乳類;sunameri:哺乳類;amazonkawairuka:哺乳類;chironex:刺胞動物;onidarumaokoze:条鰭類;erabuumihebi:爬虫類;gangaze:棘皮動物;onihitode:棘皮動物;subesube:甲殻類;mauisuna:刺胞動物;aobudai:条鰭類;hadakaiwashi:条鰭類;sakuraebi:甲殻類;nankyokuokiami:甲殻類;gomasaba:条鰭類;hirasuzuki:条鰭類;himeika:軟体動物;mahata:条鰭類;taimai:爬虫類;madaratobiei:軟骨魚類;maonaga:軟骨魚類;kamitsukigame:爬虫類;nokogirigazami:甲殻類;hokkaiebi:甲殻類;akame:条鰭類;ushimanbou:条鰭類;nokogiriei:軟骨魚類;mikadochouzame:条鰭類;leafyseadragon:条鰭類;yoroppaoonamazu:条鰭類;tsuchikujira:哺乳類;shirokurage:刺胞動物;hanagasakurage:刺胞動物;urikurage:有櫛動物;magochi:条鰭類;oyanirami:条鰭類;jugon:哺乳類;ooguchiboya:尾索動物;amakusakurage:刺胞動物;kamikurage:刺胞動物;fuusenkurage:有櫛動物;ginkakurage:刺胞動物;okamebunbuku:棘皮動物;seitakabunbuku:棘皮動物;sukashikashipan:棘皮動物;yumenamako:棘皮動物;senjunamako:棘皮動物;kairoudouketsu:海綿動物;irezumikonnyakuaji:条鰭類;tengaihata:条鰭類;onibouzugisu:条鰭類;miyakotanago:条鰭類;akafuusen:条鰭類;kokukujira:哺乳類;semikujira:哺乳類;okigondou:哺乳類;mikadoumiushi:軟体動物;kamasusawara:条鰭類;irukanji:刺胞動物;leaffish:条鰭類;ishiiruka:哺乳類";
 const TAXO_ADD_1113 = ";queenangel:条鰭類;komorizame:軟骨魚類;tarpon:条鰭類;flamingotan:軟体動物;rakko:哺乳類;masunosuke:条鰭類;sheephead:条鰭類;umiiguana:爬虫類;redlipbat:条鰭類;raigyodamashi:条鰭類;hyouazarashi:哺乳類;taiseiyoudara:条鰭類;americanlobster:甲殻類;europeunagi:条鰭類;christmasakagani:甲殻類;yashigani:甲殻類;portjackson:軟骨魚類;ozhaigyo:肉鰭類;tasukimongara:条鰭類;hawaiimonk:哺乳類";
 const TAXO_ADD_1121 = ";sandoctopus:軟体動物;hashinagairuka:哺乳類;mairuka:哺乳類;himeumigame:爬虫類;galapagoszame:軟骨魚類;americaooakaika:軟体動物;nishinezumizame:軟骨魚類;salpa:尾索動物;minamiafricaottosei:哺乳類;californiaashika:哺乳類;americakabutogani:鋏角類;hawaiimimiika:軟体動物;australiakouika:軟体動物;weedyseadragon:条鰭類;nishilemonzame:軟骨魚類;seiuchi:哺乳類;weddellazarashi:哺乳類;nileperch:条鰭類;frontosa:条鰭類;herachouzame:条鰭類;elephantnose:条鰭類";
-const TAXO = {}; (TAXO_RAW + TAXO_ADD_1113 + TAXO_ADD_1121).split(";").filter(Boolean).forEach(x => { const [id, g] = x.split(":"); TAXO[id] = g; });
-const GROUP_LABEL = { "哺乳類": "クジラ・イルカなどの なかま", "軟骨魚類": "サメ・エイの なかま", "条鰭類": "魚の なかま", "肉鰭類": "シーラカンス・ハイギョの なかま", "無顎類": "あごの ない 魚の なかま", "甲殻類": "エビ・カニの なかま", "鋏角類": "カブトガニの なかま", "軟体動物": "貝・イカ・タコの なかま", "刺胞動物": "クラゲ・サンゴの なかま", "有櫛動物": "クシクラゲの なかま", "棘皮動物": "ウニ・ヒトデ・ナマコの なかま", "尾索動物": "ホヤの なかま", "海綿動物": "カイメンの なかま", "環形動物": "ゴカイ・ハオリムシの なかま", "爬虫類": "カメ・ヘビの なかま", "両生類": "サンショウウオの なかま" };
+const TAXO_ADD_1125 = ";onikamasu:条鰭類;caribmejiro:軟骨魚類;shinonomesakatazame:軟骨魚類;pinkgai:軟体動物;nassau:条鰭類;oniitomakiei:軟骨魚類;shiroshumoku:軟骨魚類;hanagondou:哺乳類;kouteipenguin:鳥類;taiseiyousake:条鰭類;minamizouazarashi:哺乳類;tategotoazarashi:哺乳類;hokkyokuiwana:条鰭類;pompeiiworm:環形動物;juumonjidako:軟体動物;hikariboya:尾索動物;orangeroughy:条鰭類;americamanatee:哺乳類;capepenguin:鳥類;galapagosashika:哺乳類";   // 2026-11-25
+const TAXO = {}; (TAXO_RAW + TAXO_ADD_1113 + TAXO_ADD_1121 + TAXO_ADD_1125).split(";").filter(Boolean).forEach(x => { const [id, g] = x.split(":"); TAXO[id] = g; });
+const GROUP_LABEL = { "哺乳類": "クジラ・イルカなどの なかま", "軟骨魚類": "サメ・エイの なかま", "条鰭類": "魚の なかま", "肉鰭類": "シーラカンス・ハイギョの なかま", "無顎類": "あごの ない 魚の なかま", "甲殻類": "エビ・カニの なかま", "鋏角類": "カブトガニの なかま", "軟体動物": "貝・イカ・タコの なかま", "刺胞動物": "クラゲ・サンゴの なかま", "有櫛動物": "クシクラゲの なかま", "棘皮動物": "ウニ・ヒトデ・ナマコの なかま", "尾索動物": "ホヤの なかま", "海綿動物": "カイメンの なかま", "環形動物": "ゴカイ・ハオリムシの なかま", "爬虫類": "カメ・ヘビの なかま", "両生類": "サンショウウオの なかま", "鳥類": "ペンギンの なかま" };
 const EXTINCT = { megalodon: 1 };
 const TYOMI = { "冠クラゲ目": "かんむりくらげもく", "十脚目": "じっきゃくもく", "口脚目": "こうきゃくもく", "吸腔目": "きゅうこうもく", "有尾目": "ゆうびもく", "有鱗目": "ゆうりんもく", "等脚目": "とうきゃくもく", "裸殻翼足目": "らかくよくそくもく", "裸鰓目": "らさいもく", "軟クラゲ目": "やわくらげもく", "鯨偶蹄目": "くじらぐうていもく" };   // 2026-10-27 分類名は 漢字のまま 読みがなを そえる
 const tyomi = t => typeof t === "string" ? t.replace(new RegExp(Object.keys(TYOMI).join("|"), "g"), m => m + "（" + TYOMI[m] + "）") : t;
@@ -4715,7 +4906,7 @@ function taxoLabel(s) {
   return GROUP_LABEL[g] + (EXTINCT[s.id] ? "（ぜつめつ）" : "");
 }
 /* ずかんの 小さい カード用の みじかい なかま名 */
-const GROUP_SHORT = { "軟骨魚類": "サメ・エイ", "条鰭類": "さかな", "肉鰭類": "シーラカンス", "無顎類": "あごなし", "甲殻類": "エビ・カニ", "鋏角類": "カブトガニ", "軟体動物": "貝・イカ", "刺胞動物": "クラゲなど", "有櫛動物": "クシクラゲ", "棘皮動物": "ウニなど", "尾索動物": "ホヤ", "海綿動物": "カイメン", "環形動物": "ゴカイ", "爬虫類": "カメ・ヘビ", "両生類": "サンショウウオ", "哺乳類": "クジラなど" };
+const GROUP_SHORT = { "軟骨魚類": "サメ・エイ", "条鰭類": "さかな", "肉鰭類": "シーラカンス", "無顎類": "あごなし", "甲殻類": "エビ・カニ", "鋏角類": "カブトガニ", "軟体動物": "貝・イカ", "刺胞動物": "クラゲなど", "有櫛動物": "クシクラゲ", "棘皮動物": "ウニなど", "尾索動物": "ホヤ", "海綿動物": "カイメン", "環形動物": "ゴカイ", "爬虫類": "カメ・ヘビ", "両生類": "サンショウウオ", "哺乳類": "クジラなど", "鳥類": "ペンギン" };
 function taxoShort(s) {
   const g = typeof taxoOf === "function" ? (taxoOf(s) || {}).g : TAXO[s.id];
   return g ? GROUP_SHORT[String(g).replace(/（.*$/, "")] || "？" : s.r === 5 ? "でんせつ" : "？";   // 2026-10-31 「条鰭類（じょうきるい）」の 読みがなを はずして さがす
@@ -4725,7 +4916,7 @@ const RULE_DATE = "2026年10月21日";
 const RELEASE = { ishiiruka: 1, miyakotanago: 1, kokukujira: 1, semikujira: 1, jugon: 1, taimai: 1, tsuchikujira: 1, oosanshouuo: 1, aoumigame: 1, akaumigame: 1, shironagasu: 1, nagasu: 1, zatou: 1, makkou: 1, minku: 1, shachi: 1, bandou: 1, kamairuka: 1, sunameri: 1, rakko: 1, hyouazarashi: 1, hawaiimonk: 1, umiiguana: 1 };          // 本物は つかまえては いけない → つったら リリース
 const RULE_NOTE = { akame: 1, nokogiriei: 1, kamitsukigame: 1, shiroiruka: 1, ikkaku: 1, amazonkawairuka: 1, kabutogani: 1, ooshako: 1, nihonzarigani: 1, pirarucu: 1, kunimasu: 1, osagame: 1 }; // 場所や 時期に きまりが ある ことが ある
 /* 2026-11-13 ほにゅう類（クジラ・イルカ・アザラシ・ラッコ）と ウミイグアナは「つる」のでは なく「会う」：エサに 近よってきた ところに 出会い、はりには かけずに 見送る */
-const MEET = { rakko: "貝を 食べようと 近よってきた", hyouazarashi: "エサの 魚を ねらって 近よってきた", hawaiimonk: "エサの 魚を ねらって 近よってきた", umiiguana: "海そうを 食べに もぐってきた" };
+const MEET = { kouteipenguin: "エサの 魚を おって もぐってきた", capepenguin: "エサの 魚を おって もぐってきた", rakko: "貝を 食べようと 近よってきた", hyouazarashi: "エサの 魚を ねらって 近よってきた", hawaiimonk: "エサの 魚を ねらって 近よってきた", umiiguana: "海そうを 食べに もぐってきた" };
 const isMeet = f => !!f && !f.king && !!(MEET[f.id] || f.type === "whale" || f.type === "mammal");
 const meetTxt = f => MEET[f.id] || (/海草|海そう/.test(f.food || "") ? "海草を 食べに 近よってきた" : "エサの 魚を おって、船の そばに あらわれた");
 function ruleNote(id) {
@@ -4865,6 +5056,12 @@ SPOTS.shore.ids.push("minamiafricaottosei", "californiaashika", "americakabutoga
 SPOTS.reef.ids.push("weedyseadragon", "nishilemonzame");
 SPOTS.north.ids.push("seiuchi", "weddellazarashi");
 SPOTS.river.ids.push("nileperch", "frontosa", "herachouzame", "elephantnose");
+// 2026-11-25 海外の 海を ふやす 20種
+SPOTS.reef.ids.push("onikamasu", "caribmejiro", "shinonomesakatazame", "pinkgai", "nassau");
+SPOTS.open.ids.push("oniitomakiei", "shiroshumoku", "hanagondou");
+SPOTS.north.ids.push("kouteipenguin", "taiseiyousake", "minamizouazarashi", "tategotoazarashi", "hokkyokuiwana");
+SPOTS.deep.ids.push("pompeiiworm", "juumonjidako", "hikariboya", "orangeroughy");
+SPOTS.shore.ids.push("americamanatee", "capepenguin", "galapagosashika");
 
 SPOTS.deep.ids.push("yumenamako", "senjunamako", "kairoudouketsu", "irezumikonnyakuaji");
 SPOTS.open.ids.push("isonade", "semikujira", "okigondou");   // 2026-10-31 追加26
