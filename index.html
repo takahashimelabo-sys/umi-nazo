@@ -4763,6 +4763,72 @@ SHARKS.push(
     { bg: "shore", shape: "dome", W: 54, col: "#f2f5fa", op: .88, deco: ["hairs"], arms: { n: 8, len: 40, style: "cauli", col: "#eef2f8" } })
 );
 
+/* 2026-11-27 伝説・むかしの 海の 生きもの 2種の 絵（案） */
+Object.assign(SEA_ART, {
+  ketos(a, id, sil) {   // ケートス：海の りゅうのような 頭、前あしの ひれ、くるっと まいた 魚の しっぽ（星座「くじら座」の もと）
+    const K = c => sil ? "#061019" : c, v = a.v || "A"; let o = "";
+    const body = a.body || "#3fa8a0", belly = a.belly || "#f2e6c0", fin = a.fin || "#2a7a8a";
+    // しっぽ（うしろ）：くるっと まく
+    o += '<path d="M150 92 Q110 112 76 104 Q44 96 44 72 Q44 52 64 52 Q82 54 80 70 Q78 82 66 80 Q58 78 60 70" stroke="' + K(body) + '" stroke-width="15" fill="none" stroke-linecap="round"/>';
+    o += '<path d="M60 70 L40 54 L46 72 L36 84Z" fill="' + K(fin) + '"/>';
+    o += '<path d="M44 66 Q30 48 40 36 Q46 50 56 52 Q66 40 62 30 Q76 44 68 60Z" fill="' + K(fin) + '"/>';   // 尾びれ
+    // 体
+    o += '<path d="M118 100 Q140 64 178 62 Q206 62 214 80 Q214 104 190 112 Q150 120 118 100Z" fill="' + K(body) + '"/>';
+    // 前あし（ひれ）
+    o += '<path d="M176 106 Q170 126 156 134 Q172 136 186 128 Q190 118 190 108Z" fill="' + K(fin) + '"/><path d="M198 104 Q200 124 192 134 Q206 132 212 120 Q212 110 208 102Z" fill="' + K(fin) + '"/>';
+    // 首と 頭
+    o += '<path d="M196 76 Q200 46 222 36 Q246 30 262 42 Q272 52 266 62 Q252 66 236 64 Q224 76 214 90Z" fill="' + K(body) + '"/>';
+    o += '<path d="M226 34 Q222 16 210 12 Q226 10 236 30Z M244 32 Q246 14 258 8 Q256 24 250 34Z" fill="' + K(fin) + '"/>';   // 頭の ひれ（つの）
+    if (sil) return o;
+    o += '<path d="M126 100 Q156 112 188 108 Q206 104 210 92 Q190 104 160 104 Q140 104 126 100Z" fill="' + belly + '"/>';
+    o += '<path d="M150 98 Q118 110 80 104" stroke="' + belly + '" stroke-width="6" fill="none" stroke-linecap="round" opacity=".9"/>';
+    o += '<path d="M236 64 Q252 70 266 62 Q262 74 246 74 Q238 72 236 64Z" fill="' + belly + '"/>';   // あご
+    if (v === "A") {   // A：やさしい 顔。にっこり 口と ほっぺ
+      o += '<path d="M248 62 Q256 66 264 60" stroke="#1d3a3a" stroke-width="1.8" fill="none" stroke-linecap="round"/>';
+      o += '<ellipse cx="238" cy="58" rx="5" ry="3" fill="#ff9aa0" opacity=".6"/>';
+      o += EYE_(244, 46, 4.6, "#ffffff");
+    } else {   // B：昔の 星座の 絵に 近い。口を 大きく 開けて、小さな きば
+      o += '<path d="M240 62 Q256 74 270 60 Q256 64 240 62Z" fill="#7a2a3a"/>';
+      for (let i = 0; i < 5; i++) o += '<path d="M' + (246 + i * 4.6) + ' ' + (63 + Math.sin(i) * .8) + ' l1.6 3.4 l1.6 -3.4Z" fill="#fff"/>';
+      o += EYE_(244, 46, 4, "#ffe680");
+    }
+    // せなかの ギザギザと うろこ
+    for (let i = 0; i < 6; i++) o += '<path d="M' + (150 + i * 12) + ' ' + (66 - Math.sin(i / 5 * 3) * 3) + ' l5 -9 l5 8Z" fill="' + fin + '"/>';
+    for (let i = 0; i < 10; i++) o += '<path d="M' + (136 + (i % 5) * 14) + ' ' + (80 + Math.floor(i / 5) * 10) + ' q5 4 10 0" stroke="#ffffff" stroke-width="1.2" fill="none" opacity=".35"/>';
+    if (a.stars) [[160, 78], [184, 88], [202, 72], [120, 96], [90, 102], [64, 66]].forEach(([x, y]) => o += '<path d="M' + x + ' ' + (y - 4) + ' l1.2 2.8 l3 .2 l-2.3 2 l.8 3 l-2.7 -1.6 l-2.7 1.6 l.8 -3 l-2.3 -2 l3 -.2Z" fill="#fff6b0"/>');   // くじら座の 星
+    return o;
+  },
+  anomalocaris(a, id, sil) {   // アノマロカリス（横から・絵本ふう）：うでは 2本（手前と おく）。頭の 下から 前へ 出て、口の ほうへ くるっと まく
+    const K = c => sil ? "#061019" : c; let o = "";
+    const body = a.body || "#e8763e", flap = a.flap || "#f6a462", dark = a.dark || "#c85a2e", arm = a.arm || "#f6a2a2";
+    const armPath = (x0, y0) => 'M' + x0 + ' ' + y0 + ' Q' + (x0 + 26) + ' ' + (y0 + 2) + ' ' + (x0 + 26) + ' ' + (y0 + 26) + ' Q' + (x0 + 22) + ' ' + (y0 + 46) + ' ' + (x0 + 2) + ' ' + (y0 + 44) + ' Q' + (x0 - 12) + ' ' + (y0 + 40) + ' ' + (x0 - 8) + ' ' + (y0 + 28);
+    const bumps = (x0, y0) => [[18, 8], [24, 20], [22, 32], [13, 41], [1, 42]].map(([dx, dy]) => '<circle cx="' + (x0 + dx - 4) + '" cy="' + (y0 + dy - (dy > 35 ? 3 : 0)) + '" r="2.2" fill="#fff4f4"/>').join("");   // トゲは まるい つぶで やさしく
+    o += '<path d="' + armPath(236, 78) + '" stroke="' + K("#e88a92") + '" stroke-width="7" fill="none" stroke-linecap="round"/>' + (sil ? '' : bumps(236, 78));   // おくの うで
+    [[-16, 22], [-6, 26], [4, 22]].forEach(([dy, l], i) => o += '<path d="M66 ' + (66 + i * 2) + ' L' + (40 - i * 3) + ' ' + (66 + dy - 8) + ' Q' + (34 - l * .3) + ' ' + (66 + dy) + ' ' + (42 - i * 3) + ' ' + (66 + dy + 6) + 'Z" fill="' + K(i === 1 ? flap : dark) + '"/>');
+    for (let i = 0; i < 11; i++) { const x = 74 + i * 11, w = 12 + i * 1.4; o += '<path d="M' + x + ' 80 Q' + (x - 4) + ' ' + (80 + w) + ' ' + (x + 8) + ' ' + (80 + w + 4) + ' Q' + (x + 14) + ' ' + (80 + w) + ' ' + (x + 12) + ' 80Z" fill="' + K(i % 2 ? flap : dark) + '"/>'; }
+    o += '<path d="M60 70 Q64 54 100 52 L190 50 Q210 52 212 68 Q210 86 190 88 L100 88 Q64 88 60 70Z" fill="' + K(body) + '"/>';
+    o += '<path d="M196 68 Q198 44 226 44 Q254 46 258 68 Q254 88 228 92 Q200 92 196 68Z" fill="' + K(body) + '"/>';
+    o += '<path d="M222 48 Q220 34 226 26 M236 48 Q238 36 246 30" stroke="' + K(dark) + '" stroke-width="3.6" fill="none" stroke-linecap="round"/>';
+    o += '<path d="' + armPath(248, 82) + '" stroke="' + K(arm) + '" stroke-width="7.5" fill="none" stroke-linecap="round"/>';   // 手前の うで
+    if (sil) return o;
+    o += bumps(248, 82);
+    for (let i = 0; i < 9; i++) o += '<path d="M' + (96 + i * 11) + ' 54 Q' + (101 + i * 11) + ' 70 ' + (96 + i * 11) + ' 86" stroke="' + dark + '" stroke-width="1.6" fill="none" opacity=".5"/>';
+    o += '<path d="M72 62 Q120 54 194 56" stroke="#ffffff" stroke-width="3" fill="none" opacity=".3" stroke-linecap="round"/>';
+    o += EYE_(226, 24, 6, "#ffffff") + EYE_(246, 28, 6, "#ffffff");
+    o += '<ellipse cx="238" cy="70" rx="5" ry="3" fill="#ff9aa0" opacity=".65"/><path d="M244 78 Q248 81 252 78" stroke="#8a3a1e" stroke-width="1.6" fill="none" stroke-linecap="round"/>';
+    return o;
+  }
+});
+
+/* 2026-11-27 600種め：伝説の ケートスと、大むかしに 本当に いた アノマロカリス。
+   絵は 昔の 星座の 本・古代ギリシャの つぼや コイン（ケートス）、復元図 5まい いじょう（アノマロカリス）を 見くらべ、絵本ふうに した。事実は 英語版ウィキペディアで たしかめた */
+SHARKS.push(
+  K_("ketos", "ケートス", "legend", 1500, 5, "地中海の 国の 海べ（ギリシャ神話）", "なぞ（海べの 町を あらしたと 伝わる）", "海の 神ポセイドンが 送りこんだ 海の かいぶつ。英ゆうペルセウスが、岩に つながれた おひめさま アンドロメダを 助けるために たおした", "秋の 夜空の 星座「くじら座」は、もとは この ケートス。近くには ペルセウス座や アンドロメダ座も ならんでいる。",
+    { f: "ketos", v: "A", stars: true }),
+  K_("anomalocaris", "アノマロカリス", "legend", 38, 5, "約5億年前の 海（カンブリア紀。カナダなどで 化石が 見つかる）", "当時の 小さな 生きもの（三葉虫を 食べたかは まだ なぞ）", "1892年、うでの 化石だけが 先に 見つかり、エビの 体と まちがえられた。名前は「ほかの エビと ちがう エビ」という 意味", "頭の 前の 2本の うでで えものを つかまえた、当時の 海の 王者。体の わきの ひれを 波のように 動かして 泳いだ。",
+    { f: "anomalocaris" })
+);
+
 SHARKS.forEach((s, i) => s.no = String(i + 1).padStart(3, "0"));
 const byId = id => SHARKS.find(s => s.id === id);
 const sizeTxt = cm => cm >= 100 ? "最大 約" + (cm / 100) + "m" : "最大 約" + cm + "cm";
@@ -4984,9 +5050,9 @@ const TAXO_ADD_1113 = ";queenangel:条鰭類;komorizame:軟骨魚類;tarpon:条�
 const TAXO_ADD_1121 = ";sandoctopus:軟体動物;hashinagairuka:哺乳類;mairuka:哺乳類;himeumigame:爬虫類;galapagoszame:軟骨魚類;americaooakaika:軟体動物;nishinezumizame:軟骨魚類;salpa:尾索動物;minamiafricaottosei:哺乳類;californiaashika:哺乳類;americakabutogani:鋏角類;hawaiimimiika:軟体動物;australiakouika:軟体動物;weedyseadragon:条鰭類;nishilemonzame:軟骨魚類;seiuchi:哺乳類;weddellazarashi:哺乳類;nileperch:条鰭類;frontosa:条鰭類;herachouzame:条鰭類;elephantnose:条鰭類";
 const TAXO_ADD_1125 = ";onikamasu:条鰭類;caribmejiro:軟骨魚類;shinonomesakatazame:軟骨魚類;pinkgai:軟体動物;nassau:条鰭類;oniitomakiei:軟骨魚類;shiroshumoku:軟骨魚類;hanagondou:哺乳類;kouteipenguin:鳥類;taiseiyousake:条鰭類;minamizouazarashi:哺乳類;tategotoazarashi:哺乳類;hokkyokuiwana:条鰭類;pompeiiworm:環形動物;juumonjidako:軟体動物;hikariboya:尾索動物;orangeroughy:条鰭類;americamanatee:哺乳類;capepenguin:鳥類;galapagosashika:哺乳類";   // 2026-11-25
 const TAXO_ADD_1127 = ";integralkurage:刺胞動物;hanakuragemodoki:刺胞動物;kabutohengekurage:有櫛動物;choukurage:有櫛動物;deigohanagasakurage:刺胞動物;sugiurayakuchikurage:刺胞動物;chirimenkurage:刺胞動物;punctata:刺胞動物;pulmo:刺胞動物;mexicanmushroom:刺胞動物;hyougaraitohikikurage:刺胞動物;cotylorhiza:刺胞動物;minokurage:刺胞動物";   // 2026-11-27
-const TAXO = {}; (TAXO_RAW + TAXO_ADD_1113 + TAXO_ADD_1121 + TAXO_ADD_1125 + TAXO_ADD_1127).split(";").filter(Boolean).forEach(x => { const [id, g] = x.split(":"); TAXO[id] = g; });
-const GROUP_LABEL = { "哺乳類": "クジラ・イルカなどの なかま", "軟骨魚類": "サメ・エイの なかま", "条鰭類": "魚の なかま", "肉鰭類": "シーラカンス・ハイギョの なかま", "無顎類": "あごの ない 魚の なかま", "甲殻類": "エビ・カニの なかま", "鋏角類": "カブトガニの なかま", "軟体動物": "貝・イカ・タコの なかま", "刺胞動物": "クラゲ・サンゴの なかま", "有櫛動物": "クシクラゲの なかま", "棘皮動物": "ウニ・ヒトデ・ナマコの なかま", "尾索動物": "ホヤの なかま", "海綿動物": "カイメンの なかま", "環形動物": "ゴカイ・ハオリムシの なかま", "爬虫類": "カメ・ヘビの なかま", "両生類": "サンショウウオの なかま", "鳥類": "ペンギンの なかま" };
-const EXTINCT = { megalodon: 1 };
+const TAXO = {}; (TAXO_RAW + TAXO_ADD_1113 + TAXO_ADD_1121 + TAXO_ADD_1125 + TAXO_ADD_1127 + ";anomalocaris:節足動物").split(";").filter(Boolean).forEach(x => { const [id, g] = x.split(":"); TAXO[id] = g; });
+const GROUP_LABEL = { "哺乳類": "クジラ・イルカなどの なかま", "軟骨魚類": "サメ・エイの なかま", "条鰭類": "魚の なかま", "肉鰭類": "シーラカンス・ハイギョの なかま", "無顎類": "あごの ない 魚の なかま", "甲殻類": "エビ・カニの なかま", "鋏角類": "カブトガニの なかま", "軟体動物": "貝・イカ・タコの なかま", "刺胞動物": "クラゲ・サンゴの なかま", "有櫛動物": "クシクラゲの なかま", "棘皮動物": "ウニ・ヒトデ・ナマコの なかま", "尾索動物": "ホヤの なかま", "海綿動物": "カイメンの なかま", "環形動物": "ゴカイ・ハオリムシの なかま", "爬虫類": "カメ・ヘビの なかま", "両生類": "サンショウウオの なかま", "鳥類": "ペンギンの なかま", "節足動物": "エビ・カニの 遠い 親せき" };
+const EXTINCT = { megalodon: 1, anomalocaris: 1 };
 const TYOMI = { "冠クラゲ目": "かんむりくらげもく", "十脚目": "じっきゃくもく", "口脚目": "こうきゃくもく", "吸腔目": "きゅうこうもく", "有尾目": "ゆうびもく", "有鱗目": "ゆうりんもく", "等脚目": "とうきゃくもく", "裸殻翼足目": "らかくよくそくもく", "裸鰓目": "らさいもく", "軟クラゲ目": "やわくらげもく", "鯨偶蹄目": "くじらぐうていもく" };   // 2026-10-27 分類名は 漢字のまま 読みがなを そえる
 const tyomi = t => typeof t === "string" ? t.replace(new RegExp(Object.keys(TYOMI).join("|"), "g"), m => m + "（" + TYOMI[m] + "）") : t;
 function taxoLabel(s) {
@@ -4994,7 +5060,7 @@ function taxoLabel(s) {
   return GROUP_LABEL[g] + (EXTINCT[s.id] ? "（ぜつめつ）" : "");
 }
 /* ずかんの 小さい カード用の みじかい なかま名 */
-const GROUP_SHORT = { "軟骨魚類": "サメ・エイ", "条鰭類": "さかな", "肉鰭類": "シーラカンス", "無顎類": "あごなし", "甲殻類": "エビ・カニ", "鋏角類": "カブトガニ", "軟体動物": "貝・イカ", "刺胞動物": "クラゲなど", "有櫛動物": "クシクラゲ", "棘皮動物": "ウニなど", "尾索動物": "ホヤ", "海綿動物": "カイメン", "環形動物": "ゴカイ", "爬虫類": "カメ・ヘビ", "両生類": "サンショウウオ", "哺乳類": "クジラなど", "鳥類": "ペンギン" };
+const GROUP_SHORT = { "軟骨魚類": "サメ・エイ", "条鰭類": "さかな", "肉鰭類": "シーラカンス", "無顎類": "あごなし", "甲殻類": "エビ・カニ", "鋏角類": "カブトガニ", "軟体動物": "貝・イカ", "刺胞動物": "クラゲなど", "有櫛動物": "クシクラゲ", "棘皮動物": "ウニなど", "尾索動物": "ホヤ", "海綿動物": "カイメン", "環形動物": "ゴカイ", "爬虫類": "カメ・ヘビ", "両生類": "サンショウウオ", "哺乳類": "クジラなど", "鳥類": "ペンギン", "節足動物": "エビ・カニの 親せき" };
 function taxoShort(s) {
   const g = typeof taxoOf === "function" ? (taxoOf(s) || {}).g : TAXO[s.id];
   return g ? GROUP_SHORT[String(g).replace(/（.*$/, "")] || "？" : s.r === 5 ? "でんせつ" : "？";   // 2026-10-31 「条鰭類（じょうきるい）」の 読みがなを はずして さがす
@@ -5155,6 +5221,9 @@ SPOTS.shore.ids.push("integralkurage", "sugiurayakuchikurage", "chirimenkurage",
 SPOTS.reef.ids.push("deigohanagasakurage", "kabutohengekurage");
 SPOTS.open.ids.push("choukurage", "pulmo", "mexicanmushroom", "cotylorhiza");
 SPOTS.north.ids.push("hanakuragemodoki");
+// 2026-11-27 600種め
+SPOTS.shore.ids.push("ketos");
+SPOTS.reef.ids.push("anomalocaris");
 
 SPOTS.deep.ids.push("yumenamako", "senjunamako", "kairoudouketsu", "irezumikonnyakuaji");
 SPOTS.open.ids.push("isonade", "semikujira", "okigondou");   // 2026-10-31 追加26
@@ -7007,6 +7076,8 @@ const RUMORS = {
   seaserpent:    { from: 15, kind: "rec", txt: "1848年、イギリスの ぐんかんダイダロス号の 乗組員が、夕方5時ごろ 大きな 海へびを 見たと 報告した。" },
   amabie:        { from: 18, kind: "rec", txt: "江戸時代（えどじだい）の かわら版には「毎晩 海の 中に 光る ものが あらわれた」と ある。日が しずんでからの はまを 見はろう。" },
   isonade:       { from: 6,  kind: "rec", txt: "江戸時代（えどじだい）の 本『絵本百物語』には、北風が つよく ふくと 現れると 書かれている。朝の 外洋で、海面を よく 見はろう。" },
+  ketos:         { from: 21, kind: "rum", txt: "ケートスは 秋の 夜空の 星座「くじら座」に なった。夜ふけの はまで 星を 見上げたら、海にも 同じ 形の かげが…？" },
+  anomalocaris:  { from: 12, kind: "rum", txt: "1909年、カナダの 山で 大むかしの 海の 生きものの 化石が たくさん 見つかった。お昼の サンゴしょうで、くるんと まいた うでを 見た ような…" },
   kraken:        { from: 21, kind: "rum", txt: "18世紀の ノルウェーの 本に 書かれた 大だこ。夜ふけの 深海で、海が ぐらりと ゆれた ような…" }
 };
 const rumorOn = (id, h) => { const r = RUMORS[id]; return r && h >= r.from && h < r.from + 3; };
