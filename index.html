@@ -1602,9 +1602,9 @@ header .hright { width: 100%; max-width: 560px; justify-self: center; box-sizing
         <button type="button" class="g10" id="tkgo10">10回<small id="g10c">かい 2000</small></button>
       </div>
       <div class="gratebox" id="gratebox" hidden>
-        <table><tr><td><b class="gst s5">★★★★★</b></td><td><i class="gtier t4"></i>なないろの 箱</td><td>なないろシール＋ルアー</td><td>5%</td></tr><tr><td><b class="gst s4">★★★★</b></td><td><i class="gtier t3"></i>にじ色の 箱</td><td>ホログラム＋ルアー</td><td>10%</td></tr><tr><td><b class="gst s3">★★★</b></td><td><i class="gtier t2"></i>金の 箱</td><td>ぷっくり</td><td>20%</td></tr><tr><td><b class="gst s2">★★</b></td><td><i class="gtier t1"></i>鉄の 箱</td><td>ふわふわ</td><td>30%</td></tr><tr><td><b class="gst s1">★</b></td><td><i class="gtier t0"></i>木の 箱</td><td>フェルト</td><td>35%</td></tr></table>
+        <table><tr><td><b class="gst s5">★★★★★</b></td><td><i class="gtier t4"></i>なないろの 箱</td><td>なないろシール</td><td>5%</td></tr><tr><td><b class="gst s4">★★★★</b></td><td><i class="gtier t3"></i>にじ色の 箱</td><td>ホログラム＋ルアー</td><td>10%</td></tr><tr><td><b class="gst s3">★★★</b></td><td><i class="gtier t2"></i>金の 箱</td><td>ぷっくり</td><td>20%</td></tr><tr><td><b class="gst s2">★★</b></td><td><i class="gtier t1"></i>鉄の 箱</td><td>ふわふわ</td><td>30%</td></tr><tr><td><b class="gst s1">★</b></td><td><i class="gtier t0"></i>木の 箱</td><td>フェルト</td><td>35%</td></tr></table>
         <div id="gratemach"></div>
-        <div>なないろ いがいの シールは 10%で「ドデカ」（たても よこも 2ばいの 大きさ）に なるよ。絵は 30%で なかま・けしき（26しゅるい ＋ 師匠に もらった ぼうしを かぶった なかま）、70%で ずかんで 釣ったことの ある 魚と 王（王は 金の ふちで 1.5ばいの 大きさ）から えらばれるよ。しんでんの ようすや 魚は「いい 箱が 出やすい」しるしで、かならず では ないよ。にじ色と なないろの 箱には、シールと いっしょに ルアーが かならず 1つ 入って いるよ（貝・緑・星の 3しゅるいから ランダム。緑は 15・星は 30・貝は 60キャストの あいだ 効く）。むりょうは 夜の 0時と お昼の 12時に 1回ずつ ふえるよ（2回まで ためられる）。むりょうが ない ときは かい 200で 1回。10連は かい 2000で 10まい（むりょう・チケットは つかわない）。「きろくやぶり」を つりあげると たからさがし チケットが 1まい もらえて、むりょうと おなじに 1回 さがせるよ。</div>
+        <div>なないろ いがいの シールは 10%で「ドデカ」（たても よこも 2ばいの 大きさ）に なるよ。絵は 30%で なかま・けしき（26しゅるい ＋ 師匠に もらった ぼうしを かぶった なかま）、70%で ずかんで 釣ったことの ある 魚と 王（王は 金の ふちで 1.5ばいの 大きさ）から えらばれるよ。しんでんの ようすや 魚は「いい 箱が 出やすい」しるしで、かならず では ないよ。にじ色の 箱には、シールと いっしょに ルアーが かならず 1つ 入って いるよ（貝・緑・星の 3しゅるいから ランダム。緑は 15・星は 30・貝は 60キャストの あいだ 効く）。むりょうは 夜の 0時と お昼の 12時に 1回ずつ ふえるよ（2回まで ためられる）。むりょうが ない ときは かい 200で 1回。10連は かい 2000で 10まい（むりょう・チケットは つかわない）。「きろくやぶり」を つりあげると たからさがし チケットが 1まい もらえて、むりょうと おなじに 1回 さがせるよ。</div>
       </div>
     </div>
   </div>
@@ -9677,11 +9677,11 @@ function tkRoll(p) { const r = Math.random() * 100, fin = r < 35 ? 0 : r < 65 ? 
 const tkImgOr = k => tkImg(k) || (() => { const id = k.split("|")[0]; if (!tkArtOk(id)) return ""; let s = tkArt(id); if (!/xmlns=/.test(s)) s = s.replace("<svg", '<svg xmlns="http://www.w3.org/2000/svg"'); return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(s); })();
 const tkReady = keys => { tkEnsure.stop = false; let t; return Promise.race([tkEnsure(keys, true), new Promise(r => t = setTimeout(() => { tkEnsure.stop = true; r(); }, 5000))]).finally(() => clearTimeout(t)); };   // 2026-11-22 まにあったら タイマーを 止める（前は 5びょう後に かならず「やめる」が 立ち、そのあと シール帳の 読みこみが 止まっていた）   // 5びょう たったら 作るのを いったん やめて 演出を なめらかに（のこりは あとで うらで 作る）
 async function tkOpenGacha10() { const p = tkMe(); if (!p || fighting() || (p.coins || 0) < TK_COST * 10) return; p.coins -= TK_COST * 10;
-  const rs = Array.from({ length: 10 }, () => tkRoll(p)).map(r => ({ ...r, lu: r.fin >= 3 ? lureGive(p) : null })), best = Math.max(...rs.map(r => r.fin)), bi = rs.map(r => r.fin).lastIndexOf(best);
+  const rs = Array.from({ length: 10 }, () => tkRoll(p)).map(r => ({ ...r, lu: r.fin === 3 ? lureGive(p) : null })), best = Math.max(...rs.map(r => r.fin)), bi = rs.map(r => r.fin).lastIndexOf(best);
   rs.forEach(r => { p.seals[r.k] = (p.seals[r.k] || 0) + 1; }); tkLuNew = rs.filter(r => r.lu).map(r => r.lu); tkSave(); renderStat(); renderTools.dirty = true;
   tkRun(tkReady(rs.map(r => r.k)).then(() => ({ type: "tk-go", ten: true, fins: rs.map(r => r.fin), dai: best >= 4 && Math.random() < .5 ? tkDai() : null, items: rs.map((r, i) => ({ img: tkImgOr(r.k), name: tkName(r.k) + (r.lu ? "＋" + LURES[r.lu].name : ""), big: r.k.endsWith("|big"), fin: r.fin, best: i === bi })) }))); }
 async function tkOpenGacha() { const p = tkMe(); if (!p || fighting()) return; const free = tkFree(p), tix = !free && tkTix(p) > 0; if (!free && !tix && (p.coins || 0) < TK_COST) return;
-  const { fin, k } = tkRoll(p), lu = fin >= 3 ? lureGive(p) : null;   // 2026-11-21 虹の 箱は ルアーつき
+  const { fin, k } = tkRoll(p), lu = fin === 3 ? lureGive(p) : null;   /* 2026-11-27 ルアーは にじ色の 箱だけ（なないろは 別の ごほうびを 考える） */   // 2026-11-21 虹の 箱は ルアーつき
   if (free) { p.gachaFree.n--; p.gachaFree.s = tkHalf(Date.now()); } else if (tix) p.gachaTix = tkTix(p) - 1; else p.coins -= TK_COST;
   p.seals[k] = (p.seals[k] || 0) + 1; tkSave(); renderStat(); renderTools.dirty = true;
   tkRun(tkReady([k]).then(() => ({ type: "tk-go", fin, dai: fin >= 4 && Math.random() < .5 ? tkDai() : null, img: tkImgOr(k), name: tkName(k) + (lu ? "＋" + LURES[lu].name : ""), big: k.endsWith("|big") }))); tkLuNew = lu ? [lu] : []; }
@@ -9798,7 +9798,7 @@ function tkStick(k, cx, cy) { const p = tkMe(); if (!p) return; const go = () =>
     const o = { id: tkUid(), k, w, x, y, r: Math.round(Math.random() * 24 - 12) }; p.sealBook[tkCur].push(o); const m = tkAddEl(o); tkShine(m.d); tkSave(); tkRenderTray(); tkRenderClosed(); };
   if (!$("tkbw").classList.contains("isopen")) { tkOpenBook(); setTimeout(go, 520); } else go(); }
 let tkLuNew = [];
-function tkToast() { const t = document.createElement("div"); t.className = "tktoast"; t.innerHTML = (tkLuNew.length ? 'いい 箱に ' + tkLuNew.map(k => LURES[k].name).join("・") + 'も 入って いた！「どうぐ」で つかえるよ。' : '') + 'シールは「ずかん」の シール帳に 入ったよ <button type="button">見に 行く</button>'; tkLuNew = []; t.querySelector("button").onclick = () => { t.remove(); zSw("seal"); setTab("zukan"); }; document.body.appendChild(t); setTimeout(() => t.remove(), 6000); }
+function tkToast() { const t = document.createElement("div"); t.className = "tktoast"; t.innerHTML = (tkLuNew.length ? '虹の 箱に ' + tkLuNew.map(k => LURES[k].name).join("・") + 'も 入って いた！「どうぐ」で つかえるよ。' : '') + 'シールは「ずかん」の シール帳に 入ったよ <button type="button">見に 行く</button>'; tkLuNew = []; t.querySelector("button").onclick = () => { t.remove(); zSw("seal"); setTab("zukan"); }; document.body.appendChild(t); setTimeout(() => t.remove(), 6000); }
 function zSw(z) { $("zbox").classList.toggle("seal", z === "seal"); document.querySelectorAll(".zsw button").forEach(b => b.setAttribute("aria-pressed", b.dataset.z === z)); if (z === "seal") tkRender(); }
 document.querySelectorAll(".zsw button").forEach(b => b.onclick = () => zSw(b.dataset.z));
 function tkRender() { const p = tkMe(); if (!p) return; tkRenderGo(); tkRenderClosed(); tkRenderTray(); if ($("tkbw").classList.contains("isopen")) tkRenderPage();
