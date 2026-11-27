@@ -1790,6 +1790,36 @@ function jellySVG(s, opt = {}) {
     return o + '</svg>';
   }
 
+  if (a.special === "fried") {   // 2026-11-27 コティロリーザ：目玉焼きの 白身（平たい 円ばん）と 黄身（もり上がった ドーム）。下に すみれ色の 玉が ついた 短い うで
+    for (let i = 0; i < 8; i++) { const x = 116 + i * 9.7, len = 30 + (i % 3) * 5; o += '<path d="' + wav(x, 70, len, 2.5, i, 4) + '" stroke="' + K("#e8d6a0") + '" stroke-width="8" stroke-linecap="round" fill="none" opacity="' + OP(.95) + '"/>';
+      if (!sil) for (let k = 0; k < 4; k++) o += '<circle cx="' + f(x + Math.sin(k * 2.1 + i) * 6) + '" cy="' + f(76 + k * 7 + (i % 2) * 3) + '" r="' + (2.6 + (k + i) % 2) + '" fill="' + (k % 2 ? "#8a6ad8" : "#6a8ae8") + '"/>'; }
+    o += '<path d="M84 66 Q86 58 112 56 L188 56 Q214 58 216 66 Q214 74 188 76 L112 76 Q86 74 84 66Z" fill="' + K("#f2e6b8") + '" opacity="' + OP(.92) + '"/>';
+    if (!sil) for (let i = 0; i < 18; i++) { const x = 88 + i * 7.3; o += '<path d="M' + f(x) + ' 72 l3 4 l3 -4" stroke="#e2cf90" stroke-width="1.2" fill="none"/>'; }
+    o += '<path d="M120 58 Q122 30 150 28 Q178 30 180 58 Q150 64 120 58Z" fill="' + K("#f0a830") + '"/>';
+    if (!sil) o += '<ellipse cx="140" cy="38" rx="10" ry="5" fill="#fff" opacity=".55"/><path d="M120 58 Q150 64 180 58" stroke="#d88a18" stroke-width="2" fill="none" opacity=".6"/>';
+    return o + '</svg>';
+  }
+  if (a.special === "butterfly") {   // 2026-11-27 チョウクラゲ：すきとおった 体の 下に、チョウの はねのような 大きな ひだ（袖状突起）が 2まい。ひだには 茶色の 点
+    [-1, 1].forEach(sg => o += '<path d="M' + (150 + sg * 8) + ' 60 Q' + (150 + sg * 58) + ' 58 ' + (150 + sg * 62) + ' 104 Q' + (150 + sg * 58) + ' 142 ' + (150 + sg * 26) + ' 136 Q' + (150 + sg * 6) + ' 112 ' + (150 + sg * 8) + ' 60Z" fill="' + K("#e6f0f8") + '" opacity="' + OP(.5) + '" stroke="' + K("#cfe0ee") + '" stroke-width="1.4"/>');
+    o += '<path d="M150 14 Q176 16 178 46 Q178 70 162 80 Q150 86 138 80 Q122 70 122 46 Q124 16 150 14Z" fill="' + K("#eef6fb") + '" opacity="' + OP(.45) + '" stroke="' + K("#ffffff") + '" stroke-width="1"/>';
+    if (sil) return o + '</svg>';
+    [[-46, 92], [-38, 116], [-28, 100], [46, 92], [38, 116], [28, 100], [-50, 108], [50, 108]].forEach(([dx, y], i) => o += '<ellipse cx="' + (150 + dx) + '" cy="' + y + '" rx="' + (3 + i % 2) + '" ry="2.6" fill="#8a5a3a" opacity=".85"/>');
+    const cols = ["#ff5a7a", "#ffb84a", "#fff06a", "#6aff9a", "#5ad8ff", "#8a7aff"];
+    [-20, -8, 8, 20].forEach((dx, r) => { for (let k = 0; k < 8; k++) { const y = 22 + k * 6, x = 150 + dx * Math.sin(Math.PI * (.2 + .7 * k / 8)); o += '<rect x="' + f(x - 2) + '" y="' + f(y) + '" width="4" height="2" fill="' + cols[(k + r) % 6] + '" opacity=".9"/>'; } });
+    o += '<path d="M150 50 L150 84" stroke="#fff" stroke-width="2" opacity=".45"/><ellipse cx="142" cy="30" rx="7" ry="5" fill="#fff" opacity=".4"/>';
+    return o + '</svg>';
+  }
+  if (a.special === "henge") {   // 2026-11-27 カブトヘンゲクラゲ：平たい まるい 体。オレンジの くるっと まいた 4本の すじ（水管）と、白い 十字
+    o += '<ellipse cx="150" cy="78" rx="62" ry="46" fill="' + K("#e8f0f6") + '" opacity="' + OP(.4) + '" stroke="' + K("#ffffff") + '" stroke-width="1.4"/>';
+    if (sil) return o + '</svg>';
+    o += '<path d="M150 36 L150 120 M96 78 L204 78" stroke="#ffffff" stroke-width="1.6" opacity=".55"/>';
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sy]) => o += '<path d="M' + (150 + sx * 12) + ' ' + (78 + sy * 8) + ' Q' + (150 + sx * 50) + ' ' + (78 + sy * 6) + ' ' + (150 + sx * 44) + ' ' + (78 + sy * 30) + ' Q' + (150 + sx * 30) + ' ' + (78 + sy * 40) + ' ' + (150 + sx * 24) + ' ' + (78 + sy * 24) + '" stroke="#f0904a" stroke-width="4" fill="none" stroke-linecap="round"/>');
+    const cols = ["#ff5a7a", "#ffb84a", "#fff06a", "#6aff9a", "#5ad8ff", "#8a7aff"];
+    for (let k = 0; k < 16; k++) { const t = k / 16 * Math.PI * 2; o += '<rect x="' + f(150 + Math.cos(t) * 56 - 2) + '" y="' + f(78 + Math.sin(t) * 40 - 1) + '" width="4" height="2" fill="' + cols[k % 6] + '" opacity=".85"/>'; }
+    o += '<circle cx="150" cy="78" r="5" fill="#fff" opacity=".7"/><ellipse cx="128" cy="52" rx="12" ry="6" fill="#fff" opacity=".35"/>';
+    return o + '</svg>';
+  }
+
   // bell geometry
   const G = { dome: [24, 70, 60], tall: [18, 80, 34], flat: [38, 62, 80], box: [22, 74, 36], big: [12, 62, 84] }[a.shape];
   const cx = 150, T = a.T || G[0], B = a.B || G[1], W = a.W || G[2], H = B - T;
@@ -1820,6 +1850,8 @@ function jellySVG(s, opt = {}) {
     }
   }
 
+  if (a.trail) { const t = a.trail; for (let i = 0; i < t.n; i++) { const x = cx - W * .5 + W * i / Math.max(1, t.n - 1), len = t.len * (.8 + (i % 3) * .1), d = wav(x, B + 10, len, 3, i * 1.7, 5); o += '<path d="' + d + '" stroke="' + K(t.col) + '" stroke-width="' + (t.w || 3) + '" fill="none" stroke-linecap="round" opacity="' + OP(.85) + '"/>'; if (!sil && t.club) o += '<ellipse cx="' + f(x + Math.sin(len / 16 + i * 1.7) * 3) + '" cy="' + f(B + 10 + len) + '" rx="3.4" ry="4.6" fill="' + t.club + '"/>'; } }   // 2026-11-27
+
   // bell
   o += '<path d="' + bell + '" fill="' + K(a.col) + '" opacity="' + OP(a.op) + '"/>';
   if (sil) return o + '</svg>';
@@ -1831,9 +1863,22 @@ function jellySVG(s, opt = {}) {
   if (p === "canals") for (let i = 0; i <= 16; i++) { const x = cx - W + 2 * W * i / 16; o += '<path d="M' + cx + ' ' + (T + 2) + ' Q' + f(cx + (x - cx) * .5) + ' ' + f(T + H * .3) + ' ' + f(x) + ' ' + B + '" stroke="#ffffff" stroke-width=".9" fill="none" opacity=".7"/>'; }
   if (p === "gut") o += '<path d="M' + (cx - 12) + ' ' + (T + H * .45) + ' Q' + cx + ' ' + (T + H * .2) + ' ' + (cx + 12) + ' ' + (T + H * .45) + ' L' + (cx + 8) + ' ' + (B - 6) + ' Q' + cx + ' ' + (B + 2) + ' ' + (cx - 8) + ' ' + (B - 6) + 'Z" fill="#d42a3c" opacity=".9"/>';
   if (p === "crown") { o += '<path d="M' + (cx - W) + ' ' + f(T + H * .5) + ' Q' + cx + ' ' + f(T + H * .62) + ' ' + (cx + W) + ' ' + f(T + H * .5) + '" stroke="#5a0c16" stroke-width="2.5" fill="none" opacity=".6"/>'; for (let i = 0; i < 12; i++) { const x = cx - W + 2 * W * (i + .5) / 12; o += '<path d="M' + f(x) + ' ' + f(T + H * .55) + ' L' + f(x) + ' ' + B + '" stroke="#5a0c16" stroke-width="1" opacity=".4"/>'; } }
+  const D = a.deco || [];   // 2026-11-27 もようを いくつも かさねられる ように
+  if (D.includes("gonad8")) for (let i = 0; i < 8; i++) { const x = cx - W * .78 + W * 1.56 * i / 7; o += '<path d="M' + f(cx + (x - cx) * .2) + ' ' + f(T + 8) + ' Q' + f(x + 4) + ' ' + f(T + H * .45) + ' ' + f(x) + ' ' + f(B - 3) + '" stroke="#f2b82a" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-dasharray="5 3" opacity=".95"/>'; }
+  if (D.includes("curls")) { o += '<ellipse cx="' + cx + '" cy="' + f(B - 14) + '" rx="22" ry="13" fill="#ffffff" opacity=".35"/>'; for (let i = 0; i < 12; i++) { const t = i / 12 * Math.PI * 2, x = cx + Math.cos(t) * 17, y = B - 14 + Math.sin(t) * 9; o += '<path d="M' + f(x) + ' ' + f(y - 5) + ' q5 2 2 6 q-3 3 -5 0" stroke="#ffffff" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".95"/>'; } }
+  if (D.includes("radial4")) [[-.55, 0], [-.18, 0], [.18, 0], [.55, 0]].forEach(([k]) => { const x = cx + W * k * 1.4; o += '<path d="M' + cx + ' ' + (T + 4) + ' Q' + f(cx + (x - cx) * .6) + ' ' + f(T + H * .4) + ' ' + f(x) + ' ' + (B - 2) + '" stroke="#d8783a" stroke-width="6" fill="none" stroke-linecap="round" opacity=".85"/>'; });
+  if (D.includes("manu")) o += '<path d="M' + (cx - 7) + ' ' + f(T + H * .5) + ' Q' + cx + ' ' + f(T + H * .3) + ' ' + (cx + 7) + ' ' + f(T + H * .5) + ' L' + (cx + 5) + ' ' + (B + 2) + ' L' + (cx - 5) + ' ' + (B + 2) + 'Z" fill="#e84a3a" opacity=".9"/>';
+  if (D.includes("sugi")) { [[-1, -.2], [1, .1], [.2, 1]].forEach(([sx, sy], j) => { const x2 = cx + sx * W * .85, y2 = T + H * (.55 + sy * .3); o += '<path d="M' + cx + ' ' + f(T + H * .55) + ' L' + f(x2) + ' ' + f(y2) + '" stroke="#fff" stroke-width="1.6" opacity=".8"/><path d="M' + f(cx + sx * W * .4) + ' ' + f(T + H * (.55 + sy * .14)) + ' L' + f(cx + sx * W * .7) + ' ' + f(T + H * (.2 + j * .1)) + '" stroke="#fff" stroke-width="1.2" opacity=".7"/><ellipse cx="' + f(cx + sx * W * .45) + '" cy="' + f(T + H * (.55 + sy * .15)) + '" rx="5" ry="3.4" fill="#e8c860" opacity=".95"/>'; }); o += '<ellipse cx="' + cx + '" cy="' + f(T + H * .55) + '" rx="7" ry="5" fill="#e8c860"/>'; }
+  if (D.includes("mesh")) for (let i = 0; i < 46; i++) { const x = cx - W + ((i * 37) % (2 * W)), y = T + 4 + ((i * 23) % (H - 6)); o += '<path d="M' + x + ' ' + y + ' q4 -3 8 0 t8 0" stroke="#ffffff" stroke-width="1.3" fill="none" opacity=".55"/>'; }
+  if (D.includes("edge")) o += '<path d="' + bell + '" fill="none" stroke="' + (a.edgeCol || "#9a6a3a") + '" stroke-width="16" opacity=".45"/>';
+  if (D.includes("leopard")) { const rnd = k => { const v = Math.sin(k * 12.9898) * 43758.5453; return v - Math.floor(v); }; for (let i = 0; i < 46; i++) { const x = cx - W * .94 + rnd(i + 1) * W * 1.88, y = T + 4 + rnd(i + 101) * (H - 6), r = 1.8 + rnd(i + 201) * 1.8; o += '<circle cx="' + f(x) + '" cy="' + f(y) + '" r="' + r + '" fill="#6a4428" opacity=".85"/><circle cx="' + f(x + r * .9) + '" cy="' + f(y + r * .5) + '" r="' + (r * .45) + '" fill="#6a4428" opacity=".8"/>'; } }
+  if (D.includes("cloud")) for (let i = 0; i < 9; i++) { const x = cx - W * .7 + ((i * 29) % (W * 1.4)), y = T + 8 + ((i * 13) % (H - 12)); o += '<ellipse cx="' + f(x) + '" cy="' + y + '" rx="' + (9 + i % 3 * 3) + '" ry="5" fill="#ffffff" opacity=".35"/>'; }
   o += '<path d="' + bell + '" fill="url(#' + id + 'r)"/></g>';
   o += '<path d="' + bell + '" fill="none" stroke="' + (a.rim || "#ffffff") + '" stroke-width="' + (a.rim ? 2.5 : 1) + '" opacity=".7"/>';
   if (a.rimDots) for (let i = 0; i <= 22; i++) { const x = cx - W + 2 * W * i / 22; o += '<circle cx="' + f(x) + '" cy="' + (B + 1) + '" r="1.8" fill="' + a.rimDots + '"/>'; }
+  if (D.includes("hairs")) for (let i = 0; i < 34; i++) { const t = Math.PI * (.06 + .88 * i / 33), x = cx - Math.cos(t) * W * .98, y = B - Math.sin(t) * H * .98, dx = -Math.cos(t) * 7, dy = -Math.sin(t) * 7; o += '<path d="M' + f(x) + ' ' + f(y) + ' q' + f(dx * .6 + 2) + ' ' + f(dy * .6) + ' ' + f(dx) + ' ' + f(dy) + '" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".9"/>'; }
+  if (D.includes("scallop")) for (let i = 0; i <= 14; i++) { const x = cx - W + 2 * W * i / 14; o += '<path d="M' + f(x - W / 14) + ' ' + (B - 1) + ' q' + f(W / 14) + ' 7 ' + f(W / 7) + ' 0" stroke="#4a38c8" stroke-width="3" fill="none" opacity=".9"/>'; }
+  if (D.includes("upTent")) for (let i = 0; i < 16; i++) { const k = i / 15, x = cx - W * .92 + W * 1.84 * k, ys = B - 2 - Math.sin(Math.PI * k) * H * .1, sg = k < .5 ? -1 : 1; o += '<path d="M' + f(x) + ' ' + f(ys) + ' q' + f(sg * 2) + ' -14 ' + f(sg * 8) + ' -18 q' + f(sg * 4) + ' -2 ' + f(sg * 3) + ' 3" stroke="#a06a3a" stroke-width="2.6" fill="none" stroke-linecap="round" opacity=".9"/><circle cx="' + f(x + sg * 11) + '" cy="' + f(ys - 15) + '" r="2.4" fill="#e66ab8"/>'; }
   if (a.glow) for (let i = 0; i <= 18; i++) { const x = cx - W + 2 * W * i / 18; o += '<circle cx="' + f(x) + '" cy="' + (B + 1) + '" r="2.4" fill="' + a.glow + '" filter="url(#' + id + 'b)"/><circle cx="' + f(x) + '" cy="' + (B + 1) + '" r="1" fill="#ffffff"/>'; }
   return o + '</svg>';
 }
@@ -4686,6 +4731,38 @@ SHARKS.push(
     { f: "seal", col: "#8c7258", belly: "#b39a7e", ear: true, flip: true, whisk: "long", snout: 1, bigEye: 6 })
 );
 
+/* 2026-11-27 蒼くんの クラゲ図鑑から 13種。
+   写真は PCの 内蔵ブラウザで 1種 3まい いじょう（iNaturalist・加茂水族館・新江ノ島水族館・NOAA・美ら海水族館、蒼くんの 図鑑の 写真）を ならべて 見た。
+   事実は 英語版ウィキペディアと、ウィキペディアに ない 種は 水族館や 研究機関の ページで たしかめた */
+SHARKS.push(
+  K_("integralkurage", "インテグラルクラゲ", "jelly", 3, 4, "和歌山県の 田辺湾（たなべわん）など 日本の 海", "まだ よく わかって いない", "見つけたのは 13さいの 少年。2018年に 海で ふしぎな クラゲを 見つけ、家で そだてて しらべ、2025年に 新しい 種として 発表した", "まん中の 白い 生殖腺（せいしょくせん）が、数学の 記号「インテグラル（∫）」のように くるっと まいている のが 名前の 由来。",
+    { bg: "shore", shape: "dome", W: 52, col: "#eef4fb", op: .32, pat: "canals", deco: ["curls"], tent: { n: 46, len: 14, col: "#f4f8ff" } }),
+  K_("hanakuragemodoki", "ハナクラゲモドキ", "jelly", 1.5, 2, "東北より 北の 日本の 海。春に よく 見られる", "小さな プランクトン", "8本の 生殖腺（せいしょくせん）が あざやかな 山ぶき色で、海の 中でも よく 目立つ", "かさの 大きさは 1.5cmほどの 小さな クラゲ。指ぬきのような 形を している。",
+    { bg: "north", shape: "tall", W: 36, col: "#f4f1e6", op: .36, deco: ["gonad8"], tent: { n: 60, len: 16, col: "#f4e6c0" } }),
+  K_("kabutohengekurage", "カブトヘンゲクラゲ", "jelly", 4, 3, "おもに 南日本の 海の 底", "小さな プランクトン", "大人に なると ふわふわ 泳がず、海の 底の 平らな ところに ぺたっと はりついて くらす。子どもの ころは しょくしゅを のばして 海を ただよう", "クラゲに にているが「クシクラゲ」の なかま。体の はばは 4cmほど。",
+    { bg: "sand", special: "henge" }),
+  K_("choukurage", "チョウクラゲ", "jelly", 10, 2, "日本の あちこちの 海", "小さな 生きもの", "びっくりすると、2まいの 大きな ひだを パタパタ 開いたり とじたりして、チョウが はばたくように 泳いで にげる", "クラゲに にているが「クシクラゲ」の なかま。にげる ときに 光る ねばねばを 出す なかまも いる。",
+    { bg: "open", special: "butterfly" }),
+  K_("deigohanagasakurage", "デイゴハナガサクラゲ", "jelly", 8, 3, "沖縄の 海。冬から 春に、水深 3〜10mの あさい 海に あらわれる", "小魚など（しょくしゅに 毒の はりが ある）", "名前の「デイゴ」は 沖縄県の 花。2019年に 新しい 種として 発表された。この なかまで 新しい 種が 見つかったのは 114年ぶり", "かさの 大きさは 7〜8cm。かさの 上に まがった しょくしゅが たくさん 生え、口の まわりは 赤い。",
+    { bg: "shore", shape: "dome", W: 50, col: "#f6eef0", op: .36, deco: ["radial4", "manu", "upTent"], tent: { n: 24, len: 40, col: "#ffd4e2" } }),
+  K_("sugiurayakuchikurage", "スギウラヤクチクラゲ", "jelly", 0.8, 2, "日本の あちこちの 海。春から 秋", "小さな プランクトン", "口が いくつも できると、体が 分かれて ふえる。クラゲの すがたの まま 体が 分かれる めずらしい クラゲ", "名前の「ヤクチ」は「八口（やくち）」。口が いくつも あるのが 名前の 由来。かさの 大きさは 8mmほど。",
+    { bg: "shore", shape: "dome", W: 44, col: "#eef4f6", op: .28, deco: ["sugi"], tent: { n: 40, len: 40, col: "#eef2ea" } }),
+  K_("chirimenkurage", "チリメンクラゲ", "jelly", 60, 3, "東南アジアなどの あたたかい 海の 岸の 近く", "動物プランクトン（体の 中の 藻からも 栄養を もらう）", "まん中は ピンクや むらさき、ふちに 行くほど 茶色に なる。日本の 着物の 布「ちりめん」のような 色あい", "かさは ふだん 20cmほどで、ときに 60cmに なる。この なかまは 世界に この 1種だけ。",
+    { bg: "shore", shape: "dome", W: 62, col: "#f0b8b0", op: .85, deco: ["mesh", "edge"], edgeCol: "#a8683a", arms: { n: 8, len: 50, style: "cauli", col: "#d8884a" } }),
+  K_("punctata", "プンクタータ", "jelly", 50, 2, "太平洋の 西の あたたかい 海（オーストラリア〜東南アジア・日本）。ハワイや 大西洋にも ひろがった", "動物プランクトン（体の 中の 藻からも 栄養を もらう）", "1ぴきで 1日に 5万リットル（おふろ 約250ぱい分）もの 海水を こして、エサを とる", "「プンクタータ」は ラテン語で「点もよう」。かさに 白い 点が たくさん ある。ナンヨウタコクラゲとも よばれる。",
+    { bg: "shore", shape: "dome", W: 56, col: "#e6d2b6", op: .88, pat: "spots", arms: { n: 8, len: 40, style: "cauli", col: "#c89058" }, trail: { n: 8, len: 46, col: "#f4f2ea", club: "#ffffff", w: 3 } }),
+  K_("pulmo", "パルモ", "jelly", 90, 2, "ヨーロッパの 大西洋・地中海・黒海の 海", "動物プランクトン", "大きく なると かさの ふちが すみれ色に なる。英語では「たる（バレル）の クラゲ」と よばれる", "かさは ふつう 40〜60cm、まれに 90cmほどに なる。重さは 25kgに なる ことも ある。",
+    { bg: "open", shape: "tall", W: 46, col: "#eef2fb", op: .9, deco: ["scallop"], arms: { n: 8, len: 50, style: "cauli", col: "#f6f4ff" } }),
+  K_("mexicanmushroom", "メキシカンマッシュルーム", "jelly", 51, 3, "北アメリカの 大西洋がわと メキシコ湾（わん）", "小さな プランクトン", "しょくしゅは なく、ゆびのような 先を した 8本の うでで エサを とる。名前は かさの 形が キノコに にているから", "かさは 35〜50cmで、白っぽいものや 青・ピンク・緑の ものも いる。日本では 山形県の 水族館が はじめて 見せた。",
+    { bg: "open", shape: "flat", W: 66, col: "#e8eef2", op: .78, deco: ["cloud", "edge"], edgeCol: "#c8a078", arms: { n: 8, len: 36, style: "cauli", col: "#d8b070" } }),
+  K_("hyougaraitohikikurage", "ヒョウガライトヒキクラゲ", "jelly", 10, 4, "フィリピンなど 東南アジアの 海", "小さな プランクトン", "約100年 見つからなかったが、2013年に ふたたび 見つかった。2017年に 世界で はじめて 水族館で 見られるように なった", "かさに ヒョウのような もようが ある。水族館で そだてると、この もようは 出にくい。",
+    { bg: "shore", shape: "dome", W: 50, col: "#e8eef6", op: .82, deco: ["leopard"], arms: { n: 8, len: 34, style: "frill", col: "#f4f6fb" }, trail: { n: 4, len: 54, col: "#ffffff", w: 1.4 } }),
+  K_("cotylorhiza", "コティロリーザ・ツベルクラータ", "jelly", 40, 2, "地中海（ちちゅうかい）。夏から 秋に 多い", "小さな プランクトン（体の 中の 藻からも 栄養を もらう）", "見た目から「目玉やきクラゲ」と よばれる。まん中が もり上がって、本当に 目玉やきのよう", "体の 中に 光合成（こうごうせい）を する 小さな 藻が すんでいて、クラゲに 栄養を わけて くれる。",
+    { bg: "open", special: "fried" }),
+  K_("minokurage", "ミノクラゲ", "jelly", 40, 3, "インド洋〜太平洋の 西の あたたかい 海（バングラデシュ〜オーストラリア・沖縄）", "小さな プランクトン", "かさに 毛のような とっきが たくさん 出て、わらの 雨具「みの」を 着ているように 見える", "タイや フィリピンでは 食べるために とられる 大切な クラゲ。かさは 40cmほどに なる。",
+    { bg: "shore", shape: "dome", W: 54, col: "#f2f5fa", op: .88, deco: ["hairs"], arms: { n: 8, len: 40, style: "cauli", col: "#eef2f8" } })
+);
+
 SHARKS.forEach((s, i) => s.no = String(i + 1).padStart(3, "0"));
 const byId = id => SHARKS.find(s => s.id === id);
 const sizeTxt = cm => cm >= 100 ? "最大 約" + (cm / 100) + "m" : "最大 約" + cm + "cm";
@@ -4884,7 +4961,7 @@ const JP_WORDS = /日本|世界中|北海道|本州|九州|四国|沖縄|駿河|
 const WHY_VERIFIED = {
   fragile: ["sakegashira", "akanamada", "hohojiro", "rabuka", "ryuguunotsukai", "mitsukuri", "chouchinankou", "mendako", "scalyfoot"],
   newsp: ["yokozunaiwashi", "psychedelicfrog", "mimicoctopus"],
-  nojp: ["caribmejiro", "nassau", "kouteipenguin", "minamizouazarashi", "tategotoazarashi", "americamanatee", "capepenguin", "galapagosashika", "pompeiiworm", "sheephead", "umiiguana", "redlipbat", "raigyodamashi", "hyouazarashi", "taiseiyoudara", "christmasakagani", "hawaiimonk"],
+  nojp: ["pulmo", "mexicanmushroom", "cotylorhiza", "hyougaraitohikikurage", "caribmejiro", "nassau", "kouteipenguin", "minamizouazarashi", "tategotoazarashi", "americamanatee", "capepenguin", "galapagosashika", "pompeiiworm", "sheephead", "umiiguana", "redlipbat", "raigyodamashi", "hyouazarashi", "taiseiyoudara", "christmasakagani", "hawaiimonk"],
   endangered: ["shinonomesakatazame", "nassau", "capepenguin", "galapagosashika", "europeunagi", "hawaiimonk", "kanmuribudai", "kabutogani", "mahseer", "coelacanth", "osagame", "itou", "mekongcatfish"]
 };
 function whyTags(s) {
@@ -4906,7 +4983,8 @@ const TAXO_RAW = "aozame:軟骨魚類;yoshikiri:軟骨魚類;nezumi:軟骨魚類
 const TAXO_ADD_1113 = ";queenangel:条鰭類;komorizame:軟骨魚類;tarpon:条鰭類;flamingotan:軟体動物;rakko:哺乳類;masunosuke:条鰭類;sheephead:条鰭類;umiiguana:爬虫類;redlipbat:条鰭類;raigyodamashi:条鰭類;hyouazarashi:哺乳類;taiseiyoudara:条鰭類;americanlobster:甲殻類;europeunagi:条鰭類;christmasakagani:甲殻類;yashigani:甲殻類;portjackson:軟骨魚類;ozhaigyo:肉鰭類;tasukimongara:条鰭類;hawaiimonk:哺乳類";
 const TAXO_ADD_1121 = ";sandoctopus:軟体動物;hashinagairuka:哺乳類;mairuka:哺乳類;himeumigame:爬虫類;galapagoszame:軟骨魚類;americaooakaika:軟体動物;nishinezumizame:軟骨魚類;salpa:尾索動物;minamiafricaottosei:哺乳類;californiaashika:哺乳類;americakabutogani:鋏角類;hawaiimimiika:軟体動物;australiakouika:軟体動物;weedyseadragon:条鰭類;nishilemonzame:軟骨魚類;seiuchi:哺乳類;weddellazarashi:哺乳類;nileperch:条鰭類;frontosa:条鰭類;herachouzame:条鰭類;elephantnose:条鰭類";
 const TAXO_ADD_1125 = ";onikamasu:条鰭類;caribmejiro:軟骨魚類;shinonomesakatazame:軟骨魚類;pinkgai:軟体動物;nassau:条鰭類;oniitomakiei:軟骨魚類;shiroshumoku:軟骨魚類;hanagondou:哺乳類;kouteipenguin:鳥類;taiseiyousake:条鰭類;minamizouazarashi:哺乳類;tategotoazarashi:哺乳類;hokkyokuiwana:条鰭類;pompeiiworm:環形動物;juumonjidako:軟体動物;hikariboya:尾索動物;orangeroughy:条鰭類;americamanatee:哺乳類;capepenguin:鳥類;galapagosashika:哺乳類";   // 2026-11-25
-const TAXO = {}; (TAXO_RAW + TAXO_ADD_1113 + TAXO_ADD_1121 + TAXO_ADD_1125).split(";").filter(Boolean).forEach(x => { const [id, g] = x.split(":"); TAXO[id] = g; });
+const TAXO_ADD_1127 = ";integralkurage:刺胞動物;hanakuragemodoki:刺胞動物;kabutohengekurage:有櫛動物;choukurage:有櫛動物;deigohanagasakurage:刺胞動物;sugiurayakuchikurage:刺胞動物;chirimenkurage:刺胞動物;punctata:刺胞動物;pulmo:刺胞動物;mexicanmushroom:刺胞動物;hyougaraitohikikurage:刺胞動物;cotylorhiza:刺胞動物;minokurage:刺胞動物";   // 2026-11-27
+const TAXO = {}; (TAXO_RAW + TAXO_ADD_1113 + TAXO_ADD_1121 + TAXO_ADD_1125 + TAXO_ADD_1127).split(";").filter(Boolean).forEach(x => { const [id, g] = x.split(":"); TAXO[id] = g; });
 const GROUP_LABEL = { "哺乳類": "クジラ・イルカなどの なかま", "軟骨魚類": "サメ・エイの なかま", "条鰭類": "魚の なかま", "肉鰭類": "シーラカンス・ハイギョの なかま", "無顎類": "あごの ない 魚の なかま", "甲殻類": "エビ・カニの なかま", "鋏角類": "カブトガニの なかま", "軟体動物": "貝・イカ・タコの なかま", "刺胞動物": "クラゲ・サンゴの なかま", "有櫛動物": "クシクラゲの なかま", "棘皮動物": "ウニ・ヒトデ・ナマコの なかま", "尾索動物": "ホヤの なかま", "海綿動物": "カイメンの なかま", "環形動物": "ゴカイ・ハオリムシの なかま", "爬虫類": "カメ・ヘビの なかま", "両生類": "サンショウウオの なかま", "鳥類": "ペンギンの なかま" };
 const EXTINCT = { megalodon: 1 };
 const TYOMI = { "冠クラゲ目": "かんむりくらげもく", "十脚目": "じっきゃくもく", "口脚目": "こうきゃくもく", "吸腔目": "きゅうこうもく", "有尾目": "ゆうびもく", "有鱗目": "ゆうりんもく", "等脚目": "とうきゃくもく", "裸殻翼足目": "らかくよくそくもく", "裸鰓目": "らさいもく", "軟クラゲ目": "やわくらげもく", "鯨偶蹄目": "くじらぐうていもく" };   // 2026-10-27 分類名は 漢字のまま 読みがなを そえる
@@ -5072,6 +5150,11 @@ SPOTS.open.ids.push("oniitomakiei", "shiroshumoku", "hanagondou");
 SPOTS.north.ids.push("kouteipenguin", "taiseiyousake", "minamizouazarashi", "tategotoazarashi", "hokkyokuiwana");
 SPOTS.deep.ids.push("pompeiiworm", "juumonjidako", "hikariboya", "orangeroughy");
 SPOTS.shore.ids.push("americamanatee", "capepenguin", "galapagosashika");
+// 2026-11-27 蒼くんの クラゲ図鑑から 13種
+SPOTS.shore.ids.push("integralkurage", "sugiurayakuchikurage", "chirimenkurage", "punctata", "hyougaraitohikikurage", "minokurage");
+SPOTS.reef.ids.push("deigohanagasakurage", "kabutohengekurage");
+SPOTS.open.ids.push("choukurage", "pulmo", "mexicanmushroom", "cotylorhiza");
+SPOTS.north.ids.push("hanakuragemodoki");
 
 SPOTS.deep.ids.push("yumenamako", "senjunamako", "kairoudouketsu", "irezumikonnyakuaji");
 SPOTS.open.ids.push("isonade", "semikujira", "okigondou");   // 2026-10-31 追加26
